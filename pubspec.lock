@@ -46,6 +46,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  audio_session:
+    dependency: transitive
+    description:
+      name: audio_session
+      sha256: "343e83bc7809fbda2591a49e525d6b63213ade10c76f15813be9aed6657b3261"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.21"
   boolean_selector:
     dependency: transitive
     description:
@@ -453,6 +461,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
+  just_audio:
+    dependency: "direct main"
+    description:
+      name: just_audio
+      sha256: ee50602364ba83fa6308f5512dd560c713ec3e1f2bc75f0db43618f0d82ef71a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.39"
+  just_audio_platform_interface:
+    dependency: transitive
+    description:
+      name: just_audio_platform_interface
+      sha256: "0243828cce503c8366cc2090cefb2b3c871aa8ed2f520670d76fd47aa1ab2790"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.0"
+  just_audio_web:
+    dependency: transitive
+    description:
+      name: just_audio_web
+      sha256: "0edb481ad4aa1ff38f8c40f1a3576013c3420bf6669b686fe661627d49bc606c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.11"
   leak_tracker:
     dependency: transitive
     description:
@@ -693,6 +725,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  sensors_plus:
+    dependency: "direct main"
+    description:
+      name: sensors_plus
+      sha256: "90f2d38471ca75625f6569d1044d783e0add43548692fbe6e53b008a38a8313a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.1"
+  sensors_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: sensors_plus_platform_interface
+      sha256: b6cacfe243cbeb16403ba688cb0d7054ad4dccb946dcd1254bebdf345fe4b187
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   shelf:
     dependency: transitive
     description:
@@ -854,10 +902,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: d43c1d6b787bf0afad444700ae7f4db8827f701bc61c255ac8d328c6f4d52062
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "0.5.1"
   web_socket:
     dependency: transitive
     description:

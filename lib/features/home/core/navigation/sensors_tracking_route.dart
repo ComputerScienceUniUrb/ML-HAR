@@ -1,11 +1,11 @@
 import 'package:aifit/core/data/activity_recognition/models/ar_data.dart';
-import 'package:aifit/features/home/screens/training/training_screen.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/sensor_tracking.dart';
 import 'package:go_router/go_router.dart';
 
 class SensorsTrackingRoute extends GoRoute {
   SensorsTrackingRoute() : super(
     path: 'sensors-tracking',
-    builder: (context, state) => const TrainingScreen(),
+    builder: (context, state) => const SensorTrackingScreen(),
   );
 }
 
