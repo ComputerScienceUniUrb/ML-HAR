@@ -9,8 +9,8 @@ class RecordsScreen extends ConsumerWidget {
   final RecordsArgumentsRoute arguments;
 
   const RecordsScreen({
-    super.key,
     required this.arguments,
+    super.key,
   });
 
   DateTime get dateTime => arguments.dateTime;

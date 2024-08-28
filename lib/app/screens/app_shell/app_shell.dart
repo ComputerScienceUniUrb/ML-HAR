@@ -21,8 +21,9 @@ class AppShell extends ConsumerWidget {
       drawerEnableOpenDragGesture: false,
       bottomNavigationBar: Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          ref.watch(appShellNotifierProvider
-              .select((state) => state.activeTabsPaths));
+          ref.watch(
+            appShellNotifierProvider.select((state) => state.activeTabsPaths),
+          );
           return child!;
         },
         child: const CustomNavigationBar(),

@@ -3,6 +3,7 @@ import 'package:aifit/core/navigation/go_router.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   initializeGoRouter();
-  runApp(AIFitApp());
+  runApp(const AIFitApp());
 }

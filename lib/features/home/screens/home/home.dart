@@ -9,7 +9,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
       body: ListView(
         children: const [
@@ -29,7 +29,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -42,9 +42,9 @@ class NavItem extends StatelessWidget {
   final Function()? onTap;
 
   const NavItem({
-    super.key,
     required this.text,
     required this.path,
+    super.key,
     this.onTap,
   });
 

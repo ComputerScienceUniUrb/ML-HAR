@@ -1,6 +1,9 @@
-import 'package:sensors_plus/sensors_plus.dart';
+import 'package:aifit/core/data/sensors/models/sensor_track.dart';
 
-abstract class SensorsRepository{
+abstract class SensorsRepository {
+  Stream<(SensorData, SensorData, SensorData)> listenSensors();
 
-  Stream<UserAccelerometerEvent> listenSensors();
+  Future saveTrack(SensorTrack track);
+
+  Stream<List<SensorTrack>> getSensorTracks();
 }

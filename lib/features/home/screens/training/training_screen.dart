@@ -8,10 +8,10 @@ class TrainingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Training'),
+        title: const Text('Training'),
       ),
       body: ListView(
-        children: [],
+        children: const [],
       ),
     );
   }

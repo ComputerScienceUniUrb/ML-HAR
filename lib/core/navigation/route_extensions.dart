@@ -14,9 +14,9 @@ extension RouteExtensions on BuildContext {
   }
 
   Future<T?> pushRoute<T extends Object?>(
-      String path, {
-        Object? extra,
-      }) {
+    String path, {
+    Object? extra,
+  }) {
     if (GoRouter.maybeOf(this) == null) {
       return Future.value(null);
     }

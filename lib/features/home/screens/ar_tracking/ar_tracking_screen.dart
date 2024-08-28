@@ -71,13 +71,14 @@ class RealTimeActivityWidget extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                      'Confidence: ${state.activity!.confidence.name.toString()}'),
+                    'Confidence: ${state.activity!.confidence.name.toString()}',
+                  ),
                   const SizedBox(height: 16),
                   Text('Timestamp: ${state.timestamp?.toString()}'),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ],
     );
@@ -153,7 +154,7 @@ class DailyRecords extends ConsumerWidget {
                 },
                 title: Text(format.format(key)),
                 trailing: Text(state[key]?.length.toString() ?? '0'),
-              )
+              ),
           ],
         ),
       ),

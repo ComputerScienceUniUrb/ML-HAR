@@ -7,17 +7,18 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'),),
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
       body: ListView(
         children: [
           ListTile(
-            onTap: (){
+            onTap: () {
               context.pushRoute('/settings/logs');
             },
             title: const Text('Logs'),
-          )
+          ),
         ],
       ),
     );

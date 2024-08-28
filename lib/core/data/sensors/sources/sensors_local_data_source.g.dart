@@ -7,7 +7,7 @@ part of 'sensors_local_data_source.dart';
 // **************************************************************************
 
 String _$getSensorsLocalDataSourceHash() =>
-    r'e9b9473d317ca8394b577deae3d120d696a9a27c';
+    r'37681844e6c4c120f0c26f8e5b191bdbe38b25f2';
 
 /// See also [getSensorsLocalDataSource].
 @ProviderFor(getSensorsLocalDataSource)

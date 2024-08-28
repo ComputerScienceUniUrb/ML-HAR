@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class RecordTile extends StatelessWidget {
   final ARData record;
 
-  const RecordTile({super.key, required this.record});
+  const RecordTile({required this.record, super.key});
 
   @override
   Widget build(BuildContext context) {

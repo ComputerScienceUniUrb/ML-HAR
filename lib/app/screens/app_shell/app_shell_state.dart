@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class AppShellState extends Equatable {
-
   /// Contains the list of all active tabs paths
   ///
   /// For example, if the rewards tab is not enabled, the AppShell will contain
@@ -22,7 +21,6 @@ class AppShellState extends Equatable {
 
   /// Last time we refreshed the app.
   final int? lastRefreshTimestamp;
-
 
   const AppShellState({
     this.bottomNavigationHeight = 0,
@@ -52,12 +50,11 @@ class AppShellState extends Equatable {
     List<String>? activeTabsPaths,
   }) {
     return AppShellState(
-
       bottomNavigationHeight:
           bottomNavigationHeight ?? this.bottomNavigationHeight,
       headerHeight: headerHeight ?? this.headerHeight,
       lastRefreshTimestamp: lastRefreshTimestamp ?? this.lastRefreshTimestamp,
-         activeTabsPaths: activeTabsPaths ?? this.activeTabsPaths,
+      activeTabsPaths: activeTabsPaths ?? this.activeTabsPaths,
     );
   }
 

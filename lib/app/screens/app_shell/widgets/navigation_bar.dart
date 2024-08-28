@@ -25,8 +25,8 @@ class _CustomNavigationBarState extends ConsumerState<CustomNavigationBar> {
       // ).fontSize!,
       elevation: 0.0,
       type: BottomNavigationBarType.fixed,
-      items: [
-        const BottomNavigationBarItem(
+      items: const [
+        BottomNavigationBarItem(
           icon: Padding(
             padding: EdgeInsets.all(2),
             child: Icon(Icons.home),
@@ -40,7 +40,7 @@ class _CustomNavigationBarState extends ConsumerState<CustomNavigationBar> {
           ),
           label: 'Home',
         ),
-        const BottomNavigationBarItem(
+        BottomNavigationBarItem(
           icon: Padding(
             padding: EdgeInsets.all(2),
             child: Icon(Icons.settings),
@@ -79,9 +79,8 @@ class _CustomNavigationBarState extends ConsumerState<CustomNavigationBar> {
     }
     final goRouter = GoRouter.of(context);
     final fullPath = GoRouterState.of(context).fullPath!;
-    final path = fullPath.split('/')?[1] ?? '';
-    final selectedTabIndex =
-        activeTabsPaths.indexOf('/$path');
+    final path = fullPath.split('/')[1];
+    final selectedTabIndex = activeTabsPaths.indexOf('/$path');
     // final routes = goRouter.routerDelegate.currentConfiguration.routes;
     // if (selectedTabIndex < 0) {
     //   WidgetsBinding.instance.addPostFrameCallback((_) {

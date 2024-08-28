@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_shell_provider.dart';
+part of 'sensor_tracks_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appShellNotifierHash() => r'7f27a03cabb4fab18a82a3554b3f65d2d4b8f620';
+String _$getSensorTracksHash() => r'75430bb123a41a63e5a6efd7d5ab145ca001b01b';
 
-/// See also [AppShellNotifier].
-@ProviderFor(AppShellNotifier)
-final appShellNotifierProvider =
-    AutoDisposeNotifierProvider<AppShellNotifier, AppShellState>.internal(
-  AppShellNotifier.new,
-  name: r'appShellNotifierProvider',
+/// See also [getSensorTracks].
+@ProviderFor(getSensorTracks)
+final getSensorTracksProvider =
+    AutoDisposeStreamProvider<List<SensorTrack>>.internal(
+  getSensorTracks,
+  name: r'getSensorTracksProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$appShellNotifierHash,
+      : _$getSensorTracksHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AppShellNotifier = AutoDisposeNotifier<AppShellState>;
+typedef GetSensorTracksRef = AutoDisposeStreamProviderRef<List<SensorTrack>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

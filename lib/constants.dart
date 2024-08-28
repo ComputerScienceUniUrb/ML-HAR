@@ -1,0 +1,1 @@
+const defaultSamplingPeriod = Duration(milliseconds: 10);

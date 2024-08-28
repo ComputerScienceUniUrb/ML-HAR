@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  csv:
+  dartz: ^0.10.1
   equatable: ^2.0.5
   flutter_hooks:
   flutter_activity_recognition: ^3.1.0
@@ -24,10 +26,13 @@ dependencies:
   isar_flutter_libs: ^3.1.0+1
   logger: ^2.4.0
   path_provider:
+  permission_handler:
   riverpod_annotation: ^2.3.5
   rxdart: ^0.28.0
   # move this into external library
   sensors_plus: ^6.0.1
+  share_plus:
+  wakelock_plus:
 
 dependency_overrides:
   analyzer: ^6.5.0

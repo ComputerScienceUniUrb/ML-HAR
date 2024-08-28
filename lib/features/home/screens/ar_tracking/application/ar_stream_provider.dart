@@ -18,14 +18,14 @@ final format = DateFormat('dd-MM-yy');
 @freezed
 class ActivityState with _$ActivityState {
   const factory ActivityState.data({Activity? activity, DateTime? timestamp}) =
-  ActivityStateData;
+      ActivityStateData;
 
   const factory ActivityState.loading() = ActivityStateLoading;
 
   const factory ActivityState.stop() = ActivityStateStop;
 
   const factory ActivityState.error(Object error, StackTrace st) =
-  ActivityStateError;
+      ActivityStateError;
 }
 
 @riverpod
@@ -51,7 +51,6 @@ class ActivityNotifier extends _$ActivityNotifier {
 
   @override
   ActivityState build() {
-
     ref.onDispose(_onDispose);
     _arRepository = ref.read(getArRepositoryProvider);
     return const ActivityStateStop();
@@ -70,7 +69,7 @@ class ActivityNotifier extends _$ActivityNotifier {
         .activityStream()
         .handleError(_handleError)
         .listen(
-          (activity) {
+      (activity) {
         logger.i('onActivityStream');
         final now = DateTime.now();
         final lastUpdate = state is ActivityStateData
@@ -94,7 +93,9 @@ class ActivityNotifier extends _$ActivityNotifier {
 
   _handleError(dynamic error) {
     logger.e(error);
-    ref.read(activityErrorNotifierProvider.notifier).showError(error.toString());
+    ref
+        .read(activityErrorNotifierProvider.notifier)
+        .showError(error.toString());
   }
 
   void stop() {

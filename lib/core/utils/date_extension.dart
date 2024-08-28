@@ -4,7 +4,7 @@ extension DateTimeX on DateTime {
     return day == now.day && month == now.month && year == now.year;
   }
 
-  DateTime get midnight{
-    return DateTime(year,month,day);
+  DateTime get midnight {
+    return DateTime(year, month, day);
   }
 }

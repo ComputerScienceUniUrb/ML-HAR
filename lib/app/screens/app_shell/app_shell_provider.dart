@@ -10,12 +10,12 @@ class AppShellNotifier extends _$AppShellNotifier {
   ///
   /// It's mainly used to avoid adding two times the same snackbar to the queue
   /// when resuming the app (after being in background)
-  bool _isShowingDownTimeSnackBar = false;
+  final bool _isShowingDownTimeSnackBar = false;
 
   /// Flag used to know if we currently have an internet connection.
   ///
   /// It's mainly used to refresh the app if we come from a no connection state.
-  bool _hasInternet = true;
+  final bool _hasInternet = true;
 
   /// The NavigationShell that contains routes informations
   // final StatefulNavigationShell _navigationShell;

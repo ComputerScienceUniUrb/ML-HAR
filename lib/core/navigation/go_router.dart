@@ -25,7 +25,9 @@ void initializeGoRouter() {
               overrides: [
                 getNavigationShellProvider.overrideWithValue(navigationShell),
               ],
-              child: AppShell(navigationShell: navigationShell,),
+              child: AppShell(
+                navigationShell: navigationShell,
+              ),
             ),
             transitionDuration: const Duration(milliseconds: 300),
             transitionsBuilder: (_, animation, __, child) {

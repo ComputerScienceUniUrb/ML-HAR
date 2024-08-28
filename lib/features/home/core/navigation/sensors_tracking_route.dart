@@ -3,10 +3,11 @@ import 'package:aifit/features/home/screens/sensor_tracking/sensor_tracking.dart
 import 'package:go_router/go_router.dart';
 
 class SensorsTrackingRoute extends GoRoute {
-  SensorsTrackingRoute() : super(
-    path: 'sensors-tracking',
-    builder: (context, state) => const SensorTrackingScreen(),
-  );
+  SensorsTrackingRoute()
+      : super(
+          path: 'sensors-tracking',
+          builder: (context, state) => const SensorTrackingScreen(),
+        );
 }
 
 class RecordsArgumentsRoute {
