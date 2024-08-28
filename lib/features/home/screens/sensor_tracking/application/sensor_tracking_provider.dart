@@ -11,7 +11,6 @@ import 'package:aifit/core/data/sensors/repository/sensors_repository_impl.dart'
 import 'package:aifit/core/utils/logger.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sensor_tracking_provider.g.dart';
@@ -34,7 +33,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
 
   @override
   SensorTrackingState build() {
-    ref.onDispose(stop);
+    ref.onDispose(reset);
     return const SensorTrackingStateInitial();
   }
 
