@@ -47,10 +47,15 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
 
     _sensorActivityType = sensorActivityType;
     _smartphonePosition = smartphonePosition;
-
-    final t = Timer(Duration(seconds: 1), () {
-      ref.read(getAudioRepositoryProvider).playStart();
-      HapticFeedback.heavyImpact();
+    ref.read(getAudioRepositoryProvider).playPreStart();
+    final t = Timer.periodic(Duration(seconds: 1), (timer) {
+      if(timer.tick > 4){
+        timer.cancel();
+        ref.read(getAudioRepositoryProvider).playStart();
+        HapticFeedback.heavyImpact();
+      }else{
+        ref.read(getAudioRepositoryProvider).playPreStart();
+      }
     });
     _arStream = ref.read(getArRepositoryProvider).activityStream().listen((ar) {
       _lastActivityRecognized = ARData()

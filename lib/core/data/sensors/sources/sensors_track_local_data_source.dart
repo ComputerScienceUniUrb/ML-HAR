@@ -1,7 +1,7 @@
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
 import 'package:aifit/core/providers/isar/isar_provider.dart';
-import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:isar/isar.dart';
 
 part 'sensors_track_local_data_source.g.dart';
 
@@ -29,6 +29,7 @@ class SensorsTrackLocalDataSource {
         .sensorTracks
         .filter()
         .sensorsDataIsNotEmpty()
+        .sortByTimestampDesc()
         .build();
 
     yield* stream.watch(fireImmediately: true);

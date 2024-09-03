@@ -6,7 +6,6 @@ import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_t
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracks_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_activity_recognition/models/activity_type.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -170,7 +169,7 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text('Current track'),
+                      const Text('Current track'),
                       ...[
                         const SizedBox(height: 16),
                         Text('Id: ${state.track.id}'),
@@ -211,11 +210,11 @@ class SensorTracks extends ConsumerWidget with CSVMixin {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Tracks'),
+                const Text('Tracks'),
                 if (state.isNotEmpty)
                   TextButton(
                     onPressed: () {},
-                    child: Text('View all'),
+                    child: const Text('View all'),
                   ),
               ],
             ),
@@ -223,10 +222,10 @@ class SensorTracks extends ConsumerWidget with CSVMixin {
               ListTile(
                 leading: Text(state[i].id.toString()),
                 title: Text(
-                    '${state[i].activityType?.name ?? ''} ${state[i].smartphonePosition?.name ?? ''} Samples ${state[i].sensorsData?.length ?? 0}'),
+                    '${state[i].activityType?.name ?? ''} ${state[i].smartphonePosition?.name ?? ''}, samples ${state[i].sensorsData?.length ?? 0}'),
                 subtitle: Text(state[i].timestamp?.toIso8601String() ?? '-'),
                 trailing: IconButton(
-                  icon: Icon(Icons.download),
+                  icon: const Icon(Icons.download),
                   color: Colors.black,
                   onPressed: () {
                     downloadCSV(state[i]);

@@ -19,6 +19,12 @@ class SettingsScreen extends ConsumerWidget {
             },
             title: const Text('Logs'),
           ),
+          ListTile(
+            onTap: () {
+              context.pushRoute('/settings/user-details');
+            },
+            title: const Text('User details'),
+          ),
         ],
       ),
     );

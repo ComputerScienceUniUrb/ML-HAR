@@ -13,12 +13,14 @@ mixin CSVMixin {
   Future<void> downloadCSV(SensorTrack track) async {
     final fileName = 'aifit_track_${DateTime.now().toIso8601String()}';
     // final file = await getCsv(list, fileName);
-    final bytes = getCsvBytes(track.sensorsData ?? [], fileName);
+    final bytes = getCsvBytes(track, fileName);
     Share.shareXFiles([XFile.fromData(bytes, mimeType: 'csv')]);
   }
 
-  String _buildCsv(List<SensorsData> sensors) {
-    final data = sensors.map((e) => e.toCsvList()).toList();
+  String _buildCsv(SensorTrack track) {
+    final data = track.sensorsData
+        ?.map((e) => e.toCsvList(track.activityType, track.smartphonePosition))
+        .toList();
     final csv = const ListToCsvConverter().convert([
       [
         'Timestamp',
@@ -34,22 +36,24 @@ mixin CSVMixin {
         'Magn_y',
         'Magn_z',
         'Magn_timestamp',
-        'Activity_recognition'
+        'Activity_recognition',
+        'User_activity_choice',
+        'User_smartphone_position',
       ],
-      ...data,
+      ...data ?? [],
     ]);
     return csv;
   }
 
-  Uint8List getCsvBytes(List<SensorsData> sensors, String eventName) {
-    final csv = _buildCsv(sensors);
+  Uint8List getCsvBytes(SensorTrack track, String eventName) {
+    final csv = _buildCsv(track);
     final bytes = Uint8List.fromList(utf8.encode(csv));
     return bytes;
   }
 
-  Future<File?> getCsv(List<SensorsData> sensors, String filename) async {
+  Future<File?> getCsv(SensorTrack track, String filename) async {
     try {
-      final csv = _buildCsv(sensors);
+      final csv = _buildCsv(track);
 
       final statuses = await [
         Permission.storage,
@@ -62,10 +66,10 @@ mixin CSVMixin {
 
         await f.writeAsString(csv);
         return f;
-      }else{
+      } else {
         final status = await Permission.storage.request();
-        if(status == PermissionStatus.granted){
-          return getCsv(sensors, filename);
+        if (status == PermissionStatus.granted) {
+          return getCsv(track, filename);
         }
       }
       return null;

@@ -27,8 +27,11 @@ class SensorsData {
   DateTime? timestamp;
 }
 
-extension SensorsDataCsv on SensorsData{
-  List toCsvList() {
+extension SensorsDataCsv on SensorsData {
+  List toCsvList(
+    SensorActivityType? activityType,
+    SmartphonePosition? smartphonePosition,
+  ) {
     return [
       timestamp,
       accelerometer?.x,
@@ -44,10 +47,11 @@ extension SensorsDataCsv on SensorsData{
       magnetometer?.z,
       magnetometer?.timestamp,
       activityRecognized,
+      activityType?.name ?? '',
+      smartphonePosition?.name ?? '',
     ];
   }
 }
-
 
 @embedded
 class SensorData {

@@ -33,10 +33,18 @@ class AudioRepositoryImpl implements AudioRepository {
   }
 
   @override
+  playPreStart() async {
+    await _audioPlayer.stop();
+    await _audioPlayer
+        .setAudioSource(AudioSource.asset('assets/sounds/pre_start.mp3'));
+    await _audioPlayer.play();
+  }
+
+  @override
   playStop() async {
     await _audioPlayer.stop();
     await _audioPlayer
-        .setAudioSource(AudioSource.asset('assets/sounds/finish_bigdsc.mp3'));
+        .setAudioSource(AudioSource.asset('assets/sounds/complete.mp3'));
     await _audioPlayer.play();
   }
 
