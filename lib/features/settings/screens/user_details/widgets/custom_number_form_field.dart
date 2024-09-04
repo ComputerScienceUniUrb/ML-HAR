@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 /// StatelessWidget that implements the custom
 /// style for a [TextFormField]
-class CustomNumberFormField extends StatelessWidget {
-  final String? initialValue;
+class CustomNumberFormField extends StatefulWidget {
+  final String? value;
   final String? labelText;
   final String? suffix;
   final bool decimal;
@@ -16,11 +16,26 @@ class CustomNumberFormField extends StatelessWidget {
     this.labelText,
     this.suffix,
     this.decimal = false,
-    this.initialValue,
+    this.value,
     this.onSaved,
     this.validator,
     this.onChanged,
   });
+
+  @override
+  State<CustomNumberFormField> createState() => _CustomNumberFormFieldState();
+}
+
+class _CustomNumberFormFieldState extends State<CustomNumberFormField> {
+  final controller = TextEditingController();
+
+  @override
+  void didUpdateWidget(covariant CustomNumberFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      controller.text = widget.value ?? '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,32 +46,33 @@ class CustomNumberFormField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
         child: TextFormField(
-          keyboardType: TextInputType.numberWithOptions(decimal: decimal),
+          controller: controller,
+          keyboardType:
+              TextInputType.numberWithOptions(decimal: widget.decimal),
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: labelText,
-            suffixText: suffix,
-            hintStyle: TextStyle(
+            hintText: widget.labelText,
+            suffixText: widget.suffix,
+            hintStyle: const TextStyle(
               color: Color(0xFFBFBFBF),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
-            suffixStyle: TextStyle(
+            suffixStyle: const TextStyle(
               color: Color(0xFFBFBFBF),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xFFBFBFBF),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
           autocorrect: false,
-          initialValue: initialValue,
-          onChanged: (newValue) => onChanged?.call(newValue),
-          validator: validator,
-          onSaved: onSaved,
+          onChanged: (newValue) => widget.onChanged?.call(newValue),
+          validator: widget.validator,
+          onSaved: widget.onSaved,
         ),
       ),
     );

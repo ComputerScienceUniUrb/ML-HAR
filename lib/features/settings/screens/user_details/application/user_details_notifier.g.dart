@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'height_notifier.dart';
+part of 'user_details_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$heightNotifierHash() => r'86e56c78962c35c48620997416d0fffec05b1fc4';
+String _$userDetailsNotifierHash() =>
+    r'83978901ab155cd677c79b24f87517f888a2126e';
 
-/// See also [HeightNotifier].
-@ProviderFor(HeightNotifier)
-final heightNotifierProvider =
-    AutoDisposeNotifierProvider<HeightNotifier, int>.internal(
-  HeightNotifier.new,
-  name: r'heightNotifierProvider',
+/// See also [UserDetailsNotifier].
+@ProviderFor(UserDetailsNotifier)
+final userDetailsNotifierProvider =
+    AutoDisposeNotifierProvider<UserDetailsNotifier, UserDetailsState>.internal(
+  UserDetailsNotifier.new,
+  name: r'userDetailsNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$heightNotifierHash,
+      : _$userDetailsNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$HeightNotifier = AutoDisposeNotifier<int>;
+typedef _$UserDetailsNotifier = AutoDisposeNotifier<UserDetailsState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,7 +1,7 @@
 import 'package:aifit/features/settings/screens/logs/logs_screen.dart';
 import 'package:aifit/features/settings/screens/settings/settings_screen.dart';
 import 'package:aifit/features/settings/screens/user_details/user_details.dart';
-import 'package:aifit/features/settings/screens/user_height/user_height.dart';
+import 'package:aifit/features/settings/screens/user_details/user_details_form.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -26,10 +26,11 @@ class SettingsRoutes extends GoRoute {
               builder: (context, goRouteState) => const UserDetailsScreen(),
               routes: [
                 GoRoute(
-                  path: 'height',
-                  builder: (context, goRouteState) => const HeightScreen(),
+                  path: 'edit',
+                  builder: (context, goRouteState) =>
+                      const UserDetailsFormScreen(),
                 ),
-              ]
+              ],
             ),
           ],
         );
