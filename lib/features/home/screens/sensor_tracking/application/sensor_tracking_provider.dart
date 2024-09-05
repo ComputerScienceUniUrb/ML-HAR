@@ -26,6 +26,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
 
   ARData? _lastActivityRecognized;
   SensorData? _lastAccelerometer;
+  SensorData? _lastAccelerometerWithGravity;
   SensorData? _lastGyroscope;
   SensorData? _lastMagnetometer;
   SmartphonePosition? _smartphonePosition;
@@ -48,7 +49,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     _sensorActivityType = sensorActivityType;
     _smartphonePosition = smartphonePosition;
     ref.read(getAudioRepositoryProvider).playPreStart();
-    final t = Timer.periodic(Duration(seconds: 1), (timer) {
+    final t = Timer.periodic(const Duration(seconds: 1), (timer) {
       if(timer.tick > 4){
         timer.cancel();
         ref.read(getAudioRepositoryProvider).playStart();
@@ -67,12 +68,14 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         ref.read(getSensorsRepositoryProvider).listenSensors().listen(
       (data) {
         _lastAccelerometer = data.$1;
-        _lastGyroscope = data.$2;
-        _lastMagnetometer = data.$3;
+        _lastAccelerometerWithGravity = data.$2;
+        _lastGyroscope = data.$3;
+        _lastMagnetometer = data.$4;
 
         if (!t.isActive &&
             _timer == null &&
             _lastAccelerometer != null &&
+            _lastAccelerometerWithGravity != null &&
             _lastGyroscope != null &&
             _lastMagnetometer != null) {
           startSampling(duration);
@@ -102,6 +105,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         final s = SensorsData();
         s.timestamp = DateTime.now();
         s.accelerometer = _lastAccelerometer;
+        s.accelerometerWithGravity = _lastAccelerometerWithGravity;
         s.gyroscope = _lastGyroscope;
         s.magnetometer = _lastMagnetometer;
         s.activityRecognized = _lastActivityRecognized?.activity;
@@ -149,6 +153,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     _timer = null;
     _sensorsData.clear();
     _lastAccelerometer = null;
+    _lastAccelerometerWithGravity = null;
     _lastGyroscope = null;
     _lastMagnetometer = null;
   }

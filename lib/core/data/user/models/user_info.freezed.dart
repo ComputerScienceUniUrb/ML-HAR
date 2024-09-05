@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'user_details_state.dart';
+part of 'user_info.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,39 +15,38 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$UserDetailsState {
+mixin _$UserInfo {
   int? get age => throw _privateConstructorUsedError;
   double? get weight => throw _privateConstructorUsedError;
   Gender? get gender => throw _privateConstructorUsedError;
   int? get height => throw _privateConstructorUsedError;
 
-  /// Create a copy of UserDetailsState
+  /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $UserDetailsStateCopyWith<UserDetailsState> get copyWith =>
+  $UserInfoCopyWith<UserInfo> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserDetailsStateCopyWith<$Res> {
-  factory $UserDetailsStateCopyWith(
-          UserDetailsState value, $Res Function(UserDetailsState) then) =
-      _$UserDetailsStateCopyWithImpl<$Res, UserDetailsState>;
+abstract class $UserInfoCopyWith<$Res> {
+  factory $UserInfoCopyWith(UserInfo value, $Res Function(UserInfo) then) =
+      _$UserInfoCopyWithImpl<$Res, UserInfo>;
   @useResult
   $Res call({int? age, double? weight, Gender? gender, int? height});
 }
 
 /// @nodoc
-class _$UserDetailsStateCopyWithImpl<$Res, $Val extends UserDetailsState>
-    implements $UserDetailsStateCopyWith<$Res> {
-  _$UserDetailsStateCopyWithImpl(this._value, this._then);
+class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
+    implements $UserInfoCopyWith<$Res> {
+  _$UserInfoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of UserDetailsState
+  /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -79,25 +78,25 @@ class _$UserDetailsStateCopyWithImpl<$Res, $Val extends UserDetailsState>
 }
 
 /// @nodoc
-abstract class _$$UserDetailsStateImplCopyWith<$Res>
-    implements $UserDetailsStateCopyWith<$Res> {
-  factory _$$UserDetailsStateImplCopyWith(_$UserDetailsStateImpl value,
-          $Res Function(_$UserDetailsStateImpl) then) =
-      __$$UserDetailsStateImplCopyWithImpl<$Res>;
+abstract class _$$UserInfoImplCopyWith<$Res>
+    implements $UserInfoCopyWith<$Res> {
+  factory _$$UserInfoImplCopyWith(
+          _$UserInfoImpl value, $Res Function(_$UserInfoImpl) then) =
+      __$$UserInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int? age, double? weight, Gender? gender, int? height});
 }
 
 /// @nodoc
-class __$$UserDetailsStateImplCopyWithImpl<$Res>
-    extends _$UserDetailsStateCopyWithImpl<$Res, _$UserDetailsStateImpl>
-    implements _$$UserDetailsStateImplCopyWith<$Res> {
-  __$$UserDetailsStateImplCopyWithImpl(_$UserDetailsStateImpl _value,
-      $Res Function(_$UserDetailsStateImpl) _then)
+class __$$UserInfoImplCopyWithImpl<$Res>
+    extends _$UserInfoCopyWithImpl<$Res, _$UserInfoImpl>
+    implements _$$UserInfoImplCopyWith<$Res> {
+  __$$UserInfoImplCopyWithImpl(
+      _$UserInfoImpl _value, $Res Function(_$UserInfoImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of UserDetailsState
+  /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -107,7 +106,7 @@ class __$$UserDetailsStateImplCopyWithImpl<$Res>
     Object? gender = freezed,
     Object? height = freezed,
   }) {
-    return _then(_$UserDetailsStateImpl(
+    return _then(_$UserInfoImpl(
       age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
@@ -130,9 +129,8 @@ class __$$UserDetailsStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$UserDetailsStateImpl implements _UserDetailsState {
-  const _$UserDetailsStateImpl(
-      {this.age, this.weight, this.gender, this.height});
+class _$UserInfoImpl implements _UserInfo {
+  const _$UserInfoImpl({this.age, this.weight, this.gender, this.height});
 
   @override
   final int? age;
@@ -145,14 +143,14 @@ class _$UserDetailsStateImpl implements _UserDetailsState {
 
   @override
   String toString() {
-    return 'UserDetailsState(age: $age, weight: $weight, gender: $gender, height: $height)';
+    return 'UserInfo(age: $age, weight: $weight, gender: $gender, height: $height)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UserDetailsStateImpl &&
+            other is _$UserInfoImpl &&
             (identical(other.age, age) || other.age == age) &&
             (identical(other.weight, weight) || other.weight == weight) &&
             (identical(other.gender, gender) || other.gender == gender) &&
@@ -162,22 +160,21 @@ class _$UserDetailsStateImpl implements _UserDetailsState {
   @override
   int get hashCode => Object.hash(runtimeType, age, weight, gender, height);
 
-  /// Create a copy of UserDetailsState
+  /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$UserDetailsStateImplCopyWith<_$UserDetailsStateImpl> get copyWith =>
-      __$$UserDetailsStateImplCopyWithImpl<_$UserDetailsStateImpl>(
-          this, _$identity);
+  _$$UserInfoImplCopyWith<_$UserInfoImpl> get copyWith =>
+      __$$UserInfoImplCopyWithImpl<_$UserInfoImpl>(this, _$identity);
 }
 
-abstract class _UserDetailsState implements UserDetailsState {
-  const factory _UserDetailsState(
+abstract class _UserInfo implements UserInfo {
+  const factory _UserInfo(
       {final int? age,
       final double? weight,
       final Gender? gender,
-      final int? height}) = _$UserDetailsStateImpl;
+      final int? height}) = _$UserInfoImpl;
 
   @override
   int? get age;
@@ -188,10 +185,10 @@ abstract class _UserDetailsState implements UserDetailsState {
   @override
   int? get height;
 
-  /// Create a copy of UserDetailsState
+  /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UserDetailsStateImplCopyWith<_$UserDetailsStateImpl> get copyWith =>
+  _$$UserInfoImplCopyWith<_$UserInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

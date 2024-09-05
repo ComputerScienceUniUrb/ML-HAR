@@ -1,5 +1,4 @@
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
-import 'package:aifit/features/home/screens/sensor_tracking/sensor_tracking.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sensor_tracking_state.freezed.dart';

@@ -189,13 +189,17 @@ const _SensorTrackactivityTypeValueEnumMap = {
 };
 const _SensorTracksmartphonePositionEnumValueMap = {
   r'byHand': r'byHand',
+  r'byHandPortrait': r'byHandPortrait',
   r'pocket': r'pocket',
   r'pouch': r'pouch',
+  r'handleBar': r'handleBar',
 };
 const _SensorTracksmartphonePositionValueEnumMap = {
   r'byHand': SmartphonePosition.byHand,
+  r'byHandPortrait': SmartphonePosition.byHandPortrait,
   r'pocket': SmartphonePosition.pocket,
   r'pouch': SmartphonePosition.pouch,
+  r'handleBar': SmartphonePosition.handleBar,
 };
 
 Id _sensorTrackGetId(SensorTrack object) {

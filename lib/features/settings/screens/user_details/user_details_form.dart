@@ -64,12 +64,12 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                         try {
                           int age = int.parse(value);
                           if (age <= 0) {
-                            return 'invalid_age_txt';
+                            return 'L\'età deve essere maggiore di 0';
                           } else if (age > 130) {
-                            return 'too_old_error_txt';
+                            return 'Troppo anziano';
                           }
                         } on FormatException catch (_) {
-                          return 'Format exception';
+                          return 'Formato non valido';
                         }
                       }
                       return null;
@@ -88,14 +88,14 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                     validator: (value) {
                       if (value != null) {
                         try {
-                          int age = int.parse(value);
-                          if (age <= 0) {
-                            return 'invalid_age_txt';
-                          } else if (age > 130) {
-                            return 'too_old_error_txt';
+                          int height = int.parse(value);
+                          if (height <= 50) {
+                            return 'Troppo basso';
+                          } else if (height > 240) {
+                            return 'Troppo alto';
                           }
                         } on FormatException catch (_) {
-                          return 'invalid_age_txt';
+                          return 'Formato non valido';
                         }
                       }
                       return null;
@@ -118,10 +118,10 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                           if (weight < 25.0) {
                             return 'Troppo leggero';
                           } else if (weight > 580.0) {
-                            return 'too_heavy_error_txt';
+                            return 'Peso eccessivo';
                           }
                         } on FormatException catch (_) {
-                          return 'invalid_weight_txt';
+                          return 'Formato non valido';
                         }
                       }
                       return null;
@@ -149,31 +149,6 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                       hintText: 'Genere',
                     ),
                   ),
-                  /*CustomDropdownFormField<Gender>(
-                    value: gender,
-                    hint: 'Genere',
-                    valueIndex:
-                        gender == null ? null : Gender.values.indexOf(gender),
-                    onChanged: (value) {
-                      ref
-                          .read(userDetailsNotifierProvider.notifier)
-                          .setGender(value);
-                    },
-                    items: Gender.values
-                        .map(
-                          (e) => CustomDropdownItem<Gender>(
-                            text: e.name,
-                          ),
-                        )
-                        .toList(),
-                    openColor: const Color(0xFFF4F6F9),
-                    enabledColor: Colors.white,
-                    enableTextColor: const Color(0xFFBFBFBF),
-                    elementTextColor: const Color(0xFF666666),
-                    enabledIconColor: Theme.of(context).primaryColor,
-                    validator: (_) => null,
-                    onSaved: (newValue) {},
-                  ),*/
                   const SizedBox(height: 75),
                 ],
               ),

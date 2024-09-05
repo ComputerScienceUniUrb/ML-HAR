@@ -2,6 +2,7 @@ import 'package:aifit/features/home/core/navigation/ar_tracking_route.dart';
 import 'package:aifit/features/home/core/navigation/records_route.dart';
 import 'package:aifit/features/home/core/navigation/sensors_tracking_route.dart';
 import 'package:aifit/features/home/screens/home/home.dart';
+import 'package:aifit/features/settings/screens/user_details/user_details.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,7 +24,14 @@ class HomeRoutes extends GoRoute {
                 RecordsRoute(),
               ],
             ),
-            SensorsTrackingRoute(),
+            SensorsTrackingRoute(
+              routes: [
+                GoRoute(
+                  path: 'user-details',
+                  builder: (context, goRouteState) => const UserDetailsScreen(),
+                ),
+              ],
+            ),
           ],
         );
 }

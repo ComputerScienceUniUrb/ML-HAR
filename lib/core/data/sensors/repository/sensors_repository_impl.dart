@@ -2,7 +2,6 @@ import 'package:aifit/core/data/sensors/models/sensor_track.dart';
 import 'package:aifit/core/data/sensors/repository/sensors_repository.dart';
 import 'package:aifit/core/data/sensors/sources/sensors_local_data_source.dart';
 import 'package:aifit/core/data/sensors/sources/sensors_track_local_data_source.dart';
-import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -20,6 +19,7 @@ SensorsRepository getSensorsRepository(GetSensorsRepositoryRef ref) {
 class SensorsRepositoryImpl implements SensorsRepository {
   final SensorsLocalDataSource sensorsLocalDataSource;
   final SensorsTrackLocalDataSource sensorsTrackLocalDataSource;
+
   SensorsRepositoryImpl({
     required this.sensorsLocalDataSource,
     required this.sensorsTrackLocalDataSource,
@@ -28,12 +28,14 @@ class SensorsRepositoryImpl implements SensorsRepository {
   // Togliere la dipendenza da sensor_plus definendo una classe
   // proprietaria
   @override
-  Stream<(SensorData, SensorData, SensorData)> listenSensors() {
-    return Rx.combineLatest3(
+  Stream<(SensorData, SensorData, SensorData, SensorData)> listenSensors() {
+    return Rx.combineLatest4(
         sensorsLocalDataSource.listenAccelerometerSensors(),
+        sensorsLocalDataSource.listenAccelerometerWithGravitySensors(),
         sensorsLocalDataSource.listenGyroscopeSensors(),
-        sensorsLocalDataSource.listenMagnetometerSensors(), (acc, gyro, magne) {
-      return (acc, gyro, magne);
+        sensorsLocalDataSource.listenMagnetometerSensors(),
+        (acc, gravityAcc, gyro, magne) {
+      return (acc, gravityAcc, gyro, magne);
     });
   }
 

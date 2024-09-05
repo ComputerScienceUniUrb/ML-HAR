@@ -5,6 +5,10 @@ import 'package:aifit/core/utils/utils.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_provider.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracks_provider.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/application/user_info_notifier.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/start_dialog.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/user_info.dart';
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -46,22 +50,34 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            const UserInfo(),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
-                  child: DropdownMenu<SensorActivityType>(
-                    label: const Text('Tipo di attività'),
-                    expandedInsets: EdgeInsets.zero,
+                  child: CustomDropdown(
+                    hintText: 'Tipo di attività',
                     enabled: !isWorking,
-                    dropdownMenuEntries: SensorActivityType.values
-                        .map(
-                          (e) => DropdownMenuEntry<SensorActivityType>(
-                            value: e,
-                            label: e.name,
-                          ),
-                        )
-                        .toList(),
-                    onSelected: (v) {
+                    initialItem: selectedActivity.value,
+                    headerBuilder: (context, item, enabled) {
+                      return Text(
+                        item.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                    listItemBuilder: (context, item, isSelected, onSelect) {
+                      return Text(item.name);
+                    },
+                    items: SensorActivityType.values,
+                    onChanged: (v) {
+                      if (v == selectedActivity.value) return;
+                      if (selectedActivity.value ==
+                              SensorActivityType.onBicycle ||
+                          v == SensorActivityType.onBicycle) {
+                        smartphonePosition.value = null;
+                      }
                       selectedActivity.value = v;
                     },
                   ),
@@ -81,19 +97,28 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
             Row(
               children: [
                 Expanded(
-                  child: DropdownMenu<SmartphonePosition>(
-                    label: const Text('Posizione smartphone'),
-                    expandedInsets: EdgeInsets.zero,
+                  child: CustomDropdown(
+                    hintText: 'Posizione smartphone',
                     enabled: !isWorking,
-                    dropdownMenuEntries: SmartphonePosition.values
-                        .map(
-                          (e) => DropdownMenuEntry<SmartphonePosition>(
-                            value: e,
-                            label: e.name,
-                          ),
-                        )
-                        .toList(),
-                    onSelected: (v) {
+                    initialItem: smartphonePosition.value,
+                    headerBuilder: (context, item, enabled) {
+                      return Text(
+                        item.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                    listItemBuilder: (context, item, isSelected, onSelect) {
+                      return Text(item.name);
+                    },
+                    items:
+                        selectedActivity.value != SensorActivityType.onBicycle
+                            ? SmartphonePosition.values
+                                .take(SmartphonePosition.values.length - 1)
+                                .toList()
+                            : SmartphonePosition.values,
+                    onChanged: (v) {
                       smartphonePosition.value = v;
                     },
                   ),
@@ -137,13 +162,22 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
                       if (!isWorking) {
                         final isGranted = await isPermissionGrants();
                         if (isGranted) {
-                          ref
-                              .read(sensorTrackingNotifierProvider.notifier)
-                              .start(
-                                testDuration.value.toInt(),
-                                selectedActivity.value!,
-                                smartphonePosition.value!,
-                              );
+                          final res = await showDialog(
+                            context: context,
+                            builder: (_) => StartDialog(
+                              smartphonePosition: smartphonePosition.value!,
+                              sensorActivityType: selectedActivity.value!,
+                            ),
+                          );
+                          if (res ?? false) {
+                            ref
+                                .read(sensorTrackingNotifierProvider.notifier)
+                                .start(
+                                  testDuration.value.toInt(),
+                                  selectedActivity.value!,
+                                  smartphonePosition.value!,
+                                );
+                          }
                         }
                       } else {
                         ref
@@ -174,21 +208,24 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
                         const SizedBox(height: 16),
                         Text('Id: ${state.track.id}'),
                         Text(
-                            'Totali campioni: ${state.track.sensorsData?.length}'),
+                            'Totali campioni: ${state.track.sensorsData?.length}',),
                         TextButton(
                             onPressed: () {},
-                            child: const Text('Vedi traccia')),
+                            child: const Text('Vedi traccia'),),
                         TextButton(
-                            onPressed: () {
-                              downloadCSV(state.track);
+                            onPressed: () async {
+                              final userInfo =
+                                  await ref.read(getUserInfoProvider.future);
+                              downloadCSV(state.track, userInfo);
                             },
-                            child: const Text('Scarica traccia')),
+                            child: const Text('Scarica traccia'),),
                       ],
                     ],
                   ),
                 ),
               ),
             const SensorTracks(),
+            const SizedBox(height: 64),
           ],
         ),
       ),
@@ -222,13 +259,14 @@ class SensorTracks extends ConsumerWidget with CSVMixin {
               ListTile(
                 leading: Text(state[i].id.toString()),
                 title: Text(
-                    '${state[i].activityType?.name ?? ''} ${state[i].smartphonePosition?.name ?? ''}, samples ${state[i].sensorsData?.length ?? 0}'),
+                    '${state[i].activityType?.name ?? ''} ${state[i].smartphonePosition?.name ?? ''}, samples ${state[i].sensorsData?.length ?? 0}',),
                 subtitle: Text(state[i].timestamp?.toIso8601String() ?? '-'),
                 trailing: IconButton(
                   icon: const Icon(Icons.download),
                   color: Colors.black,
-                  onPressed: () {
-                    downloadCSV(state[i]);
+                  onPressed: () async {
+                    final userInfo = await ref.read(getUserInfoProvider.future);
+                    downloadCSV(state[i], userInfo);
                   },
                 ),
               ),

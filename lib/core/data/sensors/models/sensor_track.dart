@@ -1,4 +1,3 @@
-import 'package:aifit/core/data/activity_recognition/models/ar_data.dart';
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
 import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
 import 'package:isar/isar.dart';
@@ -21,6 +20,7 @@ class SensorTrack {
 @embedded
 class SensorsData {
   SensorData? accelerometer;
+  SensorData? accelerometerWithGravity;
   SensorData? gyroscope;
   SensorData? magnetometer;
   String? activityRecognized;
@@ -38,6 +38,10 @@ extension SensorsDataCsv on SensorsData {
       accelerometer?.y,
       accelerometer?.z,
       accelerometer?.timestamp,
+      accelerometerWithGravity?.x,
+      accelerometerWithGravity?.y,
+      accelerometerWithGravity?.z,
+      accelerometerWithGravity?.timestamp,
       gyroscope?.x,
       gyroscope?.y,
       gyroscope?.z,

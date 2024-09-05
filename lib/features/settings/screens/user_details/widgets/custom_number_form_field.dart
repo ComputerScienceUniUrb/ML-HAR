@@ -28,6 +28,7 @@ class CustomNumberFormField extends StatefulWidget {
 
 class _CustomNumberFormFieldState extends State<CustomNumberFormField> {
   final controller = TextEditingController();
+  var errorText;
 
   @override
   void didUpdateWidget(covariant CustomNumberFormField oldWidget) {
@@ -50,6 +51,7 @@ class _CustomNumberFormFieldState extends State<CustomNumberFormField> {
           keyboardType:
               TextInputType.numberWithOptions(decimal: widget.decimal),
           decoration: InputDecoration(
+            errorText: errorText,
             border: InputBorder.none,
             hintText: widget.labelText,
             suffixText: widget.suffix,
@@ -70,8 +72,14 @@ class _CustomNumberFormFieldState extends State<CustomNumberFormField> {
             fontWeight: FontWeight.w500,
           ),
           autocorrect: false,
-          onChanged: (newValue) => widget.onChanged?.call(newValue),
-          validator: widget.validator,
+          onChanged: (newValue) {
+            errorText = widget.validator?.call(newValue);
+            setState(() {});
+            if (errorText == null) {
+              widget.onChanged?.call(newValue);
+            }
+          },
+          // validator: widget.validator,
           onSaved: widget.onSaved,
         ),
       ),

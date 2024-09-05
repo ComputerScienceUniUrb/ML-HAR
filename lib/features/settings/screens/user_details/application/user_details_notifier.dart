@@ -1,6 +1,6 @@
 import 'package:aifit/core/data/user/models/gender.dart';
+import 'package:aifit/core/data/user/models/user_info.dart';
 import 'package:aifit/core/data/user/repository/user_repository_impl.dart';
-import 'package:aifit/features/settings/screens/user_details/application/user_details_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_details_notifier.g.dart';
@@ -8,18 +8,18 @@ part 'user_details_notifier.g.dart';
 @riverpod
 class UserDetailsNotifier extends _$UserDetailsNotifier {
   @override
-  UserDetailsState build() {
+  UserInfo build() {
     getData();
-    return const UserDetailsState();
+    return const UserInfo();
   }
 
-  getData() async {
+  Future<void> getData() async {
     final age = await ref.read(getUserRepositoryProvider).getUserAge();
     final height = await ref.read(getUserRepositoryProvider).getUserHeight();
     final weight = await ref.read(getUserRepositoryProvider).getUserWeight();
     final gender = await ref.read(getUserRepositoryProvider).getUserGender();
 
-    state = UserDetailsState(
+    state = UserInfo(
       age: age,
       weight: weight,
       gender: gender,

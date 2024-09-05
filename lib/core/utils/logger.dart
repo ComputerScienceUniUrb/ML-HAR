@@ -2,7 +2,7 @@ import 'package:logger/logger.dart';
 
 var logger = Logger(
   output: DevOutput(),
-  filter: ReleaseFilter()
+  filter: ReleaseFilter(),
 );
 
 String devOutput = '';
