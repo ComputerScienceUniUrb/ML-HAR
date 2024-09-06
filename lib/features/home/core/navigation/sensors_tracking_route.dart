@@ -1,5 +1,5 @@
 import 'package:aifit/core/data/activity_recognition/models/ar_data.dart';
-import 'package:aifit/features/home/screens/sensor_tracking/sensor_tracking.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/ui/sensor_tracking.dart';
 import 'package:go_router/go_router.dart';
 
 class SensorsTrackingRoute extends GoRoute {

@@ -4,8 +4,8 @@ import 'package:aifit/features/home/screens/sensor_tracking/application/user_inf
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserInfo extends ConsumerWidget {
-  const UserInfo({super.key});
+class UserInfoWidget extends ConsumerWidget {
+  const UserInfoWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

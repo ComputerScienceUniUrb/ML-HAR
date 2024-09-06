@@ -13,8 +13,8 @@ Future<UserInfo> getUserInfo(GetUserInfoRef ref) async {
 
   return UserInfo(
     age: age,
-    weight: weight,
     gender: gender,
     height: height?.toInt(),
+    weight: weight,
   );
 }

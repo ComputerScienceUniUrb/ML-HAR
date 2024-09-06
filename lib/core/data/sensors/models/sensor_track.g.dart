@@ -39,6 +39,12 @@ const SensorTrackSchema = CollectionSchema(
       id: 3,
       name: r'timestamp',
       type: IsarType.dateTime,
+    ),
+    r'userInfo': PropertySchema(
+      id: 4,
+      name: r'userInfo',
+      type: IsarType.object,
+      target: r'UserInfo',
     )
   },
   estimateSize: _sensorTrackEstimateSize,
@@ -50,7 +56,8 @@ const SensorTrackSchema = CollectionSchema(
   links: {},
   embeddedSchemas: {
     r'SensorsData': SensorsDataSchema,
-    r'SensorData': SensorDataSchema
+    r'SensorData': SensorDataSchema,
+    r'UserInfo': UserInfoSchema
   },
   getId: _sensorTrackGetId,
   getLinks: _sensorTrackGetLinks,
@@ -90,6 +97,13 @@ int _sensorTrackEstimateSize(
       bytesCount += 3 + value.name.length * 3;
     }
   }
+  {
+    final value = object.userInfo;
+    if (value != null) {
+      bytesCount += 3 +
+          UserInfoSchema.estimateSize(value, allOffsets[UserInfo]!, allOffsets);
+    }
+  }
   return bytesCount;
 }
 
@@ -108,6 +122,12 @@ void _sensorTrackSerialize(
   );
   writer.writeString(offsets[2], object.smartphonePosition?.name);
   writer.writeDateTime(offsets[3], object.timestamp);
+  writer.writeObject<UserInfo>(
+    offsets[4],
+    allOffsets,
+    UserInfoSchema.serialize,
+    object.userInfo,
+  );
 }
 
 SensorTrack _sensorTrackDeserialize(
@@ -129,6 +149,11 @@ SensorTrack _sensorTrackDeserialize(
   object.smartphonePosition = _SensorTracksmartphonePositionValueEnumMap[
       reader.readStringOrNull(offsets[2])];
   object.timestamp = reader.readDateTimeOrNull(offsets[3]);
+  object.userInfo = reader.readObjectOrNull<UserInfo>(
+    offsets[4],
+    UserInfoSchema.deserialize,
+    allOffsets,
+  );
   return object;
 }
 
@@ -154,6 +179,12 @@ P _sensorTrackDeserializeProp<P>(
           reader.readStringOrNull(offset)]) as P;
     case 3:
       return (reader.readDateTimeOrNull(offset)) as P;
+    case 4:
+      return (reader.readObjectOrNull<UserInfo>(
+        offset,
+        UserInfoSchema.deserialize,
+        allOffsets,
+      )) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -836,6 +867,24 @@ extension SensorTrackQueryFilter
       ));
     });
   }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      userInfoIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'userInfo',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      userInfoIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'userInfo',
+      ));
+    });
+  }
 }
 
 extension SensorTrackQueryObject
@@ -844,6 +893,13 @@ extension SensorTrackQueryObject
       sensorsDataElement(FilterQuery<SensorsData> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'sensorsData');
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> userInfo(
+      FilterQuery<UserInfo> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'userInfo');
     });
   }
 }
@@ -1005,6 +1061,12 @@ extension SensorTrackQueryProperty
       return query.addPropertyName(r'timestamp');
     });
   }
+
+  QueryBuilder<SensorTrack, UserInfo?, QQueryOperations> userInfoProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userInfo');
+    });
+  }
 }
 
 // **************************************************************************
@@ -1024,25 +1086,31 @@ const SensorsDataSchema = Schema(
       type: IsarType.object,
       target: r'SensorData',
     ),
-    r'activityRecognized': PropertySchema(
+    r'accelerometerWithGravity': PropertySchema(
       id: 1,
+      name: r'accelerometerWithGravity',
+      type: IsarType.object,
+      target: r'SensorData',
+    ),
+    r'activityRecognized': PropertySchema(
+      id: 2,
       name: r'activityRecognized',
       type: IsarType.string,
     ),
     r'gyroscope': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'gyroscope',
       type: IsarType.object,
       target: r'SensorData',
     ),
     r'magnetometer': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'magnetometer',
       type: IsarType.object,
       target: r'SensorData',
     ),
     r'timestamp': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'timestamp',
       type: IsarType.dateTime,
     )
@@ -1061,6 +1129,14 @@ int _sensorsDataEstimateSize(
   var bytesCount = offsets.last;
   {
     final value = object.accelerometer;
+    if (value != null) {
+      bytesCount += 3 +
+          SensorDataSchema.estimateSize(
+              value, allOffsets[SensorData]!, allOffsets);
+    }
+  }
+  {
+    final value = object.accelerometerWithGravity;
     if (value != null) {
       bytesCount += 3 +
           SensorDataSchema.estimateSize(
@@ -1104,20 +1180,26 @@ void _sensorsDataSerialize(
     SensorDataSchema.serialize,
     object.accelerometer,
   );
-  writer.writeString(offsets[1], object.activityRecognized);
   writer.writeObject<SensorData>(
-    offsets[2],
+    offsets[1],
+    allOffsets,
+    SensorDataSchema.serialize,
+    object.accelerometerWithGravity,
+  );
+  writer.writeString(offsets[2], object.activityRecognized);
+  writer.writeObject<SensorData>(
+    offsets[3],
     allOffsets,
     SensorDataSchema.serialize,
     object.gyroscope,
   );
   writer.writeObject<SensorData>(
-    offsets[3],
+    offsets[4],
     allOffsets,
     SensorDataSchema.serialize,
     object.magnetometer,
   );
-  writer.writeDateTime(offsets[4], object.timestamp);
+  writer.writeDateTime(offsets[5], object.timestamp);
 }
 
 SensorsData _sensorsDataDeserialize(
@@ -1132,18 +1214,23 @@ SensorsData _sensorsDataDeserialize(
     SensorDataSchema.deserialize,
     allOffsets,
   );
-  object.activityRecognized = reader.readStringOrNull(offsets[1]);
-  object.gyroscope = reader.readObjectOrNull<SensorData>(
-    offsets[2],
+  object.accelerometerWithGravity = reader.readObjectOrNull<SensorData>(
+    offsets[1],
     SensorDataSchema.deserialize,
     allOffsets,
   );
-  object.magnetometer = reader.readObjectOrNull<SensorData>(
+  object.activityRecognized = reader.readStringOrNull(offsets[2]);
+  object.gyroscope = reader.readObjectOrNull<SensorData>(
     offsets[3],
     SensorDataSchema.deserialize,
     allOffsets,
   );
-  object.timestamp = reader.readDateTimeOrNull(offsets[4]);
+  object.magnetometer = reader.readObjectOrNull<SensorData>(
+    offsets[4],
+    SensorDataSchema.deserialize,
+    allOffsets,
+  );
+  object.timestamp = reader.readDateTimeOrNull(offsets[5]);
   return object;
 }
 
@@ -1161,13 +1248,13 @@ P _sensorsDataDeserializeProp<P>(
         allOffsets,
       )) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
-    case 2:
       return (reader.readObjectOrNull<SensorData>(
         offset,
         SensorDataSchema.deserialize,
         allOffsets,
       )) as P;
+    case 2:
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readObjectOrNull<SensorData>(
         offset,
@@ -1175,6 +1262,12 @@ P _sensorsDataDeserializeProp<P>(
         allOffsets,
       )) as P;
     case 4:
+      return (reader.readObjectOrNull<SensorData>(
+        offset,
+        SensorDataSchema.deserialize,
+        allOffsets,
+      )) as P;
+    case 5:
       return (reader.readDateTimeOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1197,6 +1290,24 @@ extension SensorsDataQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'accelerometer',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorsData, SensorsData, QAfterFilterCondition>
+      accelerometerWithGravityIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'accelerometerWithGravity',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorsData, SensorsData, QAfterFilterCondition>
+      accelerometerWithGravityIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'accelerometerWithGravity',
       ));
     });
   }
@@ -1472,6 +1583,13 @@ extension SensorsDataQueryObject
       FilterQuery<SensorData> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'accelerometer');
+    });
+  }
+
+  QueryBuilder<SensorsData, SensorsData, QAfterFilterCondition>
+      accelerometerWithGravity(FilterQuery<SensorData> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'accelerometerWithGravity');
     });
   }
 

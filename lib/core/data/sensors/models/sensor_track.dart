@@ -1,5 +1,6 @@
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
 import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
+import 'package:aifit/core/data/user/models/user_info.dart';
 import 'package:isar/isar.dart';
 
 part 'sensor_track.g.dart';
@@ -15,6 +16,8 @@ class SensorTrack {
   SmartphonePosition? smartphonePosition;
 
   DateTime? timestamp;
+
+  UserInfo? userInfo;
 }
 
 @embedded
@@ -31,6 +34,7 @@ extension SensorsDataCsv on SensorsData {
   List toCsvList(
     SensorActivityType? activityType,
     SmartphonePosition? smartphonePosition,
+      UserInfo? userInfo,
   ) {
     return [
       timestamp,
@@ -53,7 +57,20 @@ extension SensorsDataCsv on SensorsData {
       activityRecognized,
       activityType?.name ?? '',
       smartphonePosition?.name ?? '',
+      userInfo?.age,
+      userInfo?.gender?.name,
+      userInfo?.height,
+      userInfo?.weight,
     ];
+  }
+
+  String valueFromColumnNumber(
+    int column,
+    SensorActivityType? a,
+    SmartphonePosition? s,
+      UserInfo? u,
+  ) {
+    return toCsvList(a, s,u)[column].toString();
   }
 }
 
@@ -64,11 +81,3 @@ class SensorData {
   double? z;
   DateTime? timestamp;
 }
-
-// @embedded
-// class AccelerometerData {
-//   double? x;
-//   double? y;
-//   double? z;
-//   DateTime? timestamp;
-// }

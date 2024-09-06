@@ -10,6 +10,7 @@ import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
 import 'package:aifit/core/data/sensors/repository/sensors_repository_impl.dart';
 import 'package:aifit/core/utils/logger.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/application/user_info_notifier.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -42,6 +43,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     int duration,
     SensorActivityType sensorActivityType,
     SmartphonePosition smartphonePosition,
+    bool retainNullValue,
   ) async {
     state = const SensorTrackingStateInitial();
     await reset();
@@ -50,11 +52,11 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     _smartphonePosition = smartphonePosition;
     ref.read(getAudioRepositoryProvider).playPreStart();
     final t = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if(timer.tick > 4){
+      if (timer.tick > 4) {
         timer.cancel();
         ref.read(getAudioRepositoryProvider).playStart();
         HapticFeedback.heavyImpact();
-      }else{
+      } else {
         ref.read(getAudioRepositoryProvider).playPreStart();
       }
     });
@@ -72,12 +74,14 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         _lastGyroscope = data.$3;
         _lastMagnetometer = data.$4;
 
-        if (!t.isActive &&
-            _timer == null &&
-            _lastAccelerometer != null &&
+        final areValuesPopulated = _lastAccelerometer != null &&
             _lastAccelerometerWithGravity != null &&
             _lastGyroscope != null &&
-            _lastMagnetometer != null) {
+            _lastMagnetometer != null;
+
+        if (!t.isActive &&
+            _timer == null &&
+            (areValuesPopulated || retainNullValue)) {
           startSampling(duration);
         }
       },
@@ -127,13 +131,15 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     reset();
   }
 
-  complete() {
+  complete() async {
     logger.i('complete sampling');
+    final userInfo = await ref.read(getUserInfoProvider.future);
     final track = SensorTrack();
     track.timestamp = DateTime.now();
     track.sensorsData = [..._sensorsData];
     track.smartphonePosition = _smartphonePosition;
     track.activityType = _sensorActivityType;
+    track.userInfo = userInfo;
     state = SensorTrackingStateCompleted(track: track);
     HapticFeedback.heavyImpact();
     ref.read(getAudioRepositoryProvider).playStop();

@@ -8,6 +8,7 @@ import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_t
 import 'package:aifit/features/home/screens/sensor_tracking/application/user_info_notifier.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/start_dialog.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/user_info.dart';
+import 'package:aifit/features/home/screens/track_viewer/track_viewer.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -32,6 +33,7 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
     final selectedActivity = useState<SensorActivityType?>(null);
     final smartphonePosition = useState<SmartphonePosition?>(null);
     final testDuration = useState<double>(30);
+    final retainNullValue = useState<bool>(false);
 
     final state = ref.watch(sensorTrackingNotifierProvider);
     final isWorking = state is SensorTrackingStateData;
@@ -50,7 +52,7 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            const UserInfo(),
+            const UserInfoWidget(),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -155,6 +157,18 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Consenti valori NULL?'),
+                Switch(
+                  value: retainNullValue.value,
+                  onChanged: (value) {
+                    retainNullValue.value = value;
+                  },
+                ),
+              ],
+            ),
             ElevatedButton(
               onPressed: selectedActivity.value != null &&
                       smartphonePosition.value != null
@@ -176,6 +190,7 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
                                   testDuration.value.toInt(),
                                   selectedActivity.value!,
                                   smartphonePosition.value!,
+                                  retainNullValue.value,
                                 );
                           }
                         }
@@ -208,17 +223,27 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
                         const SizedBox(height: 16),
                         Text('Id: ${state.track.id}'),
                         Text(
-                            'Totali campioni: ${state.track.sensorsData?.length}',),
+                          'Totali campioni: ${state.track.sensorsData?.length}',
+                        ),
                         TextButton(
-                            onPressed: () {},
-                            child: const Text('Vedi traccia'),),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    TrackViewerScreen(track: state.track),
+                              ),
+                            );
+                          },
+                          child: const Text('Vedi traccia'),
+                        ),
                         TextButton(
-                            onPressed: () async {
-                              final userInfo =
-                                  await ref.read(getUserInfoProvider.future);
-                              downloadCSV(state.track, userInfo);
-                            },
-                            child: const Text('Scarica traccia'),),
+                          onPressed: () async {
+                            final userInfo =
+                                await ref.read(getUserInfoProvider.future);
+                            downloadCSV(state.track);
+                          },
+                          child: const Text('Scarica traccia'),
+                        ),
                       ],
                     ],
                   ),
@@ -257,16 +282,24 @@ class SensorTracks extends ConsumerWidget with CSVMixin {
             ),
             for (int i = 0; i < state.length; i++)
               ListTile(
+                onTap: (){
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          TrackViewerScreen(track: state[i]),
+                    ),
+                  );
+                },
                 leading: Text(state[i].id.toString()),
                 title: Text(
-                    '${state[i].activityType?.name ?? ''} ${state[i].smartphonePosition?.name ?? ''}, samples ${state[i].sensorsData?.length ?? 0}',),
+                  '${state[i].activityType?.name ?? ''} ${state[i].smartphonePosition?.name ?? ''}, samples ${state[i].sensorsData?.length ?? 0}',
+                ),
                 subtitle: Text(state[i].timestamp?.toIso8601String() ?? '-'),
                 trailing: IconButton(
                   icon: const Icon(Icons.download),
                   color: Colors.black,
                   onPressed: () async {
-                    final userInfo = await ref.read(getUserInfoProvider.future);
-                    downloadCSV(state[i], userInfo);
+                    downloadCSV(state[i],);
                   },
                 ),
               ),
