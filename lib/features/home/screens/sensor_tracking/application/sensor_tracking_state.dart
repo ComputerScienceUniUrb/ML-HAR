@@ -8,6 +8,7 @@ class SensorTrackingState with _$SensorTrackingState {
   const factory SensorTrackingState.data({
     required double remainingInSecond,
     required int samples,
+    String? activityRecognized,
   }) = SensorTrackingStateData;
 
   const factory SensorTrackingState.loading() = SensorTrackingStateLoading;

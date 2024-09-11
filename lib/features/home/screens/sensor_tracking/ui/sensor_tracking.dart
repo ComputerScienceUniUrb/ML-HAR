@@ -1,11 +1,13 @@
+import 'package:aifit/constants.dart';
+import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
 import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
 import 'package:aifit/core/utils/csv_mixin.dart';
+import 'package:aifit/core/utils/logger.dart';
 import 'package:aifit/core/utils/utils.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_provider.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracks_provider.dart';
-import 'package:aifit/features/home/screens/sensor_tracking/application/user_info_notifier.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/start_dialog.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/user_info.dart';
 import 'package:aifit/features/home/screens/track_viewer/track_viewer.dart';
@@ -15,24 +17,52 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-// in seconds
-const defaultTestDuration = 30;
-
-class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
+class SensorTrackingScreen extends ConsumerStatefulWidget {
   const SensorTrackingScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(getSensorTracksProvider, (p, n) {
-      if (p is SensorTrackingStateInitial && n is SensorTrackingStateData) {
-        WakelockPlus.enable();
-      } else if (n is SensorTrackingStateCompleted) {
-        WakelockPlus.disable();
+  ConsumerState<SensorTrackingScreen> createState() =>
+      _SensorTrackingScreenState();
+}
+
+class _SensorTrackingScreenState extends ConsumerState<SensorTrackingScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    logger.i('AppState $state');
+    if (state == AppLifecycleState.paused) {
+      if (ref.exists(getSensorTracksProvider)) {
+        ref.read(sensorTrackingNotifierProvider.notifier).stop();
       }
-    });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const SensorTrackingWidget();
+  }
+}
+
+class SensorTrackingWidget extends HookConsumerWidget with CSVMixin {
+  const SensorTrackingWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final selectedActivity = useState<SensorActivityType?>(null);
     final smartphonePosition = useState<SmartphonePosition?>(null);
-    final testDuration = useState<double>(30);
+    final testDuration = useState<double>(defaultTestDurationInSeconds);
     final retainNullValue = useState<bool>(false);
 
     final state = ref.watch(sensorTrackingNotifierProvider);
@@ -204,14 +234,20 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
                   : null,
               child: Text(buttonText),
             ),
-            if (state is SensorTrackingStateData)
+            if (state is SensorTrackingStateData) ...[
               Center(
                 child: Text(
                   '${state.remainingInSecond.toStringAsFixed(1)} sec',
                   style: const TextStyle(fontSize: 35),
                 ),
-              )
-            else if (state is SensorTrackingStateCompleted)
+              ),
+              Center(
+                child: Text(
+                  'Activity Recognition: ${state.activityRecognized ?? '-'}',
+                  style: const TextStyle(fontSize: 24),
+                ),
+              ),
+            ] else if (state is SensorTrackingStateCompleted)
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -238,9 +274,9 @@ class SensorTrackingScreen extends HookConsumerWidget with CSVMixin {
                         ),
                         TextButton(
                           onPressed: () async {
-                            final userInfo =
-                                await ref.read(getUserInfoProvider.future);
-                            downloadCSV(state.track);
+                            final androidInfo = await ref
+                                .read(getAndroidDeviceInfoProvider.future);
+                            downloadCSV(state.track, androidInfo);
                           },
                           child: const Text('Scarica traccia'),
                         ),
@@ -282,11 +318,10 @@ class SensorTracks extends ConsumerWidget with CSVMixin {
             ),
             for (int i = 0; i < state.length; i++)
               ListTile(
-                onTap: (){
+                onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>
-                          TrackViewerScreen(track: state[i]),
+                      builder: (context) => TrackViewerScreen(track: state[i]),
                     ),
                   );
                 },
@@ -299,7 +334,9 @@ class SensorTracks extends ConsumerWidget with CSVMixin {
                   icon: const Icon(Icons.download),
                   color: Colors.black,
                   onPressed: () async {
-                    downloadCSV(state[i],);
+                    final androidInfo =
+                        await ref.read(getAndroidDeviceInfoProvider.future);
+                    downloadCSV(state[i], androidInfo);
                   },
                 ),
               ),

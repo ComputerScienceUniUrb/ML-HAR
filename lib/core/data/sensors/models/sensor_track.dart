@@ -18,6 +18,9 @@ class SensorTrack {
   DateTime? timestamp;
 
   UserInfo? userInfo;
+
+  int? startBatteryLevel;
+  bool? isInBatterySaveMode;
 }
 
 @embedded
@@ -31,11 +34,7 @@ class SensorsData {
 }
 
 extension SensorsDataCsv on SensorsData {
-  List toCsvList(
-    SensorActivityType? activityType,
-    SmartphonePosition? smartphonePosition,
-      UserInfo? userInfo,
-  ) {
+  List toCsvList() {
     return [
       timestamp,
       accelerometer?.x,
@@ -55,22 +54,11 @@ extension SensorsDataCsv on SensorsData {
       magnetometer?.z,
       magnetometer?.timestamp,
       activityRecognized,
-      activityType?.name ?? '',
-      smartphonePosition?.name ?? '',
-      userInfo?.age,
-      userInfo?.gender?.name,
-      userInfo?.height,
-      userInfo?.weight,
     ];
   }
 
-  String valueFromColumnNumber(
-    int column,
-    SensorActivityType? a,
-    SmartphonePosition? s,
-      UserInfo? u,
-  ) {
-    return toCsvList(a, s,u)[column].toString();
+  String valueFromColumnNumber(int column) {
+    return toCsvList()[column].toString();
   }
 }
 

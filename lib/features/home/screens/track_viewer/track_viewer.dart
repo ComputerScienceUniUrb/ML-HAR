@@ -1,4 +1,5 @@
 import 'package:aifit/constants.dart';
+import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
 import 'package:aifit/core/utils/csv_mixin.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,10 @@ class TrackViewerScreen extends ConsumerWidget with CSVMixin {
           IconButton(
             icon: const Icon(Icons.download),
             color: Colors.black,
-            onPressed: () {
-              downloadCSV(track);
+            onPressed: () async {
+              final androidInfo =
+                  await ref.read(getAndroidDeviceInfoProvider.future);
+              downloadCSV(track, androidInfo);
             },
           ),
         ],
@@ -31,7 +34,7 @@ class TrackViewerScreen extends ConsumerWidget with CSVMixin {
         headerBuilder: (context, contentBuilder) {
           return contentBuilder(context, (context, column) {
             return Text(
-              csvHeader[column] ?? '-',
+              csvSensorsHeader[column] ?? '-',
             );
           });
         },
@@ -40,29 +43,18 @@ class TrackViewerScreen extends ConsumerWidget with CSVMixin {
             width: 140.0,
             freezePriority: 100,
           ),
-          for (var i = 1; i < 24; i++) const TableColumn(width: 140),
+          for (var i = 1; i < 18; i++) const TableColumn(width: 140),
         ],
         rowCount: track.sensorsData?.length ?? 0,
         rowHeight: 56.0,
         rowBuilder: (context, row, contentBuilder) {
-          // if (noDataYetFor(row)) {
-          //   return null; // to use a placeholder
-          // }
-
           return contentBuilder(
             context,
             (context, column) => Text(
-              track.sensorsData?[row].valueFromColumnNumber(
-                    column,
-                    track.activityType,
-                    track.smartphonePosition,
-                    track.userInfo,
-                  ) ??
-                  '-',
+              track.sensorsData?[row].valueFromColumnNumber(column) ?? '-',
             ), // build a cell widget
           );
         },
-        // specify other parameters for other features
       ),
     );
   }

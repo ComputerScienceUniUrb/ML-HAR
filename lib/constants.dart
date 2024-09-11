@@ -1,7 +1,20 @@
 const defaultSamplingPeriod = Duration(milliseconds: 10);
+const defaultTestDurationInSeconds = 30.0;
 
+const csvUserInfoHeader = [
+  'OS',
+  'Device',
+  'Start_battery_level',
+  'isInBatterySaveMode',
+  'User_activity_choice',
+  'User_smartphone_position',
+  'Age',
+  'Gender',
+  'Height',
+  'Weight',
+];
 
-const csvHeader = [
+const csvSensorsHeader = [
   'Timestamp',
   'Acc_x',
   'Acc_y',
@@ -20,10 +33,4 @@ const csvHeader = [
   'Magn_z',
   'Magn_timestamp',
   'Activity_recognition',
-  'User_activity_choice',
-  'User_smartphone_position',
-  'Age',
-  'Gender',
-  'Height',
-  'Weight',
 ];

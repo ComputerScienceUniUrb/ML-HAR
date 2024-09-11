@@ -18,7 +18,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SensorTrackingState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double remainingInSecond, int samples) data,
+    required TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)
+        data,
     required TResult Function() loading,
     required TResult Function(SensorTrack track) completed,
     required TResult Function() initial,
@@ -27,7 +29,9 @@ mixin _$SensorTrackingState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double remainingInSecond, int samples)? data,
+    TResult? Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult? Function()? loading,
     TResult? Function(SensorTrack track)? completed,
     TResult? Function()? initial,
@@ -36,7 +40,9 @@ mixin _$SensorTrackingState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double remainingInSecond, int samples)? data,
+    TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult Function()? loading,
     TResult Function(SensorTrack track)? completed,
     TResult Function()? initial,
@@ -102,7 +108,8 @@ abstract class _$$SensorTrackingStateDataImplCopyWith<$Res> {
           $Res Function(_$SensorTrackingStateDataImpl) then) =
       __$$SensorTrackingStateDataImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({double remainingInSecond, int samples});
+  $Res call(
+      {double remainingInSecond, int samples, String? activityRecognized});
 }
 
 /// @nodoc
@@ -122,6 +129,7 @@ class __$$SensorTrackingStateDataImplCopyWithImpl<$Res>
   $Res call({
     Object? remainingInSecond = null,
     Object? samples = null,
+    Object? activityRecognized = freezed,
   }) {
     return _then(_$SensorTrackingStateDataImpl(
       remainingInSecond: null == remainingInSecond
@@ -132,6 +140,10 @@ class __$$SensorTrackingStateDataImplCopyWithImpl<$Res>
           ? _value.samples
           : samples // ignore: cast_nullable_to_non_nullable
               as int,
+      activityRecognized: freezed == activityRecognized
+          ? _value.activityRecognized
+          : activityRecognized // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -140,16 +152,20 @@ class __$$SensorTrackingStateDataImplCopyWithImpl<$Res>
 
 class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
   const _$SensorTrackingStateDataImpl(
-      {required this.remainingInSecond, required this.samples});
+      {required this.remainingInSecond,
+      required this.samples,
+      this.activityRecognized});
 
   @override
   final double remainingInSecond;
   @override
   final int samples;
+  @override
+  final String? activityRecognized;
 
   @override
   String toString() {
-    return 'SensorTrackingState.data(remainingInSecond: $remainingInSecond, samples: $samples)';
+    return 'SensorTrackingState.data(remainingInSecond: $remainingInSecond, samples: $samples, activityRecognized: $activityRecognized)';
   }
 
   @override
@@ -159,11 +175,14 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
             other is _$SensorTrackingStateDataImpl &&
             (identical(other.remainingInSecond, remainingInSecond) ||
                 other.remainingInSecond == remainingInSecond) &&
-            (identical(other.samples, samples) || other.samples == samples));
+            (identical(other.samples, samples) || other.samples == samples) &&
+            (identical(other.activityRecognized, activityRecognized) ||
+                other.activityRecognized == activityRecognized));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, remainingInSecond, samples);
+  int get hashCode =>
+      Object.hash(runtimeType, remainingInSecond, samples, activityRecognized);
 
   /// Create a copy of SensorTrackingState
   /// with the given fields replaced by the non-null parameter values.
@@ -177,31 +196,37 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double remainingInSecond, int samples) data,
+    required TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)
+        data,
     required TResult Function() loading,
     required TResult Function(SensorTrack track) completed,
     required TResult Function() initial,
     required TResult Function(Object error, StackTrace st) error,
   }) {
-    return data(remainingInSecond, samples);
+    return data(remainingInSecond, samples, activityRecognized);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double remainingInSecond, int samples)? data,
+    TResult? Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult? Function()? loading,
     TResult? Function(SensorTrack track)? completed,
     TResult? Function()? initial,
     TResult? Function(Object error, StackTrace st)? error,
   }) {
-    return data?.call(remainingInSecond, samples);
+    return data?.call(remainingInSecond, samples, activityRecognized);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double remainingInSecond, int samples)? data,
+    TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult Function()? loading,
     TResult Function(SensorTrack track)? completed,
     TResult Function()? initial,
@@ -209,7 +234,7 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
     required TResult orElse(),
   }) {
     if (data != null) {
-      return data(remainingInSecond, samples);
+      return data(remainingInSecond, samples, activityRecognized);
     }
     return orElse();
   }
@@ -258,10 +283,12 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
 abstract class SensorTrackingStateData implements SensorTrackingState {
   const factory SensorTrackingStateData(
       {required final double remainingInSecond,
-      required final int samples}) = _$SensorTrackingStateDataImpl;
+      required final int samples,
+      final String? activityRecognized}) = _$SensorTrackingStateDataImpl;
 
   double get remainingInSecond;
   int get samples;
+  String? get activityRecognized;
 
   /// Create a copy of SensorTrackingState
   /// with the given fields replaced by the non-null parameter values.
@@ -315,7 +342,9 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double remainingInSecond, int samples) data,
+    required TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)
+        data,
     required TResult Function() loading,
     required TResult Function(SensorTrack track) completed,
     required TResult Function() initial,
@@ -327,7 +356,9 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double remainingInSecond, int samples)? data,
+    TResult? Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult? Function()? loading,
     TResult? Function(SensorTrack track)? completed,
     TResult? Function()? initial,
@@ -339,7 +370,9 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double remainingInSecond, int samples)? data,
+    TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult Function()? loading,
     TResult Function(SensorTrack track)? completed,
     TResult Function()? initial,
@@ -471,7 +504,9 @@ class _$SensorTrackingStateCompletedImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double remainingInSecond, int samples) data,
+    required TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)
+        data,
     required TResult Function() loading,
     required TResult Function(SensorTrack track) completed,
     required TResult Function() initial,
@@ -483,7 +518,9 @@ class _$SensorTrackingStateCompletedImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double remainingInSecond, int samples)? data,
+    TResult? Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult? Function()? loading,
     TResult? Function(SensorTrack track)? completed,
     TResult? Function()? initial,
@@ -495,7 +532,9 @@ class _$SensorTrackingStateCompletedImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double remainingInSecond, int samples)? data,
+    TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult Function()? loading,
     TResult Function(SensorTrack track)? completed,
     TResult Function()? initial,
@@ -608,7 +647,9 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double remainingInSecond, int samples) data,
+    required TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)
+        data,
     required TResult Function() loading,
     required TResult Function(SensorTrack track) completed,
     required TResult Function() initial,
@@ -620,7 +661,9 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double remainingInSecond, int samples)? data,
+    TResult? Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult? Function()? loading,
     TResult? Function(SensorTrack track)? completed,
     TResult? Function()? initial,
@@ -632,7 +675,9 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double remainingInSecond, int samples)? data,
+    TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult Function()? loading,
     TResult Function(SensorTrack track)? completed,
     TResult Function()? initial,
@@ -768,7 +813,9 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double remainingInSecond, int samples) data,
+    required TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)
+        data,
     required TResult Function() loading,
     required TResult Function(SensorTrack track) completed,
     required TResult Function() initial,
@@ -780,7 +827,9 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double remainingInSecond, int samples)? data,
+    TResult? Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult? Function()? loading,
     TResult? Function(SensorTrack track)? completed,
     TResult? Function()? initial,
@@ -792,7 +841,9 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double remainingInSecond, int samples)? data,
+    TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
     TResult Function()? loading,
     TResult Function(SensorTrack track)? completed,
     TResult Function()? initial,

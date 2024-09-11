@@ -23,25 +23,35 @@ const SensorTrackSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _SensorTrackactivityTypeEnumValueMap,
     ),
-    r'sensorsData': PropertySchema(
+    r'isInBatterySaveMode': PropertySchema(
       id: 1,
+      name: r'isInBatterySaveMode',
+      type: IsarType.bool,
+    ),
+    r'sensorsData': PropertySchema(
+      id: 2,
       name: r'sensorsData',
       type: IsarType.objectList,
       target: r'SensorsData',
     ),
     r'smartphonePosition': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'smartphonePosition',
       type: IsarType.string,
       enumMap: _SensorTracksmartphonePositionEnumValueMap,
     ),
+    r'startBatteryLevel': PropertySchema(
+      id: 4,
+      name: r'startBatteryLevel',
+      type: IsarType.long,
+    ),
     r'timestamp': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'timestamp',
       type: IsarType.dateTime,
     ),
     r'userInfo': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'userInfo',
       type: IsarType.object,
       target: r'UserInfo',
@@ -114,16 +124,18 @@ void _sensorTrackSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.activityType?.name);
+  writer.writeBool(offsets[1], object.isInBatterySaveMode);
   writer.writeObjectList<SensorsData>(
-    offsets[1],
+    offsets[2],
     allOffsets,
     SensorsDataSchema.serialize,
     object.sensorsData,
   );
-  writer.writeString(offsets[2], object.smartphonePosition?.name);
-  writer.writeDateTime(offsets[3], object.timestamp);
+  writer.writeString(offsets[3], object.smartphonePosition?.name);
+  writer.writeLong(offsets[4], object.startBatteryLevel);
+  writer.writeDateTime(offsets[5], object.timestamp);
   writer.writeObject<UserInfo>(
-    offsets[4],
+    offsets[6],
     allOffsets,
     UserInfoSchema.serialize,
     object.userInfo,
@@ -140,17 +152,19 @@ SensorTrack _sensorTrackDeserialize(
   object.activityType =
       _SensorTrackactivityTypeValueEnumMap[reader.readStringOrNull(offsets[0])];
   object.id = id;
+  object.isInBatterySaveMode = reader.readBoolOrNull(offsets[1]);
   object.sensorsData = reader.readObjectList<SensorsData>(
-    offsets[1],
+    offsets[2],
     SensorsDataSchema.deserialize,
     allOffsets,
     SensorsData(),
   );
   object.smartphonePosition = _SensorTracksmartphonePositionValueEnumMap[
-      reader.readStringOrNull(offsets[2])];
-  object.timestamp = reader.readDateTimeOrNull(offsets[3]);
+      reader.readStringOrNull(offsets[3])];
+  object.startBatteryLevel = reader.readLongOrNull(offsets[4]);
+  object.timestamp = reader.readDateTimeOrNull(offsets[5]);
   object.userInfo = reader.readObjectOrNull<UserInfo>(
-    offsets[4],
+    offsets[6],
     UserInfoSchema.deserialize,
     allOffsets,
   );
@@ -168,18 +182,22 @@ P _sensorTrackDeserializeProp<P>(
       return (_SensorTrackactivityTypeValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
     case 1:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 2:
       return (reader.readObjectList<SensorsData>(
         offset,
         SensorsDataSchema.deserialize,
         allOffsets,
         SensorsData(),
       )) as P;
-    case 2:
+    case 3:
       return (_SensorTracksmartphonePositionValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
-    case 3:
-      return (reader.readDateTimeOrNull(offset)) as P;
     case 4:
+      return (reader.readLongOrNull(offset)) as P;
+    case 5:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 6:
       return (reader.readObjectOrNull<UserInfo>(
         offset,
         UserInfoSchema.deserialize,
@@ -534,6 +552,34 @@ extension SensorTrackQueryFilter
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      isInBatterySaveModeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isInBatterySaveMode',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      isInBatterySaveModeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isInBatterySaveMode',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      isInBatterySaveModeEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isInBatterySaveMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
       sensorsDataIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -795,6 +841,80 @@ extension SensorTrackQueryFilter
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      startBatteryLevelIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'startBatteryLevel',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      startBatteryLevelIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'startBatteryLevel',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      startBatteryLevelEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'startBatteryLevel',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      startBatteryLevelGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'startBatteryLevel',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      startBatteryLevelLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'startBatteryLevel',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      startBatteryLevelBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'startBatteryLevel',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
       timestampIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -923,6 +1043,20 @@ extension SensorTrackQuerySortBy
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      sortByIsInBatterySaveMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isInBatterySaveMode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      sortByIsInBatterySaveModeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isInBatterySaveMode', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
       sortBySmartphonePosition() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'smartphonePosition', Sort.asc);
@@ -933,6 +1067,20 @@ extension SensorTrackQuerySortBy
       sortBySmartphonePositionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'smartphonePosition', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      sortByStartBatteryLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startBatteryLevel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      sortByStartBatteryLevelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startBatteryLevel', Sort.desc);
     });
   }
 
@@ -977,6 +1125,20 @@ extension SensorTrackQuerySortThenBy
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      thenByIsInBatterySaveMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isInBatterySaveMode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      thenByIsInBatterySaveModeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isInBatterySaveMode', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
       thenBySmartphonePosition() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'smartphonePosition', Sort.asc);
@@ -987,6 +1149,20 @@ extension SensorTrackQuerySortThenBy
       thenBySmartphonePositionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'smartphonePosition', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      thenByStartBatteryLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startBatteryLevel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      thenByStartBatteryLevelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startBatteryLevel', Sort.desc);
     });
   }
 
@@ -1013,10 +1189,24 @@ extension SensorTrackQueryWhereDistinct
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QDistinct>
+      distinctByIsInBatterySaveMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isInBatterySaveMode');
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QDistinct>
       distinctBySmartphonePosition({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'smartphonePosition',
           caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QDistinct>
+      distinctByStartBatteryLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'startBatteryLevel');
     });
   }
 
@@ -1042,6 +1232,13 @@ extension SensorTrackQueryProperty
     });
   }
 
+  QueryBuilder<SensorTrack, bool?, QQueryOperations>
+      isInBatterySaveModeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isInBatterySaveMode');
+    });
+  }
+
   QueryBuilder<SensorTrack, List<SensorsData>?, QQueryOperations>
       sensorsDataProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -1053,6 +1250,13 @@ extension SensorTrackQueryProperty
       smartphonePositionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'smartphonePosition');
+    });
+  }
+
+  QueryBuilder<SensorTrack, int?, QQueryOperations>
+      startBatteryLevelProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'startBatteryLevel');
     });
   }
 

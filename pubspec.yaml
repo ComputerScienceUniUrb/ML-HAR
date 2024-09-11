@@ -12,8 +12,10 @@ dependencies:
     sdk: flutter
 
   animated_custom_dropdown: ^3.1.1
+  battery_plus: ^6.0.3
   csv:
   dartz: ^0.10.1
+  device_info_plus: ^10.1.2
   equatable: ^2.0.5
   flutter_hooks:
   flutter_activity_recognition: ^3.1.0

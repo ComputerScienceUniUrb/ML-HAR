@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:aifit/constants.dart';
-import 'package:aifit/core/data/activity_recognition/models/ar_data.dart';
 import 'package:aifit/core/data/activity_recognition/repository/ar_repository_impl.dart';
 import 'package:aifit/core/data/audio/repository/audio_repository_impl.dart';
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
@@ -13,6 +12,8 @@ import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_t
 import 'package:aifit/features/home/screens/sensor_tracking/application/user_info_notifier.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:battery_plus/battery_plus.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 part 'sensor_tracking_provider.g.dart';
 
@@ -23,19 +24,21 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   Timer? _timer;
   Stopwatch? _stopWatcher;
 
+  final _battery = Battery();
   final List<SensorsData> _sensorsData = [];
 
-  ARData? _lastActivityRecognized;
+  String? _lastActivityRecognized;
   SensorData? _lastAccelerometer;
   SensorData? _lastAccelerometerWithGravity;
   SensorData? _lastGyroscope;
   SensorData? _lastMagnetometer;
   SmartphonePosition? _smartphonePosition;
   SensorActivityType? _sensorActivityType;
+  int _startBatteryLevel = -1;
 
   @override
   SensorTrackingState build() {
-    ref.onDispose(reset);
+    ref.onDispose(closeSubscriptions);
     return const SensorTrackingStateInitial();
   }
 
@@ -45,9 +48,12 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     SmartphonePosition smartphonePosition,
     bool retainNullValue,
   ) async {
+    if(state is SensorTrackingStateData) return;
     state = const SensorTrackingStateInitial();
     await reset();
+    WakelockPlus.enable();
 
+    _startBatteryLevel = await _battery.batteryLevel;
     _sensorActivityType = sensorActivityType;
     _smartphonePosition = smartphonePosition;
     ref.read(getAudioRepositoryProvider).playPreStart();
@@ -61,10 +67,8 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
       }
     });
     _arStream = ref.read(getArRepositoryProvider).activityStream().listen((ar) {
-      _lastActivityRecognized = ARData()
-        ..timestamp = DateTime.now()
-        ..activity = ar.type.name
-        ..confidence = ar.confidence.name;
+      logger.i('Activity Recognition: ${ar.type}');
+      _lastActivityRecognized = ar.type.name;
     });
     _sensorsStream =
         ref.read(getSensorsRepositoryProvider).listenSensors().listen(
@@ -82,18 +86,19 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         if (!t.isActive &&
             _timer == null &&
             (areValuesPopulated || retainNullValue)) {
-          startSampling(duration);
+          _startSampling(duration);
         }
       },
     );
     state = SensorTrackingStateData(
       remainingInSecond: duration.toDouble(),
       samples: _sensorsData.length,
+      activityRecognized: _lastActivityRecognized,
     );
     logger.i('start listening');
   }
 
-  startSampling(int duration) {
+  _startSampling(int duration) {
     logger.i('Start sampling...');
     _stopWatcher = Stopwatch()..start();
     _timer = Timer.periodic(
@@ -104,6 +109,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         state = SensorTrackingStateData(
           remainingInSecond: remainingInMilliseconds / 1000,
           samples: 0,
+          activityRecognized: _lastActivityRecognized,
         );
 
         final s = SensorsData();
@@ -112,12 +118,12 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         s.accelerometerWithGravity = _lastAccelerometerWithGravity;
         s.gyroscope = _lastGyroscope;
         s.magnetometer = _lastMagnetometer;
-        s.activityRecognized = _lastActivityRecognized?.activity;
+        s.activityRecognized = _lastActivityRecognized;
         _sensorsData.add(s);
 
         // timers may have a 4ms resolution
         if (remainingInMilliseconds < 4) {
-          complete();
+          _completeSampling();
         }
       },
     );
@@ -125,13 +131,15 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
 
   Future stop() async {
     logger.i('stop listening');
+    if (state is SensorTrackingStateInitial ||
+        state is SensorTrackingStateCompleted) return;
     state = const SensorTrackingStateInitial();
     HapticFeedback.heavyImpact();
     ref.read(getAudioRepositoryProvider).playStop();
     reset();
   }
 
-  complete() async {
+  _completeSampling() async {
     logger.i('complete sampling');
     final userInfo = await ref.read(getUserInfoProvider.future);
     final track = SensorTrack();
@@ -140,6 +148,8 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     track.smartphonePosition = _smartphonePosition;
     track.activityType = _sensorActivityType;
     track.userInfo = userInfo;
+    track.startBatteryLevel = _startBatteryLevel;
+    track.isInBatterySaveMode = await _battery.isInBatterySaveMode;
     state = SensorTrackingStateCompleted(track: track);
     HapticFeedback.heavyImpact();
     ref.read(getAudioRepositoryProvider).playStop();
@@ -149,19 +159,26 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
 
   reset() async {
     logger.i('reset');
-    _stopWatcher?.stop();
-    _timer?.cancel();
-    await _sensorsStream?.cancel();
-    await _arStream?.cancel();
-    _sensorsStream = null;
-    _arStream = null;
-    _stopWatcher = null;
-    _timer = null;
+    await closeSubscriptions();
+    await WakelockPlus.disable();
     _sensorsData.clear();
     _lastAccelerometer = null;
     _lastAccelerometerWithGravity = null;
     _lastGyroscope = null;
     _lastMagnetometer = null;
+    _lastActivityRecognized = null;
+    _startBatteryLevel = -1;
+  }
+
+  Future closeSubscriptions() async {
+    _stopWatcher?.stop();
+    _timer?.cancel();
+    _stopWatcher = null;
+    _timer = null;
+    await _sensorsStream?.cancel();
+    await _arStream?.cancel();
+    _sensorsStream = null;
+    _arStream = null;
   }
 
   saveTrack(track) {
