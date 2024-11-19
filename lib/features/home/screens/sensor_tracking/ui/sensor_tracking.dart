@@ -172,8 +172,7 @@ class SensorTrackingWidget extends HookConsumerWidget with CSVMixin {
                   child: Slider(
                     value: testDuration.value,
                     min: 5,
-                    divisions: 11,
-                    max: 60,
+                    max: 600,
                     label: '${testDuration.value.toStringAsFixed(0)} sec',
                     onChanged: !isWorking
                         ? (v) {
@@ -182,8 +181,39 @@ class SensorTrackingWidget extends HookConsumerWidget with CSVMixin {
                         : null,
                   ),
                 ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.remove_circle,
+                  ),
+                  color: Colors.red,
+                  onPressed: testDuration.value >= 6
+                      ? () {
+                          if (testDuration.value >= 1) {
+                            testDuration.value = testDuration.value - 1;
+                          }
+                        }
+                      : null,
+                ),
                 Text(
                   '${testDuration.value.toStringAsFixed(0)} sec',
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.add_circle,
+                  ),
+                  color: Colors.green,
+                  onPressed: testDuration.value < 600
+                      ? () {
+                          if (testDuration.value < 600) {
+                            testDuration.value = testDuration.value + 1;
+                          }
+                        }
+                      : null,
                 ),
               ],
             ),
