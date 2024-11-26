@@ -1,12 +1,12 @@
 import 'package:aifit/constants.dart';
 import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
-import 'package:aifit/core/utils/csv_mixin.dart';
+import 'package:aifit/core/utils/csv_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_table_view/material_table_view.dart';
 
-class TrackViewerScreen extends ConsumerWidget with CSVMixin {
+class TrackViewerScreen extends ConsumerWidget {
   final SensorTrack track;
 
   const TrackViewerScreen({

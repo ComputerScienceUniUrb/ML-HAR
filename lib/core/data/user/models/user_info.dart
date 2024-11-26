@@ -21,4 +21,13 @@ extension UserInfoX on UserInfo {
   bool get isSomethingMissing {
     return age == null || weight == null || height == null || gender == null;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'age': age,
+      'weight': weight,
+      'height': height,
+      'gender': gender?.name,
+    };
+  }
 }

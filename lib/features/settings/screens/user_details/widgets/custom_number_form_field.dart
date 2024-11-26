@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 /// StatelessWidget that implements the custom
 /// style for a [TextFormField]
@@ -34,7 +35,9 @@ class _CustomNumberFormFieldState extends State<CustomNumberFormField> {
   void didUpdateWidget(covariant CustomNumberFormField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      controller.text = widget.value ?? '';
+      SchedulerBinding.instance.addPostFrameCallback((_){
+        controller.text = widget.value ?? '';
+      });
     }
   }
 

@@ -17,7 +17,7 @@ class SensorsTrackLocalDataSource {
 
   SensorsTrackLocalDataSource({required this.ref});
 
-  Future saveTrack(SensorTrack track) async {
+  Future<void> saveTrack(SensorTrack track) async {
     final isar = await ref.read(getIsarProvider.future);
     await isar.writeTxn(() async {
       await isar.sensorTracks.put(track);

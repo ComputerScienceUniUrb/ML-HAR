@@ -17,7 +17,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 part 'sensor_tracking_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   StreamSubscription? _sensorsStream;
   StreamSubscription? _arStream;
@@ -34,6 +34,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   SensorData? _lastMagnetometer;
   SmartphonePosition? _smartphonePosition;
   SensorActivityType? _sensorActivityType;
+  int _testDuration = -1;
   int _startBatteryLevel = -1;
 
   @override
@@ -48,12 +49,13 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     SmartphonePosition smartphonePosition,
     bool retainNullValue,
   ) async {
-    if(state is SensorTrackingStateData) return;
+    if (state is SensorTrackingStateData) return;
     state = const SensorTrackingStateInitial();
     await reset();
     WakelockPlus.enable();
 
     _startBatteryLevel = await _battery.batteryLevel;
+    _testDuration = duration;
     _sensorActivityType = sensorActivityType;
     _smartphonePosition = smartphonePosition;
     ref.read(getAudioRepositoryProvider).playPreStart();
@@ -122,12 +124,15 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         _sensorsData.add(s);
 
         // timers may have a 4ms resolution
-        if (remainingInMilliseconds < 4) {
+        if (remainingInMilliseconds < 4 && !_isCompleting) {
+          _isCompleting = true;
           _completeSampling();
         }
       },
     );
   }
+
+  bool _isCompleting = false;
 
   Future stop() async {
     logger.i('stop listening');
@@ -142,22 +147,26 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   _completeSampling() async {
     logger.i('complete sampling');
     final userInfo = await ref.read(getUserInfoProvider.future);
-    final track = SensorTrack();
-    track.timestamp = DateTime.now();
-    track.sensorsData = [..._sensorsData];
-    track.smartphonePosition = _smartphonePosition;
-    track.activityType = _sensorActivityType;
-    track.userInfo = userInfo;
-    track.startBatteryLevel = _startBatteryLevel;
-    track.isInBatterySaveMode = await _battery.isInBatterySaveMode;
+    final track = SensorTrack(
+      timestamp: DateTime.now(),
+      sensorsData: [..._sensorsData],
+      smartphonePosition: _smartphonePosition,
+      activityType: _sensorActivityType,
+      userInfo: userInfo,
+      testDuration: _testDuration,
+      startBatteryLevel: _startBatteryLevel,
+      isInBatterySaveMode: await _battery.isInBatterySaveMode,
+      cloudId: null,
+    );
     state = SensorTrackingStateCompleted(track: track);
     HapticFeedback.heavyImpact();
     ref.read(getAudioRepositoryProvider).playStop();
     saveTrack(track);
     reset();
+    _isCompleting = false;
   }
 
-  reset() async {
+  Future<void> reset() async {
     logger.i('reset');
     await closeSubscriptions();
     await WakelockPlus.disable();
@@ -181,7 +190,24 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     _arStream = null;
   }
 
-  saveTrack(track) {
+  Future<void> saveTrack(SensorTrack track) {
     return ref.read(getSensorsRepositoryProvider).saveTrack(track);
+  }
+
+  Future<void> uploadTrack() async {
+    final currentState = state;
+    if (currentState is SensorTrackingStateCompleted) {
+      if (!currentState.isUploading) {
+        try {
+          state = currentState.copyWith(isUploading: true);
+          await ref
+              .read(getSensorsRepositoryProvider)
+              .uploadTrack(currentState.track);
+          state = SensorTrackingStateUploaded(track: currentState.track);
+        } catch (ex, st) {
+          state = currentState.copyWith(isUploading: false, error: ex);
+        }
+      }
+    }
   }
 }

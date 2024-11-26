@@ -13,8 +13,15 @@ class SensorTrackingState with _$SensorTrackingState {
 
   const factory SensorTrackingState.loading() = SensorTrackingStateLoading;
 
-  const factory SensorTrackingState.completed({required SensorTrack track}) =
-      SensorTrackingStateCompleted;
+  const factory SensorTrackingState.completed({
+    required SensorTrack track,
+    @Default(false) bool isUploading,
+    Object? error,
+  }) = SensorTrackingStateCompleted;
+
+  const factory SensorTrackingState.uploaded({
+    required SensorTrack track,
+  }) = SensorTrackingStateUploaded;
 
   const factory SensorTrackingState.initial() = SensorTrackingStateInitial;
 

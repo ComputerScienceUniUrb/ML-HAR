@@ -12,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
-mixin CSVMixin {
+
   // TODO add data compatible for iOS [AndroidDeviceInfo]
   Future<void> downloadCSV(
     SensorTrack track,
@@ -24,7 +24,7 @@ mixin CSVMixin {
     Share.shareXFiles([XFile.fromData(bytes, mimeType: 'csv')]);
   }
 
-  String _buildCsv(SensorTrack track, AndroidDeviceInfo androidDeviceInfo) {
+  String buildCsv(SensorTrack track, AndroidDeviceInfo androidDeviceInfo) {
     final data = track.sensorsData
         ?.map(
           (e) => e.toCsvList(),
@@ -59,7 +59,7 @@ mixin CSVMixin {
     String eventName,
     AndroidDeviceInfo androidDeviceInfo,
   ) {
-    final csv = _buildCsv(track, androidDeviceInfo);
+    final csv = buildCsv(track, androidDeviceInfo);
     final bytes = Uint8List.fromList(utf8.encode(csv));
     return bytes;
   }
@@ -70,7 +70,7 @@ mixin CSVMixin {
     AndroidDeviceInfo androidDeviceInfo,
   ) async {
     try {
-      final csv = _buildCsv(track, androidDeviceInfo);
+      final csv = buildCsv(track, androidDeviceInfo);
 
       final statuses = await [
         Permission.storage,
@@ -95,4 +95,4 @@ mixin CSVMixin {
       return null;
     }
   }
-}
+

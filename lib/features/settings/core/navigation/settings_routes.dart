@@ -13,7 +13,7 @@ final settingsStatefulShell = StatefulShellBranch(
 class SettingsRoutes extends GoRoute {
   SettingsRoutes()
       : super(
-          path: '/settings',
+          path: 'settings',
           builder: (context, goRouteState) => const SettingsScreen(),
           routes: [
             GoRoute(

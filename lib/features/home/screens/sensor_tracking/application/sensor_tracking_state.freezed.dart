@@ -22,7 +22,10 @@ mixin _$SensorTrackingState {
             double remainingInSecond, int samples, String? activityRecognized)
         data,
     required TResult Function() loading,
-    required TResult Function(SensorTrack track) completed,
+    required TResult Function(
+            SensorTrack track, bool isUploading, Object? error)
+        completed,
+    required TResult Function(SensorTrack track) uploaded,
     required TResult Function() initial,
     required TResult Function(Object error, StackTrace st) error,
   }) =>
@@ -33,7 +36,9 @@ mixin _$SensorTrackingState {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult? Function()? loading,
-    TResult? Function(SensorTrack track)? completed,
+    TResult? Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult? Function(SensorTrack track)? uploaded,
     TResult? Function()? initial,
     TResult? Function(Object error, StackTrace st)? error,
   }) =>
@@ -44,7 +49,9 @@ mixin _$SensorTrackingState {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult Function()? loading,
-    TResult Function(SensorTrack track)? completed,
+    TResult Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult Function(SensorTrack track)? uploaded,
     TResult Function()? initial,
     TResult Function(Object error, StackTrace st)? error,
     required TResult orElse(),
@@ -55,6 +62,7 @@ mixin _$SensorTrackingState {
     required TResult Function(SensorTrackingStateData value) data,
     required TResult Function(SensorTrackingStateLoading value) loading,
     required TResult Function(SensorTrackingStateCompleted value) completed,
+    required TResult Function(SensorTrackingStateUploaded value) uploaded,
     required TResult Function(SensorTrackingStateInitial value) initial,
     required TResult Function(SensorTrackingStateError value) error,
   }) =>
@@ -64,6 +72,7 @@ mixin _$SensorTrackingState {
     TResult? Function(SensorTrackingStateData value)? data,
     TResult? Function(SensorTrackingStateLoading value)? loading,
     TResult? Function(SensorTrackingStateCompleted value)? completed,
+    TResult? Function(SensorTrackingStateUploaded value)? uploaded,
     TResult? Function(SensorTrackingStateInitial value)? initial,
     TResult? Function(SensorTrackingStateError value)? error,
   }) =>
@@ -73,6 +82,7 @@ mixin _$SensorTrackingState {
     TResult Function(SensorTrackingStateData value)? data,
     TResult Function(SensorTrackingStateLoading value)? loading,
     TResult Function(SensorTrackingStateCompleted value)? completed,
+    TResult Function(SensorTrackingStateUploaded value)? uploaded,
     TResult Function(SensorTrackingStateInitial value)? initial,
     TResult Function(SensorTrackingStateError value)? error,
     required TResult orElse(),
@@ -200,7 +210,10 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
             double remainingInSecond, int samples, String? activityRecognized)
         data,
     required TResult Function() loading,
-    required TResult Function(SensorTrack track) completed,
+    required TResult Function(
+            SensorTrack track, bool isUploading, Object? error)
+        completed,
+    required TResult Function(SensorTrack track) uploaded,
     required TResult Function() initial,
     required TResult Function(Object error, StackTrace st) error,
   }) {
@@ -214,7 +227,9 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult? Function()? loading,
-    TResult? Function(SensorTrack track)? completed,
+    TResult? Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult? Function(SensorTrack track)? uploaded,
     TResult? Function()? initial,
     TResult? Function(Object error, StackTrace st)? error,
   }) {
@@ -228,7 +243,9 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult Function()? loading,
-    TResult Function(SensorTrack track)? completed,
+    TResult Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult Function(SensorTrack track)? uploaded,
     TResult Function()? initial,
     TResult Function(Object error, StackTrace st)? error,
     required TResult orElse(),
@@ -245,6 +262,7 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
     required TResult Function(SensorTrackingStateData value) data,
     required TResult Function(SensorTrackingStateLoading value) loading,
     required TResult Function(SensorTrackingStateCompleted value) completed,
+    required TResult Function(SensorTrackingStateUploaded value) uploaded,
     required TResult Function(SensorTrackingStateInitial value) initial,
     required TResult Function(SensorTrackingStateError value) error,
   }) {
@@ -257,6 +275,7 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
     TResult? Function(SensorTrackingStateData value)? data,
     TResult? Function(SensorTrackingStateLoading value)? loading,
     TResult? Function(SensorTrackingStateCompleted value)? completed,
+    TResult? Function(SensorTrackingStateUploaded value)? uploaded,
     TResult? Function(SensorTrackingStateInitial value)? initial,
     TResult? Function(SensorTrackingStateError value)? error,
   }) {
@@ -269,6 +288,7 @@ class _$SensorTrackingStateDataImpl implements SensorTrackingStateData {
     TResult Function(SensorTrackingStateData value)? data,
     TResult Function(SensorTrackingStateLoading value)? loading,
     TResult Function(SensorTrackingStateCompleted value)? completed,
+    TResult Function(SensorTrackingStateUploaded value)? uploaded,
     TResult Function(SensorTrackingStateInitial value)? initial,
     TResult Function(SensorTrackingStateError value)? error,
     required TResult orElse(),
@@ -346,7 +366,10 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
             double remainingInSecond, int samples, String? activityRecognized)
         data,
     required TResult Function() loading,
-    required TResult Function(SensorTrack track) completed,
+    required TResult Function(
+            SensorTrack track, bool isUploading, Object? error)
+        completed,
+    required TResult Function(SensorTrack track) uploaded,
     required TResult Function() initial,
     required TResult Function(Object error, StackTrace st) error,
   }) {
@@ -360,7 +383,9 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult? Function()? loading,
-    TResult? Function(SensorTrack track)? completed,
+    TResult? Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult? Function(SensorTrack track)? uploaded,
     TResult? Function()? initial,
     TResult? Function(Object error, StackTrace st)? error,
   }) {
@@ -374,7 +399,9 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult Function()? loading,
-    TResult Function(SensorTrack track)? completed,
+    TResult Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult Function(SensorTrack track)? uploaded,
     TResult Function()? initial,
     TResult Function(Object error, StackTrace st)? error,
     required TResult orElse(),
@@ -391,6 +418,7 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
     required TResult Function(SensorTrackingStateData value) data,
     required TResult Function(SensorTrackingStateLoading value) loading,
     required TResult Function(SensorTrackingStateCompleted value) completed,
+    required TResult Function(SensorTrackingStateUploaded value) uploaded,
     required TResult Function(SensorTrackingStateInitial value) initial,
     required TResult Function(SensorTrackingStateError value) error,
   }) {
@@ -403,6 +431,7 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
     TResult? Function(SensorTrackingStateData value)? data,
     TResult? Function(SensorTrackingStateLoading value)? loading,
     TResult? Function(SensorTrackingStateCompleted value)? completed,
+    TResult? Function(SensorTrackingStateUploaded value)? uploaded,
     TResult? Function(SensorTrackingStateInitial value)? initial,
     TResult? Function(SensorTrackingStateError value)? error,
   }) {
@@ -415,6 +444,7 @@ class _$SensorTrackingStateLoadingImpl implements SensorTrackingStateLoading {
     TResult Function(SensorTrackingStateData value)? data,
     TResult Function(SensorTrackingStateLoading value)? loading,
     TResult Function(SensorTrackingStateCompleted value)? completed,
+    TResult Function(SensorTrackingStateUploaded value)? uploaded,
     TResult Function(SensorTrackingStateInitial value)? initial,
     TResult Function(SensorTrackingStateError value)? error,
     required TResult orElse(),
@@ -437,7 +467,7 @@ abstract class _$$SensorTrackingStateCompletedImplCopyWith<$Res> {
           $Res Function(_$SensorTrackingStateCompletedImpl) then) =
       __$$SensorTrackingStateCompletedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({SensorTrack track});
+  $Res call({SensorTrack track, bool isUploading, Object? error});
 }
 
 /// @nodoc
@@ -456,12 +486,19 @@ class __$$SensorTrackingStateCompletedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? track = null,
+    Object? isUploading = null,
+    Object? error = freezed,
   }) {
     return _then(_$SensorTrackingStateCompletedImpl(
       track: null == track
           ? _value.track
           : track // ignore: cast_nullable_to_non_nullable
               as SensorTrack,
+      isUploading: null == isUploading
+          ? _value.isUploading
+          : isUploading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      error: freezed == error ? _value.error : error,
     ));
   }
 }
@@ -470,14 +507,20 @@ class __$$SensorTrackingStateCompletedImplCopyWithImpl<$Res>
 
 class _$SensorTrackingStateCompletedImpl
     implements SensorTrackingStateCompleted {
-  const _$SensorTrackingStateCompletedImpl({required this.track});
+  const _$SensorTrackingStateCompletedImpl(
+      {required this.track, this.isUploading = false, this.error});
 
   @override
   final SensorTrack track;
+  @override
+  @JsonKey()
+  final bool isUploading;
+  @override
+  final Object? error;
 
   @override
   String toString() {
-    return 'SensorTrackingState.completed(track: $track)';
+    return 'SensorTrackingState.completed(track: $track, isUploading: $isUploading, error: $error)';
   }
 
   @override
@@ -485,11 +528,15 @@ class _$SensorTrackingStateCompletedImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SensorTrackingStateCompletedImpl &&
-            (identical(other.track, track) || other.track == track));
+            (identical(other.track, track) || other.track == track) &&
+            (identical(other.isUploading, isUploading) ||
+                other.isUploading == isUploading) &&
+            const DeepCollectionEquality().equals(other.error, error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, track);
+  int get hashCode => Object.hash(runtimeType, track, isUploading,
+      const DeepCollectionEquality().hash(error));
 
   /// Create a copy of SensorTrackingState
   /// with the given fields replaced by the non-null parameter values.
@@ -508,11 +555,14 @@ class _$SensorTrackingStateCompletedImpl
             double remainingInSecond, int samples, String? activityRecognized)
         data,
     required TResult Function() loading,
-    required TResult Function(SensorTrack track) completed,
+    required TResult Function(
+            SensorTrack track, bool isUploading, Object? error)
+        completed,
+    required TResult Function(SensorTrack track) uploaded,
     required TResult Function() initial,
     required TResult Function(Object error, StackTrace st) error,
   }) {
-    return completed(track);
+    return completed(track, isUploading, this.error);
   }
 
   @override
@@ -522,11 +572,13 @@ class _$SensorTrackingStateCompletedImpl
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult? Function()? loading,
-    TResult? Function(SensorTrack track)? completed,
+    TResult? Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult? Function(SensorTrack track)? uploaded,
     TResult? Function()? initial,
     TResult? Function(Object error, StackTrace st)? error,
   }) {
-    return completed?.call(track);
+    return completed?.call(track, isUploading, this.error);
   }
 
   @override
@@ -536,13 +588,15 @@ class _$SensorTrackingStateCompletedImpl
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult Function()? loading,
-    TResult Function(SensorTrack track)? completed,
+    TResult Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult Function(SensorTrack track)? uploaded,
     TResult Function()? initial,
     TResult Function(Object error, StackTrace st)? error,
     required TResult orElse(),
   }) {
     if (completed != null) {
-      return completed(track);
+      return completed(track, isUploading, this.error);
     }
     return orElse();
   }
@@ -553,6 +607,7 @@ class _$SensorTrackingStateCompletedImpl
     required TResult Function(SensorTrackingStateData value) data,
     required TResult Function(SensorTrackingStateLoading value) loading,
     required TResult Function(SensorTrackingStateCompleted value) completed,
+    required TResult Function(SensorTrackingStateUploaded value) uploaded,
     required TResult Function(SensorTrackingStateInitial value) initial,
     required TResult Function(SensorTrackingStateError value) error,
   }) {
@@ -565,6 +620,7 @@ class _$SensorTrackingStateCompletedImpl
     TResult? Function(SensorTrackingStateData value)? data,
     TResult? Function(SensorTrackingStateLoading value)? loading,
     TResult? Function(SensorTrackingStateCompleted value)? completed,
+    TResult? Function(SensorTrackingStateUploaded value)? uploaded,
     TResult? Function(SensorTrackingStateInitial value)? initial,
     TResult? Function(SensorTrackingStateError value)? error,
   }) {
@@ -577,6 +633,7 @@ class _$SensorTrackingStateCompletedImpl
     TResult Function(SensorTrackingStateData value)? data,
     TResult Function(SensorTrackingStateLoading value)? loading,
     TResult Function(SensorTrackingStateCompleted value)? completed,
+    TResult Function(SensorTrackingStateUploaded value)? uploaded,
     TResult Function(SensorTrackingStateInitial value)? initial,
     TResult Function(SensorTrackingStateError value)? error,
     required TResult orElse(),
@@ -590,15 +647,198 @@ class _$SensorTrackingStateCompletedImpl
 
 abstract class SensorTrackingStateCompleted implements SensorTrackingState {
   const factory SensorTrackingStateCompleted(
-      {required final SensorTrack track}) = _$SensorTrackingStateCompletedImpl;
+      {required final SensorTrack track,
+      final bool isUploading,
+      final Object? error}) = _$SensorTrackingStateCompletedImpl;
 
   SensorTrack get track;
+  bool get isUploading;
+  Object? get error;
 
   /// Create a copy of SensorTrackingState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SensorTrackingStateCompletedImplCopyWith<
           _$SensorTrackingStateCompletedImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SensorTrackingStateUploadedImplCopyWith<$Res> {
+  factory _$$SensorTrackingStateUploadedImplCopyWith(
+          _$SensorTrackingStateUploadedImpl value,
+          $Res Function(_$SensorTrackingStateUploadedImpl) then) =
+      __$$SensorTrackingStateUploadedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({SensorTrack track});
+}
+
+/// @nodoc
+class __$$SensorTrackingStateUploadedImplCopyWithImpl<$Res>
+    extends _$SensorTrackingStateCopyWithImpl<$Res,
+        _$SensorTrackingStateUploadedImpl>
+    implements _$$SensorTrackingStateUploadedImplCopyWith<$Res> {
+  __$$SensorTrackingStateUploadedImplCopyWithImpl(
+      _$SensorTrackingStateUploadedImpl _value,
+      $Res Function(_$SensorTrackingStateUploadedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of SensorTrackingState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? track = null,
+  }) {
+    return _then(_$SensorTrackingStateUploadedImpl(
+      track: null == track
+          ? _value.track
+          : track // ignore: cast_nullable_to_non_nullable
+              as SensorTrack,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SensorTrackingStateUploadedImpl implements SensorTrackingStateUploaded {
+  const _$SensorTrackingStateUploadedImpl({required this.track});
+
+  @override
+  final SensorTrack track;
+
+  @override
+  String toString() {
+    return 'SensorTrackingState.uploaded(track: $track)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SensorTrackingStateUploadedImpl &&
+            (identical(other.track, track) || other.track == track));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, track);
+
+  /// Create a copy of SensorTrackingState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SensorTrackingStateUploadedImplCopyWith<_$SensorTrackingStateUploadedImpl>
+      get copyWith => __$$SensorTrackingStateUploadedImplCopyWithImpl<
+          _$SensorTrackingStateUploadedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)
+        data,
+    required TResult Function() loading,
+    required TResult Function(
+            SensorTrack track, bool isUploading, Object? error)
+        completed,
+    required TResult Function(SensorTrack track) uploaded,
+    required TResult Function() initial,
+    required TResult Function(Object error, StackTrace st) error,
+  }) {
+    return uploaded(track);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
+    TResult? Function()? loading,
+    TResult? Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult? Function(SensorTrack track)? uploaded,
+    TResult? Function()? initial,
+    TResult? Function(Object error, StackTrace st)? error,
+  }) {
+    return uploaded?.call(track);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            double remainingInSecond, int samples, String? activityRecognized)?
+        data,
+    TResult Function()? loading,
+    TResult Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult Function(SensorTrack track)? uploaded,
+    TResult Function()? initial,
+    TResult Function(Object error, StackTrace st)? error,
+    required TResult orElse(),
+  }) {
+    if (uploaded != null) {
+      return uploaded(track);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SensorTrackingStateData value) data,
+    required TResult Function(SensorTrackingStateLoading value) loading,
+    required TResult Function(SensorTrackingStateCompleted value) completed,
+    required TResult Function(SensorTrackingStateUploaded value) uploaded,
+    required TResult Function(SensorTrackingStateInitial value) initial,
+    required TResult Function(SensorTrackingStateError value) error,
+  }) {
+    return uploaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SensorTrackingStateData value)? data,
+    TResult? Function(SensorTrackingStateLoading value)? loading,
+    TResult? Function(SensorTrackingStateCompleted value)? completed,
+    TResult? Function(SensorTrackingStateUploaded value)? uploaded,
+    TResult? Function(SensorTrackingStateInitial value)? initial,
+    TResult? Function(SensorTrackingStateError value)? error,
+  }) {
+    return uploaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SensorTrackingStateData value)? data,
+    TResult Function(SensorTrackingStateLoading value)? loading,
+    TResult Function(SensorTrackingStateCompleted value)? completed,
+    TResult Function(SensorTrackingStateUploaded value)? uploaded,
+    TResult Function(SensorTrackingStateInitial value)? initial,
+    TResult Function(SensorTrackingStateError value)? error,
+    required TResult orElse(),
+  }) {
+    if (uploaded != null) {
+      return uploaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SensorTrackingStateUploaded implements SensorTrackingState {
+  const factory SensorTrackingStateUploaded(
+      {required final SensorTrack track}) = _$SensorTrackingStateUploadedImpl;
+
+  SensorTrack get track;
+
+  /// Create a copy of SensorTrackingState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SensorTrackingStateUploadedImplCopyWith<_$SensorTrackingStateUploadedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -651,7 +891,10 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
             double remainingInSecond, int samples, String? activityRecognized)
         data,
     required TResult Function() loading,
-    required TResult Function(SensorTrack track) completed,
+    required TResult Function(
+            SensorTrack track, bool isUploading, Object? error)
+        completed,
+    required TResult Function(SensorTrack track) uploaded,
     required TResult Function() initial,
     required TResult Function(Object error, StackTrace st) error,
   }) {
@@ -665,7 +908,9 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult? Function()? loading,
-    TResult? Function(SensorTrack track)? completed,
+    TResult? Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult? Function(SensorTrack track)? uploaded,
     TResult? Function()? initial,
     TResult? Function(Object error, StackTrace st)? error,
   }) {
@@ -679,7 +924,9 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult Function()? loading,
-    TResult Function(SensorTrack track)? completed,
+    TResult Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult Function(SensorTrack track)? uploaded,
     TResult Function()? initial,
     TResult Function(Object error, StackTrace st)? error,
     required TResult orElse(),
@@ -696,6 +943,7 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
     required TResult Function(SensorTrackingStateData value) data,
     required TResult Function(SensorTrackingStateLoading value) loading,
     required TResult Function(SensorTrackingStateCompleted value) completed,
+    required TResult Function(SensorTrackingStateUploaded value) uploaded,
     required TResult Function(SensorTrackingStateInitial value) initial,
     required TResult Function(SensorTrackingStateError value) error,
   }) {
@@ -708,6 +956,7 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
     TResult? Function(SensorTrackingStateData value)? data,
     TResult? Function(SensorTrackingStateLoading value)? loading,
     TResult? Function(SensorTrackingStateCompleted value)? completed,
+    TResult? Function(SensorTrackingStateUploaded value)? uploaded,
     TResult? Function(SensorTrackingStateInitial value)? initial,
     TResult? Function(SensorTrackingStateError value)? error,
   }) {
@@ -720,6 +969,7 @@ class _$SensorTrackingStateInitialImpl implements SensorTrackingStateInitial {
     TResult Function(SensorTrackingStateData value)? data,
     TResult Function(SensorTrackingStateLoading value)? loading,
     TResult Function(SensorTrackingStateCompleted value)? completed,
+    TResult Function(SensorTrackingStateUploaded value)? uploaded,
     TResult Function(SensorTrackingStateInitial value)? initial,
     TResult Function(SensorTrackingStateError value)? error,
     required TResult orElse(),
@@ -817,7 +1067,10 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
             double remainingInSecond, int samples, String? activityRecognized)
         data,
     required TResult Function() loading,
-    required TResult Function(SensorTrack track) completed,
+    required TResult Function(
+            SensorTrack track, bool isUploading, Object? error)
+        completed,
+    required TResult Function(SensorTrack track) uploaded,
     required TResult Function() initial,
     required TResult Function(Object error, StackTrace st) error,
   }) {
@@ -831,7 +1084,9 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult? Function()? loading,
-    TResult? Function(SensorTrack track)? completed,
+    TResult? Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult? Function(SensorTrack track)? uploaded,
     TResult? Function()? initial,
     TResult? Function(Object error, StackTrace st)? error,
   }) {
@@ -845,7 +1100,9 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
             double remainingInSecond, int samples, String? activityRecognized)?
         data,
     TResult Function()? loading,
-    TResult Function(SensorTrack track)? completed,
+    TResult Function(SensorTrack track, bool isUploading, Object? error)?
+        completed,
+    TResult Function(SensorTrack track)? uploaded,
     TResult Function()? initial,
     TResult Function(Object error, StackTrace st)? error,
     required TResult orElse(),
@@ -862,6 +1119,7 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
     required TResult Function(SensorTrackingStateData value) data,
     required TResult Function(SensorTrackingStateLoading value) loading,
     required TResult Function(SensorTrackingStateCompleted value) completed,
+    required TResult Function(SensorTrackingStateUploaded value) uploaded,
     required TResult Function(SensorTrackingStateInitial value) initial,
     required TResult Function(SensorTrackingStateError value) error,
   }) {
@@ -874,6 +1132,7 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
     TResult? Function(SensorTrackingStateData value)? data,
     TResult? Function(SensorTrackingStateLoading value)? loading,
     TResult? Function(SensorTrackingStateCompleted value)? completed,
+    TResult? Function(SensorTrackingStateUploaded value)? uploaded,
     TResult? Function(SensorTrackingStateInitial value)? initial,
     TResult? Function(SensorTrackingStateError value)? error,
   }) {
@@ -886,6 +1145,7 @@ class _$SensorTrackingStateErrorImpl implements SensorTrackingStateError {
     TResult Function(SensorTrackingStateData value)? data,
     TResult Function(SensorTrackingStateLoading value)? loading,
     TResult Function(SensorTrackingStateCompleted value)? completed,
+    TResult Function(SensorTrackingStateUploaded value)? uploaded,
     TResult Function(SensorTrackingStateInitial value)? initial,
     TResult Function(SensorTrackingStateError value)? error,
     required TResult orElse(),

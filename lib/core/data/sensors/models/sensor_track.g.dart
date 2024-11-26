@@ -23,35 +23,45 @@ const SensorTrackSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _SensorTrackactivityTypeEnumValueMap,
     ),
-    r'isInBatterySaveMode': PropertySchema(
+    r'cloudId': PropertySchema(
       id: 1,
+      name: r'cloudId',
+      type: IsarType.string,
+    ),
+    r'isInBatterySaveMode': PropertySchema(
+      id: 2,
       name: r'isInBatterySaveMode',
       type: IsarType.bool,
     ),
     r'sensorsData': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'sensorsData',
       type: IsarType.objectList,
       target: r'SensorsData',
     ),
     r'smartphonePosition': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'smartphonePosition',
       type: IsarType.string,
       enumMap: _SensorTracksmartphonePositionEnumValueMap,
     ),
     r'startBatteryLevel': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'startBatteryLevel',
       type: IsarType.long,
     ),
+    r'testDuration': PropertySchema(
+      id: 6,
+      name: r'testDuration',
+      type: IsarType.long,
+    ),
     r'timestamp': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'timestamp',
       type: IsarType.dateTime,
     ),
     r'userInfo': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'userInfo',
       type: IsarType.object,
       target: r'UserInfo',
@@ -85,6 +95,12 @@ int _sensorTrackEstimateSize(
     final value = object.activityType;
     if (value != null) {
       bytesCount += 3 + value.name.length * 3;
+    }
+  }
+  {
+    final value = object.cloudId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
     }
   }
   {
@@ -124,18 +140,20 @@ void _sensorTrackSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.activityType?.name);
-  writer.writeBool(offsets[1], object.isInBatterySaveMode);
+  writer.writeString(offsets[1], object.cloudId);
+  writer.writeBool(offsets[2], object.isInBatterySaveMode);
   writer.writeObjectList<SensorsData>(
-    offsets[2],
+    offsets[3],
     allOffsets,
     SensorsDataSchema.serialize,
     object.sensorsData,
   );
-  writer.writeString(offsets[3], object.smartphonePosition?.name);
-  writer.writeLong(offsets[4], object.startBatteryLevel);
-  writer.writeDateTime(offsets[5], object.timestamp);
+  writer.writeString(offsets[4], object.smartphonePosition?.name);
+  writer.writeLong(offsets[5], object.startBatteryLevel);
+  writer.writeLong(offsets[6], object.testDuration);
+  writer.writeDateTime(offsets[7], object.timestamp);
   writer.writeObject<UserInfo>(
-    offsets[6],
+    offsets[8],
     allOffsets,
     UserInfoSchema.serialize,
     object.userInfo,
@@ -148,26 +166,29 @@ SensorTrack _sensorTrackDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = SensorTrack();
-  object.activityType =
-      _SensorTrackactivityTypeValueEnumMap[reader.readStringOrNull(offsets[0])];
+  final object = SensorTrack(
+    activityType: _SensorTrackactivityTypeValueEnumMap[
+        reader.readStringOrNull(offsets[0])],
+    cloudId: reader.readStringOrNull(offsets[1]),
+    isInBatterySaveMode: reader.readBoolOrNull(offsets[2]),
+    sensorsData: reader.readObjectList<SensorsData>(
+      offsets[3],
+      SensorsDataSchema.deserialize,
+      allOffsets,
+      SensorsData(),
+    ),
+    smartphonePosition: _SensorTracksmartphonePositionValueEnumMap[
+        reader.readStringOrNull(offsets[4])],
+    startBatteryLevel: reader.readLongOrNull(offsets[5]),
+    testDuration: reader.readLongOrNull(offsets[6]),
+    timestamp: reader.readDateTimeOrNull(offsets[7]),
+    userInfo: reader.readObjectOrNull<UserInfo>(
+      offsets[8],
+      UserInfoSchema.deserialize,
+      allOffsets,
+    ),
+  );
   object.id = id;
-  object.isInBatterySaveMode = reader.readBoolOrNull(offsets[1]);
-  object.sensorsData = reader.readObjectList<SensorsData>(
-    offsets[2],
-    SensorsDataSchema.deserialize,
-    allOffsets,
-    SensorsData(),
-  );
-  object.smartphonePosition = _SensorTracksmartphonePositionValueEnumMap[
-      reader.readStringOrNull(offsets[3])];
-  object.startBatteryLevel = reader.readLongOrNull(offsets[4]);
-  object.timestamp = reader.readDateTimeOrNull(offsets[5]);
-  object.userInfo = reader.readObjectOrNull<UserInfo>(
-    offsets[6],
-    UserInfoSchema.deserialize,
-    allOffsets,
-  );
   return object;
 }
 
@@ -182,22 +203,26 @@ P _sensorTrackDeserializeProp<P>(
       return (_SensorTrackactivityTypeValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
     case 1:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 3:
       return (reader.readObjectList<SensorsData>(
         offset,
         SensorsDataSchema.deserialize,
         allOffsets,
         SensorsData(),
       )) as P;
-    case 3:
+    case 4:
       return (_SensorTracksmartphonePositionValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
-    case 4:
-      return (reader.readLongOrNull(offset)) as P;
     case 5:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 6:
+      return (reader.readLongOrNull(offset)) as P;
+    case 7:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 8:
       return (reader.readObjectOrNull<UserInfo>(
         offset,
         UserInfoSchema.deserialize,
@@ -252,7 +277,7 @@ const _SensorTracksmartphonePositionValueEnumMap = {
 };
 
 Id _sensorTrackGetId(SensorTrack object) {
-  return object.id;
+  return object.id ?? Isar.autoIncrement;
 }
 
 List<IsarLinkBase<dynamic>> _sensorTrackGetLinks(SensorTrack object) {
@@ -498,8 +523,176 @@ extension SensorTrackQueryFilter
     });
   }
 
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      cloudIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'cloudId',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      cloudIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'cloudId',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> cloudIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'cloudId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      cloudIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'cloudId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> cloudIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'cloudId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> cloudIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'cloudId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      cloudIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'cloudId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> cloudIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'cloudId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> cloudIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'cloudId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> cloudIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'cloudId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      cloudIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'cloudId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      cloudIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'cloudId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
   QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> idEqualTo(
-      Id value) {
+      Id? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -509,7 +702,7 @@ extension SensorTrackQueryFilter
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> idGreaterThan(
-    Id value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -522,7 +715,7 @@ extension SensorTrackQueryFilter
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> idLessThan(
-    Id value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -535,8 +728,8 @@ extension SensorTrackQueryFilter
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
+    Id? lower,
+    Id? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -915,6 +1108,80 @@ extension SensorTrackQueryFilter
   }
 
   QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      testDurationIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'testDuration',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      testDurationIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'testDuration',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      testDurationEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'testDuration',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      testDurationGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'testDuration',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      testDurationLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'testDuration',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      testDurationBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'testDuration',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
       timestampIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1042,6 +1309,18 @@ extension SensorTrackQuerySortBy
     });
   }
 
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> sortByCloudId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cloudId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> sortByCloudIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cloudId', Sort.desc);
+    });
+  }
+
   QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
       sortByIsInBatterySaveMode() {
     return QueryBuilder.apply(this, (query) {
@@ -1084,6 +1363,19 @@ extension SensorTrackQuerySortBy
     });
   }
 
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> sortByTestDuration() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'testDuration', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      sortByTestDurationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'testDuration', Sort.desc);
+    });
+  }
+
   QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> sortByTimestamp() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timestamp', Sort.asc);
@@ -1109,6 +1401,18 @@ extension SensorTrackQuerySortThenBy
       thenByActivityTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'activityType', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> thenByCloudId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cloudId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> thenByCloudIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cloudId', Sort.desc);
     });
   }
 
@@ -1166,6 +1470,19 @@ extension SensorTrackQuerySortThenBy
     });
   }
 
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> thenByTestDuration() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'testDuration', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      thenByTestDurationDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'testDuration', Sort.desc);
+    });
+  }
+
   QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> thenByTimestamp() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timestamp', Sort.asc);
@@ -1185,6 +1502,13 @@ extension SensorTrackQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'activityType', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QDistinct> distinctByCloudId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'cloudId', caseSensitive: caseSensitive);
     });
   }
 
@@ -1210,6 +1534,12 @@ extension SensorTrackQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SensorTrack, SensorTrack, QDistinct> distinctByTestDuration() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'testDuration');
+    });
+  }
+
   QueryBuilder<SensorTrack, SensorTrack, QDistinct> distinctByTimestamp() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'timestamp');
@@ -1229,6 +1559,12 @@ extension SensorTrackQueryProperty
       activityTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'activityType');
+    });
+  }
+
+  QueryBuilder<SensorTrack, String?, QQueryOperations> cloudIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'cloudId');
     });
   }
 
@@ -1257,6 +1593,12 @@ extension SensorTrackQueryProperty
       startBatteryLevelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'startBatteryLevel');
+    });
+  }
+
+  QueryBuilder<SensorTrack, int?, QQueryOperations> testDurationProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'testDuration');
     });
   }
 

@@ -7,7 +7,7 @@ part of 'sensors_repository_impl.dart';
 // **************************************************************************
 
 String _$getSensorsRepositoryHash() =>
-    r'4182be1628ee76764688f8f478f89e3490254854';
+    r'5e029e2091f3aee85a3ca01547b0ca4a8d4a2b91';
 
 /// See also [getSensorsRepository].
 @ProviderFor(getSensorsRepository)

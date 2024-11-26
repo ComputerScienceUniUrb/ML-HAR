@@ -17,29 +17,30 @@ void initializeGoRouter() {
     initialLocation: '/',
     debugLogDiagnostics: true,
     routes: [
-      StatefulShellRoute.indexedStack(
-        pageBuilder: (context, state, navigationShell) {
-          return CustomTransitionPage(
-            key: state.pageKey,
-            child: ProviderScope(
-              overrides: [
-                getNavigationShellProvider.overrideWithValue(navigationShell),
-              ],
-              child: AppShell(
-                navigationShell: navigationShell,
-              ),
-            ),
-            transitionDuration: const Duration(milliseconds: 300),
-            transitionsBuilder: (_, animation, __, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-          );
-        },
-        branches: [
-          homeStatefulShell,
-          settingsStatefulShell,
-        ],
-      ),
+      HomeRoutes(),
+      // StatefulShellRoute.indexedStack(
+      //   pageBuilder: (context, state, navigationShell) {
+      //     return CustomTransitionPage(
+      //       key: state.pageKey,
+      //       child: ProviderScope(
+      //         overrides: [
+      //           getNavigationShellProvider.overrideWithValue(navigationShell),
+      //         ],
+      //         child: AppShell(
+      //           navigationShell: navigationShell,
+      //         ),
+      //       ),
+      //       transitionDuration: const Duration(milliseconds: 300),
+      //       transitionsBuilder: (_, animation, __, child) {
+      //         return FadeTransition(opacity: animation, child: child);
+      //       },
+      //     );
+      //   },
+      //   branches: [
+      //     homeStatefulShell,
+      //     settingsStatefulShell,
+      //   ],
+      // ),
     ],
   );
 }

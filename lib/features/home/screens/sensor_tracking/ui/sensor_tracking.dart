@@ -2,15 +2,19 @@ import 'package:aifit/constants.dart';
 import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
 import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
-import 'package:aifit/core/utils/csv_mixin.dart';
+import 'package:aifit/core/utils/csv_utils.dart';
 import 'package:aifit/core/utils/logger.dart';
 import 'package:aifit/core/utils/utils.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_provider.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracks_provider.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/ui/all_tracks.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/start_dialog.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/track_tile.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/upload_dialog.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/user_info.dart';
 import 'package:aifit/features/home/screens/track_viewer/track_viewer.dart';
+import 'package:aifit/features/settings/screens/settings/settings_screen.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -55,11 +59,21 @@ class _SensorTrackingScreenState extends ConsumerState<SensorTrackingScreen>
   }
 }
 
-class SensorTrackingWidget extends HookConsumerWidget with CSVMixin {
+class SensorTrackingWidget extends HookConsumerWidget {
   const SensorTrackingWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(sensorTrackingNotifierProvider, (p, n) async {
+      if (n is SensorTrackingStateCompleted &&
+          !n.isUploading &&
+          n.error == null) {
+        await showDialog(
+          context: context,
+          builder: (_) => const UploadDialog(),
+        );
+      }
+    });
     final selectedActivity = useState<SensorActivityType?>(null);
     final smartphonePosition = useState<SmartphonePosition?>(null);
     final testDuration = useState<double>(defaultTestDurationInSeconds);
@@ -78,6 +92,19 @@ class SensorTrackingWidget extends HookConsumerWidget with CSVMixin {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Sensor Tracking'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.settings),
+              color: Colors.black,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SettingsScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         body: ListView(
           padding: const EdgeInsets.all(16),
@@ -324,7 +351,7 @@ class SensorTrackingWidget extends HookConsumerWidget with CSVMixin {
   }
 }
 
-class SensorTracks extends ConsumerWidget with CSVMixin {
+class SensorTracks extends ConsumerWidget {
   const SensorTracks({super.key});
 
   @override
@@ -341,35 +368,19 @@ class SensorTracks extends ConsumerWidget with CSVMixin {
                 const Text('Tracks'),
                 if (state.isNotEmpty)
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AllTracksScreen(),
+                        ),
+                      );
+                    },
                     child: const Text('View all'),
                   ),
               ],
             ),
-            for (int i = 0; i < state.length; i++)
-              ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => TrackViewerScreen(track: state[i]),
-                    ),
-                  );
-                },
-                leading: Text(state[i].id.toString()),
-                title: Text(
-                  '${state[i].activityType?.name ?? ''} ${state[i].smartphonePosition?.name ?? ''}, samples ${state[i].sensorsData?.length ?? 0}',
-                ),
-                subtitle: Text(state[i].timestamp?.toIso8601String() ?? '-'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.download),
-                  color: Colors.black,
-                  onPressed: () async {
-                    final androidInfo =
-                        await ref.read(getAndroidDeviceInfoProvider.future);
-                    downloadCSV(state[i], androidInfo);
-                  },
-                ),
-              ),
+            if (state.isNotEmpty)
+              for (int i = 0; i < 5; i++) TrackTile(sensorTrack: state[i]),
           ],
         ),
       ),

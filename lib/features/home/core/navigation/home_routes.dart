@@ -2,6 +2,8 @@ import 'package:aifit/features/home/core/navigation/ar_tracking_route.dart';
 import 'package:aifit/features/home/core/navigation/records_route.dart';
 import 'package:aifit/features/home/core/navigation/sensors_tracking_route.dart';
 import 'package:aifit/features/home/screens/home/home.dart';
+import 'package:aifit/features/home/screens/sensor_tracking/ui/sensor_tracking.dart';
+import 'package:aifit/features/settings/core/navigation/settings_routes.dart';
 import 'package:aifit/features/settings/screens/user_details/user_details.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +19,7 @@ class HomeRoutes extends GoRoute {
   HomeRoutes()
       : super(
           path: '/',
-          builder: (context, goRouteState) => const HomeScreen(),
+          builder: (context, goRouteState) => const SensorTrackingScreen(),
           routes: [
             ARTrackingRoute(
               routes: [
@@ -32,6 +34,7 @@ class HomeRoutes extends GoRoute {
                 ),
               ],
             ),
+            SettingsRoutes(),
           ],
         );
 }
