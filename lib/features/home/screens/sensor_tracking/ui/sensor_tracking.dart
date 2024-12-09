@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aifit/constants.dart';
 import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
@@ -380,7 +382,7 @@ class SensorTracks extends ConsumerWidget {
               ],
             ),
             if (state.isNotEmpty)
-              for (int i = 0; i < 5; i++) TrackTile(sensorTrack: state[i]),
+              for (int i = 0; i < min(state.length, 5); i++) TrackTile(sensorTrack: state[i]),
           ],
         ),
       ),

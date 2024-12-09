@@ -71,7 +71,7 @@ class SensorTrack {
   }
 
   SensorTrack copyWith({required String? cloudId}) {
-    return SensorTrack(
+    final o = SensorTrack(
       sensorsData: sensorsData,
       activityType: activityType,
       smartphonePosition: smartphonePosition,
@@ -82,6 +82,8 @@ class SensorTrack {
       cloudId: cloudId ?? cloudId,
       testDuration: testDuration,
     );
+    o.id = id;
+    return o;
   }
 }
 

@@ -5,6 +5,7 @@ import 'package:aifit/core/data/sensors/sources/sensors_track_local_data_source.
 import 'package:aifit/core/data/sensors/sources/sensors_track_remote_data_source.dart';
 import 'package:aifit/core/utils/csv_utils.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
@@ -64,13 +65,18 @@ class SensorsRepositoryImpl implements SensorsRepository {
   Future<void> uploadTrack(SensorTrack track) async {
     final docId = const Uuid().v4();
     final androidInfo = await deviceInfoPlugin.androidInfo;
+    final packageInfo = await PackageInfo.fromPlatform();
     final csv = buildCsv(track, androidInfo);
     final downloadUrl =
-    await sensorsTrackRemoteDataSource.uploadCsv(docId, csv);
+        await sensorsTrackRemoteDataSource.uploadCsv(docId, csv);
 
     final trackWithCloudId = track.copyWith(cloudId: docId);
-    await sensorsTrackRemoteDataSource
-        .saveTrackOnFirestore(trackWithCloudId, downloadUrl);
+    await sensorsTrackRemoteDataSource.saveTrackOnFirestore(
+      trackWithCloudId,
+      downloadUrl,
+      androidInfo,
+      packageInfo.version,
+    );
     await sensorsTrackLocalDataSource.saveTrack(trackWithCloudId);
   }
 }

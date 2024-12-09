@@ -49,7 +49,7 @@ class _LoadingWidget extends StatelessWidget {
           child: CircularProgressIndicator(),
         ),
         SizedBox(height: 16),
-        Text('Caricamento in corso'),
+        Text('Caricamento in corso...'),
       ],
     );
   }
@@ -144,7 +144,7 @@ class _TrackSavedWidget extends ConsumerWidget {
               onPressed: () {
                 ref.read(sensorTrackingNotifierProvider.notifier).uploadTrack();
               },
-              child: const Text('Upoload'),
+              child: const Text('Upload'),
             ),
           ],
         ),

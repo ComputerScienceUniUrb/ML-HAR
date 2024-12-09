@@ -8,3 +8,9 @@ Future<AndroidDeviceInfo> getAndroidDeviceInfo(GetAndroidDeviceInfoRef ref) asyn
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   return await deviceInfo.androidInfo;
 }
+
+extension AndroidDeviceInfoX on AndroidDeviceInfo {
+  String get deviceModel => '$manufacturer $model';
+
+  String get os => 'Android ${version.release} (SDK ${version.sdkInt})';
+}
