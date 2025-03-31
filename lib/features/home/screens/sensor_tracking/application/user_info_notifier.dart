@@ -1,3 +1,4 @@
+/*
 import 'package:aifit/core/data/user/models/user_info.dart';
 import 'package:aifit/core/data/user/repository/user_repository_impl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,10 +12,12 @@ Future<UserInfo> getUserInfo(GetUserInfoRef ref) async {
   final weight = await ref.read(getUserRepositoryProvider).getUserWeight();
   final gender = await ref.read(getUserRepositoryProvider).getUserGender();
 
-  return UserInfo(
-    age: age,
-    gender: gender,
-    height: height?.toInt(),
-    weight: weight,
-  );
+  final userInfo = UserInfo();
+
+  userInfo.age = age;
+  userInfo.height = height;
+  userInfo.weight = weight;
+  userInfo.gender = gender;
+  return userInfo;
 }
+*/

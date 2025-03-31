@@ -3,8 +3,10 @@ import 'package:aifit/core/navigation/navigation_shell_provider.dart';
 import 'package:aifit/features/home/core/navigation/home_routes.dart';
 import 'package:aifit/features/settings/core/navigation/settings_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final appKey = GlobalKey<NavigatorState>();
@@ -16,6 +18,10 @@ void initializeGoRouter() {
     navigatorKey: rootNavigatorKey,
     initialLocation: '/',
     debugLogDiagnostics: true,
+    observers: [
+      FlutterSmartDialog.observer,
+      SentryNavigatorObserver(),
+    ],
     routes: [
       HomeRoutes(),
       // StatefulShellRoute.indexedStack(

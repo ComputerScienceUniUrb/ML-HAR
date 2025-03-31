@@ -7,12 +7,12 @@ part of 'user_details_notifier.dart';
 // **************************************************************************
 
 String _$userDetailsNotifierHash() =>
-    r'e34b94fe7e7a55931f06b9fa935d791b0a3c2620';
+    r'ab306d346c4fa9feee7d20fc9af14de41ddd18d2';
 
 /// See also [UserDetailsNotifier].
 @ProviderFor(UserDetailsNotifier)
 final userDetailsNotifierProvider =
-    AutoDisposeNotifierProvider<UserDetailsNotifier, UserInfo>.internal(
+    AutoDisposeAsyncNotifierProvider<UserDetailsNotifier, UserInfo>.internal(
   UserDetailsNotifier.new,
   name: r'userDetailsNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final userDetailsNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$UserDetailsNotifier = AutoDisposeNotifier<UserInfo>;
+typedef _$UserDetailsNotifier = AutoDisposeAsyncNotifier<UserInfo>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -24,7 +24,8 @@ class SensorsTrackRemoteDataSource {
       await docRef.putData(utf8.encode(csv));
       return docRef.getDownloadURL();
     } on firebase_core.FirebaseException catch (e, st) {
-      logger.e('uploadCsv', error: e, stackTrace: st);
+      logger.e('SensorsTrackRemoteDataSource: uploadCsv',
+          error: e, stackTrace: st);
       rethrow;
     }
   }
@@ -36,7 +37,7 @@ class SensorsTrackRemoteDataSource {
     String appVersion,
   ) async {
     if (track.cloudId == null) {
-      throw Exception('cloudId cannot be null');
+      throw Exception('SensorsTrackRemoteDataSource: cloudId cannot be null');
     }
     try {
       final docRef =
@@ -49,6 +50,11 @@ class SensorsTrackRemoteDataSource {
         'appVersion': appVersion,
       });
     } catch (ex, st) {
+      logger.e(
+        'SensorsTrackRemoteDataSource: saveTrackOnFirestore',
+        error: ex,
+        stackTrace: st,
+      );
       rethrow;
     }
   }

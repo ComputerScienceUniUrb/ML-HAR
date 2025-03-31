@@ -1,6 +1,7 @@
 import 'package:aifit/core/navigation/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 class AIFitApp extends StatelessWidget {
   const AIFitApp({super.key});
@@ -15,6 +16,7 @@ class AIFitApp extends StatelessWidget {
           useMaterial3: true,
         ),
         routerConfig: goRouter,
+        builder: FlutterSmartDialog.init(),
       ),
     );
   }

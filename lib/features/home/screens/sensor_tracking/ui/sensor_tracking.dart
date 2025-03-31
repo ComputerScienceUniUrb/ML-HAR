@@ -76,14 +76,15 @@ class SensorTrackingWidget extends HookConsumerWidget {
         );
       }
     });
+    final experimentController = useTextEditingController();
     final selectedActivity = useState<SensorActivityType?>(null);
     final smartphonePosition = useState<SmartphonePosition?>(null);
     final testDuration = useState<double>(defaultTestDurationInSeconds);
     final retainNullValue = useState<bool>(false);
 
     final state = ref.watch(sensorTrackingNotifierProvider);
-    final isWorking = state is SensorTrackingStateData;
-    final buttonText = !isWorking ? 'Start' : 'Stop';
+    final isTracking = state is SensorTrackingStateData;
+    final buttonText = !isTracking ? 'Start' : 'Stop';
 
     return PopScope(
       onPopInvoked: (didPop) {
@@ -96,12 +97,12 @@ class SensorTrackingWidget extends HookConsumerWidget {
           title: const Text('Sensor Tracking'),
           actions: [
             IconButton(
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               color: Colors.black,
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SettingsScreen(),
+                    builder: (context) => const SettingsScreen(),
                   ),
                 );
               },
@@ -116,20 +117,44 @@ class SensorTrackingWidget extends HookConsumerWidget {
             Row(
               children: [
                 Expanded(
+                  child: TextFormField(
+                    controller: experimentController,
+                    decoration: InputDecoration(
+                      hintText: 'CODE',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                IconButton(
+                  icon: const Icon(
+                    Icons.clear,
+                  ),
+                  color: Colors.red,
+                  onPressed: () {
+                    experimentController.clear();
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
                   child: CustomDropdown(
                     hintText: 'Tipo di attività',
-                    enabled: !isWorking,
+                    enabled: !isTracking,
                     initialItem: selectedActivity.value,
                     headerBuilder: (context, item, enabled) {
                       return Text(
-                        item.name,
+                        item.translate,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       );
                     },
                     listItemBuilder: (context, item, isSelected, onSelect) {
-                      return Text(item.name);
+                      return Text(item.translate);
                     },
                     items: SensorActivityType.values,
                     onChanged: (v) {
@@ -146,7 +171,7 @@ class SensorTrackingWidget extends HookConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.clear),
                   color: Colors.red,
-                  onPressed: !isWorking
+                  onPressed: !isTracking
                       ? () {
                           selectedActivity.value = null;
                         }
@@ -160,18 +185,18 @@ class SensorTrackingWidget extends HookConsumerWidget {
                 Expanded(
                   child: CustomDropdown(
                     hintText: 'Posizione smartphone',
-                    enabled: !isWorking,
+                    enabled: !isTracking,
                     initialItem: smartphonePosition.value,
                     headerBuilder: (context, item, enabled) {
                       return Text(
-                        item.name,
+                        item.translate,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       );
                     },
                     listItemBuilder: (context, item, isSelected, onSelect) {
-                      return Text(item.name);
+                      return Text(item.translate);
                     },
                     items:
                         selectedActivity.value != SensorActivityType.onBicycle
@@ -187,7 +212,7 @@ class SensorTrackingWidget extends HookConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.clear),
                   color: Colors.red,
-                  onPressed: !isWorking
+                  onPressed: !isTracking
                       ? () {
                           smartphonePosition.value = null;
                         }
@@ -203,7 +228,7 @@ class SensorTrackingWidget extends HookConsumerWidget {
                     min: 5,
                     max: 600,
                     label: '${testDuration.value.toStringAsFixed(0)} sec',
-                    onChanged: !isWorking
+                    onChanged: !isTracking
                         ? (v) {
                             testDuration.value = v;
                           }
@@ -262,9 +287,10 @@ class SensorTrackingWidget extends HookConsumerWidget {
               onPressed: selectedActivity.value != null &&
                       smartphonePosition.value != null
                   ? () async {
-                      if (!isWorking) {
+                      if (!isTracking) {
                         final isGranted = await isPermissionGrants();
                         if (isGranted) {
+                          if (!context.mounted) return;
                           final res = await showDialog(
                             context: context,
                             builder: (_) => StartDialog(
@@ -276,10 +302,12 @@ class SensorTrackingWidget extends HookConsumerWidget {
                             ref
                                 .read(sensorTrackingNotifierProvider.notifier)
                                 .start(
-                                  testDuration.value.toInt(),
-                                  selectedActivity.value!,
-                                  smartphonePosition.value!,
-                                  retainNullValue.value,
+                                  duration: testDuration.value.toInt(),
+                                  sensorActivityType: selectedActivity.value!,
+                                  smartphonePosition: smartphonePosition.value!,
+                                  retainNullValue: retainNullValue.value,
+                                  experimentCode:
+                                      experimentController.text.trim(),
                                 );
                           }
                         }
@@ -287,7 +315,6 @@ class SensorTrackingWidget extends HookConsumerWidget {
                         ref
                             .read(sensorTrackingNotifierProvider.notifier)
                             .stop();
-                        WakelockPlus.disable();
                       }
                     }
                   : null,
@@ -382,7 +409,8 @@ class SensorTracks extends ConsumerWidget {
               ],
             ),
             if (state.isNotEmpty)
-              for (int i = 0; i < min(state.length, 5); i++) TrackTile(sensorTrack: state[i]),
+              for (int i = 0; i < min(state.length, 5); i++)
+                TrackTile(sensorTrack: state[i]),
           ],
         ),
       ),

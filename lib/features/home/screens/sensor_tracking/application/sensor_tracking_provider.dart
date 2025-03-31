@@ -10,6 +10,7 @@ import 'package:aifit/core/data/sensors/repository/sensors_repository_impl.dart'
 import 'package:aifit/core/utils/logger.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/user_info_notifier.dart';
+import 'package:aifit/features/settings/screens/user_details/application/user_details_notifier.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:battery_plus/battery_plus.dart';
@@ -36,6 +37,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   SensorActivityType? _sensorActivityType;
   int _testDuration = -1;
   int _startBatteryLevel = -1;
+  String? _experimentCode;
 
   @override
   SensorTrackingState build() {
@@ -43,12 +45,13 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     return const SensorTrackingStateInitial();
   }
 
-  Future start(
-    int duration,
-    SensorActivityType sensorActivityType,
-    SmartphonePosition smartphonePosition,
-    bool retainNullValue,
-  ) async {
+  Future start({
+    required int duration,
+    required SensorActivityType sensorActivityType,
+    required SmartphonePosition smartphonePosition,
+    required bool retainNullValue,
+    String? experimentCode,
+  }) async {
     if (state is SensorTrackingStateData) return;
     state = const SensorTrackingStateInitial();
     await reset();
@@ -58,6 +61,9 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     _testDuration = duration;
     _sensorActivityType = sensorActivityType;
     _smartphonePosition = smartphonePosition;
+    if (experimentCode?.isNotEmpty ?? false) {
+      _experimentCode = experimentCode;
+    }
     ref.read(getAudioRepositoryProvider).playPreStart();
     final t = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (timer.tick > 4) {
@@ -68,10 +74,19 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         ref.read(getAudioRepositoryProvider).playPreStart();
       }
     });
-    _arStream = ref.read(getArRepositoryProvider).activityStream().listen((ar) {
-      logger.i('Activity Recognition: ${ar.type}');
-      _lastActivityRecognized = ar.type.name;
-    });
+    _arStream = ref.read(getArRepositoryProvider).activityStream().listen(
+      (ar) {
+        logger.i('Activity Recognition: ${ar.type}');
+        _lastActivityRecognized = ar.type.name;
+      },
+      onError: (ex, st) {
+        logger.e(
+          'SensorTrackingProvider: activity stream',
+          error: ex,
+          stackTrace: st,
+        );
+      },
+    );
     _sensorsStream =
         ref.read(getSensorsRepositoryProvider).listenSensors().listen(
       (data) {
@@ -90,6 +105,13 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
             (areValuesPopulated || retainNullValue)) {
           _startSampling(duration);
         }
+      },
+      onError: (ex, st) {
+        logger.e(
+          'SensorTrackingProvider: sensors stream',
+          error: ex,
+          stackTrace: st,
+        );
       },
     );
     state = SensorTrackingStateData(
@@ -146,7 +168,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
 
   _completeSampling() async {
     logger.i('complete sampling');
-    final userInfo = await ref.read(getUserInfoProvider.future);
+    final userInfo = await ref.read(userDetailsNotifierProvider.future);
     final track = SensorTrack(
       timestamp: DateTime.now(),
       sensorsData: [..._sensorsData],
@@ -157,6 +179,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
       startBatteryLevel: _startBatteryLevel,
       isInBatterySaveMode: await _battery.isInBatterySaveMode,
       cloudId: null,
+      experimentCode: _experimentCode,
     );
     state = SensorTrackingStateCompleted(track: track);
     HapticFeedback.heavyImpact();
@@ -205,6 +228,11 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
               .uploadTrack(currentState.track);
           state = SensorTrackingStateUploaded(track: currentState.track);
         } catch (ex, st) {
+          logger.e(
+            'SensorTrackingProvider: uploadTrack',
+            error: ex,
+            stackTrace: st,
+          );
           state = currentState.copyWith(isUploading: false, error: ex);
         }
       }

@@ -7,7 +7,7 @@ part of 'audio_repository_impl.dart';
 // **************************************************************************
 
 String _$getAudioRepositoryHash() =>
-    r'ab86b5f0ca897468cb789cfaeea2a1ee764ad05c';
+    r'4a8c4d779d4d2fbbd183e3e0f765c5d89dbe9899';
 
 /// See also [getAudioRepository].
 @ProviderFor(getAudioRepository)

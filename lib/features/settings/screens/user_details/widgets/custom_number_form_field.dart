@@ -32,10 +32,16 @@ class _CustomNumberFormFieldState extends State<CustomNumberFormField> {
   var errorText;
 
   @override
+  void initState() {
+    super.initState();
+    controller.text = widget.value ?? '';
+  }
+
+  @override
   void didUpdateWidget(covariant CustomNumberFormField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      SchedulerBinding.instance.addPostFrameCallback((_){
+      SchedulerBinding.instance.addPostFrameCallback((_) {
         controller.text = widget.value ?? '';
       });
     }

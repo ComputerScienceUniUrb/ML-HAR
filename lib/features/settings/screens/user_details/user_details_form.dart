@@ -1,4 +1,5 @@
 import 'package:aifit/core/data/user/models/gender.dart';
+import 'package:aifit/core/data/user/models/user_info.dart';
 import 'package:aifit/features/settings/screens/user_details/application/user_details_notifier.dart';
 import 'package:aifit/features/settings/screens/user_details/widgets/custom_number_form_field.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 
 class UserDetailsFormScreen extends ConsumerStatefulWidget {
-  const UserDetailsFormScreen({super.key});
+  final UserInfo initialUserInfo;
+
+  const UserDetailsFormScreen({
+    required this.initialUserInfo,
+    super.key,
+  });
 
   @override
   UserDetailsFormScreenState createState() => UserDetailsFormScreenState();
@@ -17,11 +23,11 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userData = ref.watch(userDetailsNotifierProvider);
-    final weight = userData.weight;
-    final height = userData.height;
-    final age = userData.age;
-    final gender = userData.gender;
+    final weight = widget.initialUserInfo.weight;
+    final height = widget.initialUserInfo.height;
+    final age = widget.initialUserInfo.age;
+    final gender = widget.initialUserInfo.gender;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       reverse: true,
@@ -30,20 +36,6 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const SizedBox(height: 32),
-          // Padding(
-          //     padding: const EdgeInsets.all(48.0),
-          //     child: Image.asset(
-          //       'assets/images/eta.png',
-          //     )),
-          Text(
-            'User details',
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                  // color: Colors.white,
-                ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30),
             child: Form(
@@ -77,13 +69,14 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                   ),
                   const SizedBox(height: 8),
                   CustomNumberFormField(
+
                     labelText: 'Altezza',
                     value: height?.toString() ?? '',
                     suffix: 'cm',
                     onChanged: (value) {
                       ref
                           .read(userDetailsNotifierProvider.notifier)
-                          .setHeight(int.tryParse(value));
+                          .setHeight(double.tryParse(value));
                     },
                     validator: (value) {
                       if (value != null) {

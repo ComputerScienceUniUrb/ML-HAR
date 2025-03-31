@@ -2,19 +2,18 @@ import 'package:aifit/core/data/user/models/gender.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
-part 'user_info.freezed.dart';
-
 part 'user_info.g.dart';
 
-@freezed
 @embedded
-class UserInfo with _$UserInfo {
-  const factory UserInfo({
-    int? age,
-    double? weight,
-    Gender? gender,
-    int? height,
-  }) = _UserInfo;
+class UserInfo {
+  int? age;
+
+  double? weight;
+
+  @Enumerated(EnumType.name)
+  Gender? gender;
+
+  double? height;
 }
 
 extension UserInfoX on UserInfo {
@@ -29,5 +28,19 @@ extension UserInfoX on UserInfo {
       'height': height,
       'gender': gender?.name,
     };
+  }
+
+  UserInfo copyWith({
+    int? age,
+    double? weight,
+    Gender? gender,
+    double? height,
+  }) {
+    final u = UserInfo();
+    u.age = age ?? this.age;
+    u.weight = weight ?? this.weight;
+    u.gender = gender ?? this.gender;
+    u.height = height ?? this.height;
+    return u;
   }
 }

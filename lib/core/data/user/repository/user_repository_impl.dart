@@ -23,7 +23,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<void> setUserHeight(int height) {
+  Future<void> setUserHeight(double height) {
     return userLocalDataSource.setUserHeight(height);
   }
 
@@ -55,5 +55,10 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> setUserWeight(double weight) {
     return userLocalDataSource.setUserWeight(weight);
+  }
+
+  @override
+  Future<void> clearAll() {
+    return userLocalDataSource.clearAll();
   }
 }

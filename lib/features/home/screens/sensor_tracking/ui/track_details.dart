@@ -58,15 +58,15 @@ class TrackDetailsScreen extends HookConsumerWidget {
           ),
           _TrackInfo(
             label: 'Gender',
-            text: sensorTrack.userInfo?.gender?.name,
+            text: sensorTrack.userInfo?.gender?.translate,
           ),
           _TrackInfo(
             label: 'Smartphone position',
-            text: sensorTrack.smartphonePosition?.name,
+            text: sensorTrack.smartphonePosition?.translate,
           ),
           _TrackInfo(
             label: 'Activity Type',
-            text: sensorTrack.activityType?.name,
+            text: sensorTrack.activityType?.translate,
           ),
           _TrackInfo(
             label: 'Is in battery save mode?',

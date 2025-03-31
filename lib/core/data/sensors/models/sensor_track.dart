@@ -18,6 +18,7 @@ class SensorTrack {
     required this.isInBatterySaveMode,
     required this.cloudId,
     required this.testDuration,
+    required this.experimentCode,
   });
 
   Id? id;
@@ -36,6 +37,7 @@ class SensorTrack {
   final bool? isInBatterySaveMode;
   final String? cloudId;
   final int? testDuration;
+  final String? experimentCode;
 
   // factory SensorTrack.fromJson(Map<String, dynamic> json) {
   //   return SensorTrack(
@@ -67,6 +69,7 @@ class SensorTrack {
       'isInBatterySaveMode': isInBatterySaveMode,
       'cloudId': cloudId,
       'testDuration': testDuration,
+      'experimentCode': experimentCode,
     };
   }
 
@@ -81,6 +84,7 @@ class SensorTrack {
       isInBatterySaveMode: isInBatterySaveMode,
       cloudId: cloudId ?? cloudId,
       testDuration: testDuration,
+      experimentCode: experimentCode,
     );
     o.id = id;
     return o;

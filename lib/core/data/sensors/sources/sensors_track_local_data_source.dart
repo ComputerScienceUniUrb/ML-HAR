@@ -1,5 +1,6 @@
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
 import 'package:aifit/core/providers/isar/isar_provider.dart';
+import 'package:aifit/core/utils/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:isar/isar.dart';
 
@@ -18,10 +19,19 @@ class SensorsTrackLocalDataSource {
   SensorsTrackLocalDataSource({required this.ref});
 
   Future<void> saveTrack(SensorTrack track) async {
-    final isar = await ref.read(getIsarProvider.future);
-    await isar.writeTxn(() async {
-      await isar.sensorTracks.put(track);
-    });
+    try {
+      final isar = await ref.read(getIsarProvider.future);
+      await isar.writeTxn(() async {
+        await isar.sensorTracks.put(track);
+      });
+    } catch (ex, st) {
+      logger.e(
+        'SensorsTrackLocalDataSource: saveTrack',
+        error: ex,
+        stackTrace: st,
+      );
+      rethrow;
+    }
   }
 
   Stream<List<SensorTrack>> getSensorTracks() async* {

@@ -1,6 +1,7 @@
 import 'package:aifit/core/data/user/models/user_info.dart';
 import 'package:aifit/core/navigation/route_extensions.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/user_info_notifier.dart';
+import 'package:aifit/features/settings/screens/user_details/application/user_details_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,12 +10,11 @@ class UserInfoWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userInfo = ref.watch(getUserInfoProvider);
+    final userInfo = ref.watch(userDetailsNotifierProvider);
     return Card(
       child: InkWell(
           onTap: ()async {
             await context.pushRoute('/sensors-tracking/user-details');
-            ref.invalidate(getUserInfoProvider);
           },
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -48,7 +48,7 @@ class UserInfoWidget extends ConsumerWidget {
                             ),
                             InfoText(
                               label: 'Genere',
-                              value: value.gender?.name ?? '-',
+                              value: value.gender?.translate ?? '-',
                             ),
                           ],
                         ),

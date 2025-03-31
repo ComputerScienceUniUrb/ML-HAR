@@ -24,9 +24,9 @@ class UserLocalDataSource {
     return s.getDouble(userHeightKey);
   }
 
-  Future<void> setUserHeight(int height) async {
+  Future<void> setUserHeight(double height) async {
     final s = await ref.read(getSharedPreferencesProvider.future);
-    s.setDouble(userHeightKey, height.toDouble());
+    s.setDouble(userHeightKey, height);
   }
 
   Future<int?> getUserAge() async {
@@ -60,5 +60,13 @@ class UserLocalDataSource {
   Future<void> setUserWeight(double weight) async {
     final s = await ref.read(getSharedPreferencesProvider.future);
     s.setDouble(userWeightKey, weight);
+  }
+
+  Future<void> clearAll() async {
+    final s = await ref.read(getSharedPreferencesProvider.future);
+    await s.remove(userAgeKey);
+    await s.remove(userHeightKey);
+    await s.remove(userWeightKey);
+    await s.remove(userGenderKey);
   }
 }

@@ -3,7 +3,7 @@ import 'package:aifit/core/data/user/models/gender.dart';
 abstract class UserRepository {
   Future<double?> getUserHeight();
 
-  Future<void> setUserHeight(int height);
+  Future<void> setUserHeight(double height);
 
   Future<int?> getUserAge();
 
@@ -16,4 +16,6 @@ abstract class UserRepository {
   Future<double?> getUserWeight();
 
   Future<void> setUserWeight(double weight);
+
+  Future<void> clearAll();
 }

@@ -28,40 +28,45 @@ const SensorTrackSchema = CollectionSchema(
       name: r'cloudId',
       type: IsarType.string,
     ),
-    r'isInBatterySaveMode': PropertySchema(
+    r'experimentCode': PropertySchema(
       id: 2,
+      name: r'experimentCode',
+      type: IsarType.string,
+    ),
+    r'isInBatterySaveMode': PropertySchema(
+      id: 3,
       name: r'isInBatterySaveMode',
       type: IsarType.bool,
     ),
     r'sensorsData': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'sensorsData',
       type: IsarType.objectList,
       target: r'SensorsData',
     ),
     r'smartphonePosition': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'smartphonePosition',
       type: IsarType.string,
       enumMap: _SensorTracksmartphonePositionEnumValueMap,
     ),
     r'startBatteryLevel': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'startBatteryLevel',
       type: IsarType.long,
     ),
     r'testDuration': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'testDuration',
       type: IsarType.long,
     ),
     r'timestamp': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'timestamp',
       type: IsarType.dateTime,
     ),
     r'userInfo': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'userInfo',
       type: IsarType.object,
       target: r'UserInfo',
@@ -104,6 +109,12 @@ int _sensorTrackEstimateSize(
     }
   }
   {
+    final value = object.experimentCode;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final list = object.sensorsData;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -141,19 +152,20 @@ void _sensorTrackSerialize(
 ) {
   writer.writeString(offsets[0], object.activityType?.name);
   writer.writeString(offsets[1], object.cloudId);
-  writer.writeBool(offsets[2], object.isInBatterySaveMode);
+  writer.writeString(offsets[2], object.experimentCode);
+  writer.writeBool(offsets[3], object.isInBatterySaveMode);
   writer.writeObjectList<SensorsData>(
-    offsets[3],
+    offsets[4],
     allOffsets,
     SensorsDataSchema.serialize,
     object.sensorsData,
   );
-  writer.writeString(offsets[4], object.smartphonePosition?.name);
-  writer.writeLong(offsets[5], object.startBatteryLevel);
-  writer.writeLong(offsets[6], object.testDuration);
-  writer.writeDateTime(offsets[7], object.timestamp);
+  writer.writeString(offsets[5], object.smartphonePosition?.name);
+  writer.writeLong(offsets[6], object.startBatteryLevel);
+  writer.writeLong(offsets[7], object.testDuration);
+  writer.writeDateTime(offsets[8], object.timestamp);
   writer.writeObject<UserInfo>(
-    offsets[8],
+    offsets[9],
     allOffsets,
     UserInfoSchema.serialize,
     object.userInfo,
@@ -170,20 +182,21 @@ SensorTrack _sensorTrackDeserialize(
     activityType: _SensorTrackactivityTypeValueEnumMap[
         reader.readStringOrNull(offsets[0])],
     cloudId: reader.readStringOrNull(offsets[1]),
-    isInBatterySaveMode: reader.readBoolOrNull(offsets[2]),
+    experimentCode: reader.readStringOrNull(offsets[2]),
+    isInBatterySaveMode: reader.readBoolOrNull(offsets[3]),
     sensorsData: reader.readObjectList<SensorsData>(
-      offsets[3],
+      offsets[4],
       SensorsDataSchema.deserialize,
       allOffsets,
       SensorsData(),
     ),
     smartphonePosition: _SensorTracksmartphonePositionValueEnumMap[
-        reader.readStringOrNull(offsets[4])],
-    startBatteryLevel: reader.readLongOrNull(offsets[5]),
-    testDuration: reader.readLongOrNull(offsets[6]),
-    timestamp: reader.readDateTimeOrNull(offsets[7]),
+        reader.readStringOrNull(offsets[5])],
+    startBatteryLevel: reader.readLongOrNull(offsets[6]),
+    testDuration: reader.readLongOrNull(offsets[7]),
+    timestamp: reader.readDateTimeOrNull(offsets[8]),
     userInfo: reader.readObjectOrNull<UserInfo>(
-      offsets[8],
+      offsets[9],
       UserInfoSchema.deserialize,
       allOffsets,
     ),
@@ -205,24 +218,26 @@ P _sensorTrackDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 4:
       return (reader.readObjectList<SensorsData>(
         offset,
         SensorsDataSchema.deserialize,
         allOffsets,
         SensorsData(),
       )) as P;
-    case 4:
+    case 5:
       return (_SensorTracksmartphonePositionValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
-    case 5:
-      return (reader.readLongOrNull(offset)) as P;
     case 6:
       return (reader.readLongOrNull(offset)) as P;
     case 7:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 8:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 9:
       return (reader.readObjectOrNull<UserInfo>(
         offset,
         UserInfoSchema.deserialize,
@@ -234,6 +249,8 @@ P _sensorTrackDeserializeProp<P>(
 }
 
 const _SensorTrackactivityTypeEnumValueMap = {
+  r'armRotation': r'armRotation',
+  r'clapHands': r'clapHands',
   r'onBicycle': r'onBicycle',
   r'inVehicle': r'inVehicle',
   r'stand': r'stand',
@@ -243,11 +260,18 @@ const _SensorTrackactivityTypeEnumValueMap = {
   r'lay': r'lay',
   r'jump': r'jump',
   r'walk': r'walk',
+  r'walkOnSpot': r'walkOnSpot',
   r'walkingBack': r'walkingBack',
   r'walkingCircle': r'walkingCircle',
+  r'tapisRoulant': r'tapisRoulant',
+  r'horizontalCyclette': r'horizontalCyclette',
+  r'verticalCyclette': r'verticalCyclette',
   r'run': r'run',
+  r'runOnSpot': r'runOnSpot',
 };
 const _SensorTrackactivityTypeValueEnumMap = {
+  r'armRotation': SensorActivityType.armRotation,
+  r'clapHands': SensorActivityType.clapHands,
   r'onBicycle': SensorActivityType.onBicycle,
   r'inVehicle': SensorActivityType.inVehicle,
   r'stand': SensorActivityType.stand,
@@ -257,9 +281,14 @@ const _SensorTrackactivityTypeValueEnumMap = {
   r'lay': SensorActivityType.lay,
   r'jump': SensorActivityType.jump,
   r'walk': SensorActivityType.walk,
+  r'walkOnSpot': SensorActivityType.walkOnSpot,
   r'walkingBack': SensorActivityType.walkingBack,
   r'walkingCircle': SensorActivityType.walkingCircle,
+  r'tapisRoulant': SensorActivityType.tapisRoulant,
+  r'horizontalCyclette': SensorActivityType.horizontalCyclette,
+  r'verticalCyclette': SensorActivityType.verticalCyclette,
   r'run': SensorActivityType.run,
+  r'runOnSpot': SensorActivityType.runOnSpot,
 };
 const _SensorTracksmartphonePositionEnumValueMap = {
   r'byHand': r'byHand',
@@ -670,6 +699,160 @@ extension SensorTrackQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'cloudId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'experimentCode',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'experimentCode',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'experimentCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'experimentCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'experimentCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'experimentCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'experimentCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'experimentCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'experimentCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'experimentCode',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'experimentCode',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterFilterCondition>
+      experimentCodeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'experimentCode',
         value: '',
       ));
     });
@@ -1321,6 +1504,19 @@ extension SensorTrackQuerySortBy
     });
   }
 
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> sortByExperimentCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'experimentCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      sortByExperimentCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'experimentCode', Sort.desc);
+    });
+  }
+
   QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
       sortByIsInBatterySaveMode() {
     return QueryBuilder.apply(this, (query) {
@@ -1413,6 +1609,19 @@ extension SensorTrackQuerySortThenBy
   QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> thenByCloudIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'cloudId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy> thenByExperimentCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'experimentCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SensorTrack, SensorTrack, QAfterSortBy>
+      thenByExperimentCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'experimentCode', Sort.desc);
     });
   }
 
@@ -1512,6 +1721,14 @@ extension SensorTrackQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SensorTrack, SensorTrack, QDistinct> distinctByExperimentCode(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'experimentCode',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<SensorTrack, SensorTrack, QDistinct>
       distinctByIsInBatterySaveMode() {
     return QueryBuilder.apply(this, (query) {
@@ -1565,6 +1782,13 @@ extension SensorTrackQueryProperty
   QueryBuilder<SensorTrack, String?, QQueryOperations> cloudIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'cloudId');
+    });
+  }
+
+  QueryBuilder<SensorTrack, String?, QQueryOperations>
+      experimentCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'experimentCode');
     });
   }
 
