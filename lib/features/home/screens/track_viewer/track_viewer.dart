@@ -23,9 +23,8 @@ class TrackViewerScreen extends ConsumerWidget {
             icon: const Icon(Icons.download),
             color: Colors.black,
             onPressed: () async {
-              final androidInfo =
-                  await ref.read(getAndroidDeviceInfoProvider.future);
-              downloadCSV(track, androidInfo);
+              final deviceInfo = await ref.read(getDeviceInfoProvider.future);
+              downloadCSV(track, deviceInfo);
             },
           ),
         ],

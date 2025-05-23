@@ -16,7 +16,7 @@ void main() async {
   initializeGoRouter();
 
   // If in debug mode, start the app without Sentry
-  if (!kDebugMode) {
+  if (kDebugMode) {
     // Override the default error handling to prevent silent errors
     // from being displayed in the console.
     //

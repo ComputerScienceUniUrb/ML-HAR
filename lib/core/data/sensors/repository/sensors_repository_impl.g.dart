@@ -7,12 +7,11 @@ part of 'sensors_repository_impl.dart';
 // **************************************************************************
 
 String _$getSensorsRepositoryHash() =>
-    r'5e029e2091f3aee85a3ca01547b0ca4a8d4a2b91';
+    r'4d315a6d619e94159c2d3e5387a167fecab8e55c';
 
 /// See also [getSensorsRepository].
 @ProviderFor(getSensorsRepository)
-final getSensorsRepositoryProvider =
-    AutoDisposeProvider<SensorsRepository>.internal(
+final getSensorsRepositoryProvider = Provider<SensorsRepository>.internal(
   getSensorsRepository,
   name: r'getSensorsRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +21,6 @@ final getSensorsRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef GetSensorsRepositoryRef = AutoDisposeProviderRef<SensorsRepository>;
+typedef GetSensorsRepositoryRef = ProviderRef<SensorsRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

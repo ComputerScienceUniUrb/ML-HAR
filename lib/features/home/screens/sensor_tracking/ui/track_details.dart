@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
 import 'package:aifit/core/data/sensors/repository/sensors_repository_impl.dart';
 import 'package:aifit/core/data/sensors/sources/sensors_track_remote_data_source.dart';
 import 'package:aifit/core/utils/csv_utils.dart';
 import 'package:aifit/features/home/screens/track_viewer/track_viewer.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -98,10 +101,24 @@ class TrackDetailsScreen extends HookConsumerWidget {
                 : () async {
                     if (!isUploading.value) {
                       isUploading.value = true;
-                      await ref
-                          .read(getSensorsRepositoryProvider)
-                          .uploadTrack(sensorTrack);
-                      isUploading.value = false;
+                      try {
+                        await ref
+                            .read(getSensorsRepositoryProvider)
+                            .uploadTrack(sensorTrack);
+                        isUploading.value = false;
+                      } catch (ex, st) {
+                        isUploading.value = false;
+                        if (context.mounted) {
+                          final dialog = AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.error,
+                            animType: AnimType.scale,
+                            title: 'Errore nel caricamento della traccia',
+                            btnOkOnPress: () {},
+                          );
+                          dialog.show();
+                        }
+                      }
                     }
                   },
             child: Row(
@@ -126,8 +143,8 @@ class TrackDetailsScreen extends HookConsumerWidget {
   }
 
   Future<void> downloadCsvLocally(WidgetRef ref) async {
-    final androidInfo = await ref.read(getAndroidDeviceInfoProvider.future);
-    downloadCSV(sensorTrack, androidInfo);
+    final deviceInfo = await ref.read(getDeviceInfoProvider.future);
+    downloadCSV(sensorTrack, deviceInfo);
   }
 }
 

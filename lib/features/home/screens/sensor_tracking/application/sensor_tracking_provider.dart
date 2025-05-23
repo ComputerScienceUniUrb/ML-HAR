@@ -20,7 +20,7 @@ part 'sensor_tracking_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class SensorTrackingNotifier extends _$SensorTrackingNotifier {
-  StreamSubscription? _sensorsStream;
+  StreamSubscription? _sensorsStreamSubscription;
   StreamSubscription? _arStream;
   Timer? _timer;
   Stopwatch? _stopWatcher;
@@ -42,38 +42,29 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   @override
   SensorTrackingState build() {
     ref.onDispose(closeSubscriptions);
+    ref.read(getSensorsRepositoryProvider).init();
+    init();
     return const SensorTrackingStateInitial();
   }
 
-  Future start({
-    required int duration,
-    required SensorActivityType sensorActivityType,
-    required SmartphonePosition smartphonePosition,
-    required bool retainNullValue,
-    String? experimentCode,
-  }) async {
-    if (state is SensorTrackingStateData) return;
-    state = const SensorTrackingStateInitial();
-    await reset();
-    WakelockPlus.enable();
+  init() {
+    _sensorsStreamSubscription =
+        ref.read(getSensorsRepositoryProvider).listenSensors().listen(
+      (data) {
+        _lastAccelerometer = data.$1;
+        _lastAccelerometerWithGravity = data.$2;
+        _lastGyroscope = data.$3;
+        _lastMagnetometer = data.$4;
+      },
+      onError: (ex, st) {
+        logger.e(
+          'SensorTrackingProvider: sensors stream',
+          error: ex,
+          stackTrace: st,
+        );
+      },
+    );
 
-    _startBatteryLevel = await _battery.batteryLevel;
-    _testDuration = duration;
-    _sensorActivityType = sensorActivityType;
-    _smartphonePosition = smartphonePosition;
-    if (experimentCode?.isNotEmpty ?? false) {
-      _experimentCode = experimentCode;
-    }
-    ref.read(getAudioRepositoryProvider).playPreStart();
-    final t = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (timer.tick > 4) {
-        timer.cancel();
-        ref.read(getAudioRepositoryProvider).playStart();
-        HapticFeedback.heavyImpact();
-      } else {
-        ref.read(getAudioRepositoryProvider).playPreStart();
-      }
-    });
     _arStream = ref.read(getArRepositoryProvider).activityStream().listen(
       (ar) {
         logger.i('Activity Recognition: ${ar.type}');
@@ -87,33 +78,57 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         );
       },
     );
-    _sensorsStream =
-        ref.read(getSensorsRepositoryProvider).listenSensors().listen(
-      (data) {
-        _lastAccelerometer = data.$1;
-        _lastAccelerometerWithGravity = data.$2;
-        _lastGyroscope = data.$3;
-        _lastMagnetometer = data.$4;
+  }
 
+  Future start({
+    required int duration,
+    required SensorActivityType sensorActivityType,
+    required SmartphonePosition smartphonePosition,
+    required bool retainNullValue,
+    String? experimentCode,
+  }) async {
+    if (state is SensorTrackingStateData) return;
+    state = const SensorTrackingStateInitial();
+    WakelockPlus.enable();
+
+    try {
+      _startBatteryLevel = await _battery.batteryLevel;
+    } catch (ex, st) {
+      logger.e('start', error: ex, stackTrace: st);
+    }
+    _testDuration = duration;
+    _sensorActivityType = sensorActivityType;
+    _smartphonePosition = smartphonePosition;
+    if (experimentCode?.isNotEmpty ?? false) {
+      _experimentCode = experimentCode;
+    }
+    ref.read(getAudioRepositoryProvider).playPreStart();
+    final t = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timer.tick > 4) {
+        timer.cancel();
+        ref.read(getAudioRepositoryProvider).playStart();
+        HapticFeedback.heavyImpact();
+      } else if (timer.tick > 3) {
+        ref.read(getAudioRepositoryProvider).playPreStart();
         final areValuesPopulated = _lastAccelerometer != null &&
             _lastAccelerometerWithGravity != null &&
-            _lastGyroscope != null &&
             _lastMagnetometer != null;
 
-        if (!t.isActive &&
-            _timer == null &&
-            (areValuesPopulated || retainNullValue)) {
+        if (areValuesPopulated || retainNullValue) {
           _startSampling(duration);
+        } else {
+          logger.e(
+            'values are not populated, '
+            '_lastAccelerometer: $_lastAccelerometer, '
+            '_lastAccelerometerWithGravity:$_lastAccelerometerWithGravity, '
+            '_lastMagnetometer:$_lastMagnetometer, '
+            '_lastGyroscope:$_lastGyroscope',
+          );
         }
-      },
-      onError: (ex, st) {
-        logger.e(
-          'SensorTrackingProvider: sensors stream',
-          error: ex,
-          stackTrace: st,
-        );
-      },
-    );
+      } else {
+        ref.read(getAudioRepositoryProvider).playPreStart();
+      }
+    });
     state = SensorTrackingStateData(
       remainingInSecond: duration.toDouble(),
       samples: _sensorsData.length,
@@ -124,17 +139,21 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
 
   _startSampling(int duration) {
     logger.i('Start sampling...');
+    _sensorsData.clear();
     _stopWatcher = Stopwatch()..start();
     _timer = Timer.periodic(
       defaultSamplingPeriod,
       (timer) {
         final remainingInMilliseconds =
-            (duration * 1000) - _stopWatcher!.elapsedMilliseconds;
-        state = SensorTrackingStateData(
-          remainingInSecond: remainingInMilliseconds / 1000,
-          samples: 0,
-          activityRecognized: _lastActivityRecognized,
-        );
+            ((duration + 1) * 1000) - _stopWatcher!.elapsedMilliseconds;
+
+        if (remainingInMilliseconds <= duration * 1000) {
+          state = SensorTrackingStateData(
+            remainingInSecond: remainingInMilliseconds / 1000,
+            samples: 0,
+            activityRecognized: _lastActivityRecognized,
+          );
+        }
 
         final s = SensorsData();
         s.timestamp = DateTime.now();
@@ -166,9 +185,16 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     reset();
   }
 
-  _completeSampling() async {
+  Future _completeSampling() async {
     logger.i('complete sampling');
     final userInfo = await ref.read(userDetailsNotifierProvider.future);
+
+    var isInBatterySaveMode = false;
+    try {
+      isInBatterySaveMode = await _battery.isInBatterySaveMode;
+    } catch (ex, st) {
+      logger.w('_completeSampling', error: ex, stackTrace: st);
+    }
     final track = SensorTrack(
       timestamp: DateTime.now(),
       sensorsData: [..._sensorsData],
@@ -177,7 +203,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
       userInfo: userInfo,
       testDuration: _testDuration,
       startBatteryLevel: _startBatteryLevel,
-      isInBatterySaveMode: await _battery.isInBatterySaveMode,
+      isInBatterySaveMode: isInBatterySaveMode,
       cloudId: null,
       experimentCode: _experimentCode,
     );
@@ -191,7 +217,10 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
 
   Future<void> reset() async {
     logger.i('reset');
-    await closeSubscriptions();
+    _stopWatcher?.stop();
+    _timer?.cancel();
+    _stopWatcher = null;
+    _timer = null;
     await WakelockPlus.disable();
     _sensorsData.clear();
     _lastAccelerometer = null;
@@ -203,14 +232,18 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   }
 
   Future closeSubscriptions() async {
-    _stopWatcher?.stop();
-    _timer?.cancel();
-    _stopWatcher = null;
-    _timer = null;
-    await _sensorsStream?.cancel();
-    await _arStream?.cancel();
-    _sensorsStream = null;
-    _arStream = null;
+    try {
+      _stopWatcher?.stop();
+      _timer?.cancel();
+      _stopWatcher = null;
+      _timer = null;
+      await _sensorsStreamSubscription?.cancel();
+      await _arStream?.cancel();
+      _sensorsStreamSubscription = null;
+      _arStream = null;
+    } catch (ex, st) {
+      logger.e('closeSubscriptions', error: ex, stackTrace: st);
+    }
   }
 
   Future<void> saveTrack(SensorTrack track) {
@@ -237,5 +270,9 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
         }
       }
     }
+  }
+
+  Future dispose() async {
+    await closeSubscriptions();
   }
 }

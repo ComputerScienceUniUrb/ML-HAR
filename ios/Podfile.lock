@@ -1435,14 +1435,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: d121da9ef7e2ff4cab7666e76c5a3e0915ae08c3
-  audio_session: 088d2483ebd1dc43f51d253d4a1c517d9a2e7207
-  battery_plus: 1ff2e16ba75af2a78387f65476057a390b47885e
+  audio_session: f08db0697111ac84ba46191b55488c0563bb29c6
+  battery_plus: 8df26ad5ade26110b2d22a4d1f582b5926983023
   BoringSSL-GRPC: ca6a8e5d04812fce8ffd6437810c2d46f925eaeb
-  cloud_firestore: 8794ea2885e367f0a2096338964ddfd49739b2c7
-  device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
+  cloud_firestore: f5f37d55cffb850b85f46ce9ac852ca60e9545d4
+  device_info_plus: 71ffc6ab7634ade6267c7a93088ed7e4f74e5896
   Firebase: cf1b19f21410b029b6786a54e9764a0cacad3c99
-  firebase_core: 9efc3ecf689cdbc90f13f4dc58108c83ea46b266
-  firebase_storage: 942caaa628c22c941bff8af058347cc5c38a70bf
+  firebase_core: 84a16d041be8bc166b6e00350f89849e06daf9d1
+  firebase_storage: ba775022ffa934f38f3aae7151082ad74b42f0b6
   FirebaseAppCheckInterop: f23709c9ce92d810aa53ff4ce12ad3e666a3c7be
   FirebaseAuthInterop: ac22ed402c2f4e3a8c63ebd3278af9a06073c1be
   FirebaseCore: e0510f1523bc0eb21653cac00792e1e2bd6f1771
@@ -1453,26 +1453,26 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: b1d32c3b29a911dc174bcf363f2f70bda9509d2f
   FirebaseStorage: 1bf8f80ac3bb02c72844b7350e95e10be7113ef0
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_activity_recognition: 5c3b026997742b01e82424ef257db9640822ad77
+  flutter_activity_recognition: 52dfad4c1e9cec99f0841b3ed0efcc9d424b3deb
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   "gRPC-C++": 2fa52b3141e7789a28a737f251e0c45b4cb20a87
   gRPC-Core: a27c294d6149e1c39a7d173527119cfbc3375ce4
   GTMSessionFetcher: 75b671f9e551e4c49153d4c4f8659ef4f559b970
-  isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
-  just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
+  isar_flutter_libs: 9fc2cfb928c539e1b76c481ba5d143d556d94920
+  just_audio: 6c031bb61297cf218b4462be616638e81c058e97
   leveldb-library: cc8b8f8e013647a295ad3f8cd2ddf49a6f19be19
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
-  rive_common: 4743dbfd2911c99066547a3c6454681e0fa907df
-  sensors_plus: 4b7c4bd9c9be2efbd575649368fe77ef09b429ad
+  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  rive_common: dd421daaf9ae69f0125aa761dd96abd278399952
+  sensors_plus: be896569d136c51a2db98203645e289ae70c5e4f
   Sentry: da60d980b197a46db0b35ea12cb8f39af48d8854
-  sentry_flutter: 6a134f9d381e49f22ea25a67736cf0cf4d02ec9c
-  share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  wakelock_plus: 78ec7c5b202cab7761af8e2b2b3d0671be6c4ae1
+  sentry_flutter: 942017adbe00f963061cb11ec260414a990b7a42
+  share_plus: 011d6fb4f9d2576b83179a3a5c5e323202cdabcf
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  wakelock_plus: fd58c82b1388f4afe3fe8aa2c856503a262a5b03
 
 PODFILE CHECKSUM: 1959d098c91d8a792531a723c4a9d7e9f6a01e38
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

@@ -2,7 +2,7 @@ name: aifit
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 0.0.6+6
+version: 0.0.11+12
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -29,6 +29,7 @@ dependencies:
   go_router:
   hooks_riverpod: ^2.5.1
   just_audio: ^0.9.39
+  json_annotation: ^4.9.0
   intl:
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
@@ -60,6 +61,7 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   freezed:
   isar_generator: ^3.1.0+1
+  json_serializable: ^6.9.0
   riverpod_generator: ^2.4.2
   riverpod_lint: ^2.3.12
 

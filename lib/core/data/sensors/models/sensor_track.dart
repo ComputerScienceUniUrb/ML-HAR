@@ -140,4 +140,12 @@ class SensorData {
   double? y;
   double? z;
   DateTime? timestamp;
+
+  @override
+  String toString() {
+    return 'x: $x\n'
+        'y: $y\n'
+        'z: $z\n'
+        'timestamp: $timestamp';
+  }
 }

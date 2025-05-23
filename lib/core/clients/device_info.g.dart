@@ -6,23 +6,20 @@ part of 'device_info.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAndroidDeviceInfoHash() =>
-    r'34a1877bfd42badcbca00793cfe6d2fec488debe';
+String _$getDeviceInfoHash() => r'aa500aa329f81d7eba0ef74c327b8686b6db94c1';
 
-/// See also [getAndroidDeviceInfo].
-@ProviderFor(getAndroidDeviceInfo)
-final getAndroidDeviceInfoProvider =
-    AutoDisposeFutureProvider<AndroidDeviceInfo>.internal(
-  getAndroidDeviceInfo,
-  name: r'getAndroidDeviceInfoProvider',
+/// See also [getDeviceInfo].
+@ProviderFor(getDeviceInfo)
+final getDeviceInfoProvider = AutoDisposeFutureProvider<MyDeviceInfo>.internal(
+  getDeviceInfo,
+  name: r'getDeviceInfoProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$getAndroidDeviceInfoHash,
+      : _$getDeviceInfoHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef GetAndroidDeviceInfoRef
-    = AutoDisposeFutureProviderRef<AndroidDeviceInfo>;
+typedef GetDeviceInfoRef = AutoDisposeFutureProviderRef<MyDeviceInfo>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

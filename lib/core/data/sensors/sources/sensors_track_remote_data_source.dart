@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
+import 'package:aifit/core/utils/csv_utils.dart';
 import 'package:aifit/core/utils/logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -33,7 +34,7 @@ class SensorsTrackRemoteDataSource {
   Future<void> saveTrackOnFirestore(
     SensorTrack track,
     String downloadUrl,
-    AndroidDeviceInfo androidDeviceInfo,
+    MyDeviceInfo deviceInfo,
     String appVersion,
   ) async {
     if (track.cloudId == null) {
@@ -45,8 +46,8 @@ class SensorsTrackRemoteDataSource {
       await docRef.set({
         ...track.toJson(),
         'downloadUrl': downloadUrl,
-        'os': androidDeviceInfo.os,
-        'device': androidDeviceInfo.deviceModel,
+        'os': deviceInfo.os,
+        'device': deviceInfo.deviceModel,
         'appVersion': appVersion,
       });
     } catch (ex, st) {
