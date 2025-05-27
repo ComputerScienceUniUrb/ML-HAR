@@ -6,7 +6,10 @@ class SensorsTrackingRoute extends GoRoute {
   SensorsTrackingRoute({super.routes})
       : super(
           path: 'sensors-tracking',
-          builder: (context, state) => const SensorTrackingScreen(),
+          builder: (context, state){
+            final configuration = state.extra as TestConfiguration;
+            return SensorTrackingScreen(configuration: configuration,);
+          },
         );
 }
 

@@ -37,7 +37,8 @@ Map<String, dynamic> _$$ExperimentImplToJson(_$ExperimentImpl instance) =>
     };
 
 const _$SensorActivityTypeEnumMap = {
-  SensorActivityType.armRotation: 'armRotation',
+  SensorActivityType.forwardArmRotation: 'forwardArmRotation',
+  SensorActivityType.backwardsArmRotation: 'backwardsArmRotation',
   SensorActivityType.clapHands: 'clapHands',
   SensorActivityType.onBicycle: 'onBicycle',
   SensorActivityType.inVehicle: 'inVehicle',
@@ -56,12 +57,16 @@ const _$SensorActivityTypeEnumMap = {
   SensorActivityType.verticalCyclette: 'verticalCyclette',
   SensorActivityType.run: 'run',
   SensorActivityType.runOnSpot: 'runOnSpot',
+  SensorActivityType.sideOpening: 'sideOpening',
+  SensorActivityType.upperArmAndTorsoStretch: 'upperArmAndTorsoStretch',
+  SensorActivityType.middleSquat: 'middleSquat',
+  SensorActivityType.standingLunges: 'standingLunges',
+  SensorActivityType.heelLift: 'heelLift',
+  SensorActivityType.torsoTorsion: 'torsoTorsion',
 };
 
 const _$SmartphonePositionEnumMap = {
   SmartphonePosition.byHand: 'byHand',
   SmartphonePosition.byHandPortrait: 'byHandPortrait',
   SmartphonePosition.pocket: 'pocket',
-  SmartphonePosition.pouch: 'pouch',
-  SmartphonePosition.handleBar: 'handleBar',
 };

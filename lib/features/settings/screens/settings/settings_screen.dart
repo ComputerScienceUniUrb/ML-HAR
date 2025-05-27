@@ -15,13 +15,13 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           ListTile(
             onTap: () {
-              context.pushRoute('/settings/logs');
+              context.pushRoute('/home/settings/logs');
             },
             title: const Text('Logs'),
           ),
           ListTile(
             onTap: () {
-              context.pushRoute('/settings/user-details');
+              context.pushRoute('/home/settings/user-details');
             },
             title: const Text('User details'),
           ),

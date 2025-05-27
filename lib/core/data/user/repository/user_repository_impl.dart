@@ -1,4 +1,5 @@
 import 'package:aifit/core/data/user/models/gender.dart';
+import 'package:aifit/core/data/user/models/user_info.dart';
 import 'package:aifit/core/data/user/repository/user_repository.dart';
 import 'package:aifit/core/data/user/sources/user_local_data_source.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,5 +61,20 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> clearAll() {
     return userLocalDataSource.clearAll();
+  }
+
+  @override
+  Future<UserInfo> getUserInfo()async {
+    final height = await getUserHeight();
+    final age = await getUserAge();
+    final gender = await getUserGender();
+    final weight = await getUserWeight();
+
+    final userInfo = UserInfo();
+    userInfo.age = age;
+    userInfo.weight = weight;
+    userInfo.gender = gender;
+    userInfo.height = height;
+    return userInfo;
   }
 }

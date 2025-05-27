@@ -2,7 +2,7 @@ name: aifit
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 0.0.11+12
+version: 0.0.12+13
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -13,7 +13,7 @@ dependencies:
 
   animated_custom_dropdown: ^3.1.1
   awesome_dialog: ^3.2.1
-  battery_plus: ^6.0.3
+  battery_plus: ^6.2.1
   cloud_firestore: ^5.5.0
   csv:
   dartz: ^0.10.1
@@ -28,12 +28,13 @@ dependencies:
   freezed_annotation:
   go_router:
   hooks_riverpod: ^2.5.1
-  just_audio: ^0.9.39
+  just_audio: ^0.10.3
   json_annotation: ^4.9.0
   intl:
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
-  logger: ^2.4.0
+  logger: ^2.5.0
+  mobile_scanner: ^7.0.0
   package_info_plus: ^8.1.1
   path_provider:
   permission_handler:

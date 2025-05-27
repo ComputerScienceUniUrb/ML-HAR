@@ -1,5 +1,6 @@
 enum SensorActivityType {
-  armRotation,
+  forwardArmRotation,
+  backwardsArmRotation,
   clapHands,
   onBicycle,
   inVehicle,
@@ -17,12 +18,20 @@ enum SensorActivityType {
   horizontalCyclette,
   verticalCyclette,
   run,
-  runOnSpot;
+  runOnSpot,
+  sideOpening,
+  upperArmAndTorsoStretch,
+  middleSquat,
+  standingLunges,
+  heelLift,
+  torsoTorsion;
 
   String get translate {
     return switch (this) {
-      SensorActivityType.armRotation => 'Rotazione delle braccia',
-      SensorActivityType.clapHands => 'Battito di mani',
+      SensorActivityType.forwardArmRotation => 'Rotazione delle braccia avanti',
+      SensorActivityType.backwardsArmRotation =>
+        'Rotazione delle braccia indietro',
+      SensorActivityType.clapHands => 'Battito di mani, in piedi',
       SensorActivityType.onBicycle => 'Bicicletta',
       SensorActivityType.inVehicle => 'Su veicolo',
       SensorActivityType.stand => 'Fermo in piedi',
@@ -40,6 +49,14 @@ enum SensorActivityType {
       SensorActivityType.verticalCyclette => 'Cyclette verticale',
       SensorActivityType.run => 'Corsa',
       SensorActivityType.runOnSpot => 'Corsa sul posto',
+      SensorActivityType.sideOpening => 'Apertura laterale',
+      SensorActivityType.upperArmAndTorsoStretch =>
+        'Allungamento torso e braccio alto',
+      SensorActivityType.middleSquat => 'Mezzi squat sul posto',
+      SensorActivityType.standingLunges => 'Affondi da fermo',
+      SensorActivityType.standingLunges => 'Affondi da fermo',
+      SensorActivityType.heelLift => 'Sollevamento talloni',
+      SensorActivityType.torsoTorsion => 'Torsione del busto',
     };
   }
 }

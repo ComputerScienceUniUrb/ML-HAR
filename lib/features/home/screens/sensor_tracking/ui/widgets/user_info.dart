@@ -14,7 +14,7 @@ class UserInfoWidget extends ConsumerWidget {
     return Card(
       child: InkWell(
           onTap: ()async {
-            await context.pushRoute('/sensors-tracking/user-details');
+            // await context.pushRoute('/sensors-tracking/user-details');
           },
           child: Padding(
             padding: const EdgeInsets.all(8),

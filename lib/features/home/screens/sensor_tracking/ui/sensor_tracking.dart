@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:aifit/constants.dart';
 import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/experiment/models/experiment.dart';
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
@@ -8,7 +7,7 @@ import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
 import 'package:aifit/core/utils/csv_utils.dart';
 import 'package:aifit/core/utils/logger.dart';
 import 'package:aifit/core/utils/utils.dart';
-import 'package:aifit/features/home/screens/sensor_tracking/application/experiment_notifier.dart';
+import 'package:aifit/features/home/screens/load_experiment.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_provider.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracks_provider.dart';
@@ -19,15 +18,43 @@ import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/upload_di
 import 'package:aifit/features/home/screens/sensor_tracking/ui/widgets/user_info.dart';
 import 'package:aifit/features/home/screens/track_viewer/track_viewer.dart';
 import 'package:aifit/features/settings/screens/settings/settings_screen.dart';
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+class TestConfiguration extends Equatable {
+  final Experiment? experiment;
+  final SmartphonePosition smartphonePosition;
+  final SensorActivityType sensorActivityType;
+  final int duration;
+  final bool retainNullValue;
+
+  const TestConfiguration({
+    required this.experiment,
+    required this.smartphonePosition,
+    required this.sensorActivityType,
+    required this.duration,
+    required this.retainNullValue,
+  });
+
+  @override
+  List<Object?> get props => [
+        experiment,
+        smartphonePosition,
+        sensorActivityType,
+        duration,
+        retainNullValue,
+      ];
+}
+
 class SensorTrackingScreen extends ConsumerStatefulWidget {
-  const SensorTrackingScreen({super.key});
+  final TestConfiguration configuration;
+
+  const SensorTrackingScreen({
+    required this.configuration,
+    super.key,
+  });
 
   @override
   ConsumerState<SensorTrackingScreen> createState() =>
@@ -51,21 +78,40 @@ class _SensorTrackingScreenState extends ConsumerState<SensorTrackingScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     logger.i('AppState $state');
-    if (state == AppLifecycleState.paused) {
-      if (ref.exists(getSensorTracksProvider)) {
-        ref.read(sensorTrackingNotifierProvider.notifier).stop();
-      }
-    }
+    // if (state == AppLifecycleState.paused) {
+    //   if (ref.exists(getSensorTracksProvider)) {
+    //     ref.read(sensorTrackingNotifierProvider.notifier).stop();
+    //   }
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const SensorTrackingWidget();
+    return SensorTrackingWidget(
+      experiment: widget.configuration.experiment,
+      smartphonePosition: widget.configuration.smartphonePosition,
+      sensorActivityType: widget.configuration.sensorActivityType,
+      duration: widget.configuration.duration,
+      retainNullValue: widget.configuration.retainNullValue,
+    );
   }
 }
 
 class SensorTrackingWidget extends HookConsumerWidget {
-  const SensorTrackingWidget({super.key});
+  final Experiment? experiment;
+  final SmartphonePosition smartphonePosition;
+  final SensorActivityType sensorActivityType;
+  final int duration;
+  final bool retainNullValue;
+
+  const SensorTrackingWidget({
+    required this.smartphonePosition,
+    required this.sensorActivityType,
+    required this.duration,
+    required this.retainNullValue,
+    this.experiment,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,12 +125,6 @@ class SensorTrackingWidget extends HookConsumerWidget {
         );
       }
     });
-    final experimentController = useTextEditingController();
-    final selectedActivity = useState<SensorActivityType?>(null);
-    final smartphonePosition = useState<SmartphonePosition?>(null);
-    final testDuration = useState<double>(defaultTestDurationInSeconds);
-    final retainNullValue = useState<bool>(false);
-    final experimentState = useState<Experiment?>(null);
 
     final state = ref.watch(sensorTrackingNotifierProvider);
     final isTracking = state is SensorTrackingStateData;
@@ -96,361 +136,120 @@ class SensorTrackingWidget extends HookConsumerWidget {
           WakelockPlus.disable();
         }
       },
-      child: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Sensor Tracking'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.settings),
-                color: Colors.black,
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsScreen(),
-                    ),
-                  );
-                },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Sensor Tracking'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings),
+              color: Colors.black,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const UserInfoWidget(),
+            const SizedBox(height: 16),
+            if (experiment != null) ...[
+              ExperimentInfo(
+                experiment: experiment!,
               ),
+              const SizedBox(height: 16),
             ],
-          ),
-          body: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              const UserInfoWidget(),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: experimentController,
-                      decoration: const InputDecoration(
-                        hintText: 'CODE',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.clear,
-                    ),
-                    color: Colors.red,
-                    onPressed: () {
-                      experimentController.clear();
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  if (experimentState.value != null) {
-                    experimentState.value = null;
-                    selectedActivity.value = null;
-                    smartphonePosition.value = null;
-                    testDuration.value = 30;
-                    return;
-                  }
-
-                  final shortCode = experimentController.text.trim();
-                  final experiment = await ref
-                      .read(getExperimentByCodeProvider(shortCode).future);
-                  if (!context.mounted) return;
-                  if (experiment != null) {
-                    experimentState.value = experiment;
-                    if (experiment.smartphonePositionOverride != null) {
-                      smartphonePosition.value =
-                          experiment.smartphonePositionOverride;
-                    }
-
-                    if (experiment.activityTypeOverride != null) {
-                      selectedActivity.value = experiment.activityTypeOverride;
-                    }
-                    if (experiment.duration != null) {
-                      testDuration.value = experiment.duration!.toDouble();
-                    }
-                  } else {
-                    final dialog = AwesomeDialog(
+            ElevatedButton(
+              onPressed: () async {
+                if (!isTracking) {
+                  final isGranted = await isPermissionGrants();
+                  if (isGranted) {
+                    if (!context.mounted) return;
+                    final res = await showDialog(
                       context: context,
-                      dialogType: DialogType.error,
-                      animType: AnimType.scale,
-                      title: 'Errore nel recupero dell\'esperimento',
-                      // btnCancelOnPress: () {},
-                      btnOkOnPress: () {},
+                      builder: (_) => StartDialog(
+                        smartphonePosition: smartphonePosition,
+                        sensorActivityType: sensorActivityType,
+                      ),
                     );
-                    dialog.show();
+                    if (res ?? false) {
+                      ref.read(sensorTrackingNotifierProvider.notifier).start(
+                            duration: duration,
+                            sensorActivityType: sensorActivityType,
+                            smartphonePosition: smartphonePosition,
+                            retainNullValue: retainNullValue,
+                            experimentCode: experiment?.id,
+                          );
+                    }
                   }
-                },
+                } else {
+                  ref.read(sensorTrackingNotifierProvider.notifier).stop();
+                }
+              },
+              child: Text(buttonText),
+            ),
+            if (state is SensorTrackingStateData) ...[
+              Center(
                 child: Text(
-                  experimentState.value != null
-                      ? 'Reset esperimento'
-                      : 'Applica esperimento',
+                  '${state.remainingInSecond.toStringAsFixed(1)} sec',
+                  style: const TextStyle(fontSize: 35),
                 ),
               ),
-              const SizedBox(height: 16),
-              if (experimentState.value != null) ...[
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(experimentState.value!.name),
-                        if (experimentState.value!.description?.isNotEmpty ??
-                            false)
-                          Text(experimentState.value!.description!),
-                      ],
-                    ),
-                  ),
+              Center(
+                child: Text(
+                  'Activity Recognition: ${state.activityRecognized ?? '-'}',
+                  style: const TextStyle(fontSize: 24),
                 ),
-                const SizedBox(height: 16),
-              ],
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomDropdown(
-                      hintText: 'Tipo di attività',
-                      enabled: !isTracking,
-                      initialItem: selectedActivity.value,
-                      headerBuilder: (context, item, enabled) {
-                        return Text(
-                          item.translate,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      },
-                      listItemBuilder: (context, item, isSelected, onSelect) {
-                        return Text(item.translate);
-                      },
-                      items: SensorActivityType.values,
-                      onChanged: (v) {
-                        if (v == selectedActivity.value) return;
-                        if (selectedActivity.value ==
-                                SensorActivityType.onBicycle ||
-                            v == SensorActivityType.onBicycle) {
-                          smartphonePosition.value = null;
-                        }
-                        selectedActivity.value = v;
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.clear),
-                    color: Colors.red,
-                    onPressed: !isTracking
-                        ? () {
-                            selectedActivity.value = null;
-                          }
-                        : null,
-                  ),
-                ],
               ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomDropdown(
-                      hintText: 'Posizione smartphone',
-                      enabled: !isTracking,
-                      initialItem: smartphonePosition.value,
-                      headerBuilder: (context, item, enabled) {
-                        return Text(
-                          item.translate,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      },
-                      listItemBuilder: (context, item, isSelected, onSelect) {
-                        return Text(item.translate);
-                      },
-                      items:
-                          selectedActivity.value != SensorActivityType.onBicycle
-                              ? SmartphonePosition.values
-                                  .take(SmartphonePosition.values.length - 1)
-                                  .toList()
-                              : SmartphonePosition.values,
-                      onChanged: (v) {
-                        smartphonePosition.value = v;
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.clear),
-                    color: Colors.red,
-                    onPressed: !isTracking
-                        ? () {
-                            smartphonePosition.value = null;
-                          }
-                        : null,
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Slider(
-                      value: testDuration.value,
-                      min: 5,
-                      max: 600,
-                      label: '${testDuration.value.toStringAsFixed(0)} sec',
-                      onChanged: !isTracking
-                          ? (v) {
-                              testDuration.value = v;
-                            }
-                          : null,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.remove_circle,
-                    ),
-                    color: Colors.red,
-                    onPressed: testDuration.value >= 6
-                        ? () {
-                            if (testDuration.value >= 1) {
-                              testDuration.value = testDuration.value - 1;
-                            }
-                          }
-                        : null,
-                  ),
-                  Text(
-                    '${testDuration.value.toStringAsFixed(0)} sec',
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.add_circle,
-                    ),
-                    color: Colors.green,
-                    onPressed: testDuration.value < 600
-                        ? () {
-                            if (testDuration.value < 600) {
-                              testDuration.value = testDuration.value + 1;
-                            }
-                          }
-                        : null,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Consenti valori NULL?'),
-                  Switch(
-                    value: retainNullValue.value,
-                    onChanged: (value) {
-                      retainNullValue.value = value;
-                    },
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: selectedActivity.value != null &&
-                        smartphonePosition.value != null
-                    ? () async {
-                        if (!isTracking) {
-                          final isGranted = await isPermissionGrants();
-                          if (isGranted) {
-                            if (!context.mounted) return;
-                            final res = await showDialog(
-                              context: context,
-                              builder: (_) => StartDialog(
-                                smartphonePosition: smartphonePosition.value!,
-                                sensorActivityType: selectedActivity.value!,
+            ] else if (state is SensorTrackingStateCompleted)
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text('Current track'),
+                      ...[
+                        const SizedBox(height: 16),
+                        Text('Id: ${state.track.id}'),
+                        Text(
+                          'Totali campioni: ${state.track.sensorsData?.length}',
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    TrackViewerScreen(track: state.track),
                               ),
                             );
-                            if (res ?? false) {
-                              ref
-                                  .read(sensorTrackingNotifierProvider.notifier)
-                                  .start(
-                                    duration: testDuration.value.toInt(),
-                                    sensorActivityType: selectedActivity.value!,
-                                    smartphonePosition:
-                                        smartphonePosition.value!,
-                                    retainNullValue: retainNullValue.value,
-                                    experimentCode:
-                                        experimentController.text.trim(),
-                                  );
-                            }
-                          }
-                        } else {
-                          ref
-                              .read(sensorTrackingNotifierProvider.notifier)
-                              .stop();
-                        }
-                      }
-                    : null,
-                child: Text(buttonText),
-              ),
-              if (state is SensorTrackingStateData) ...[
-                Center(
-                  child: Text(
-                    '${state.remainingInSecond.toStringAsFixed(1)} sec',
-                    style: const TextStyle(fontSize: 35),
-                  ),
-                ),
-                Center(
-                  child: Text(
-                    'Activity Recognition: ${state.activityRecognized ?? '-'}',
-                    style: const TextStyle(fontSize: 24),
-                  ),
-                ),
-              ] else if (state is SensorTrackingStateCompleted)
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Text('Current track'),
-                        ...[
-                          const SizedBox(height: 16),
-                          Text('Id: ${state.track.id}'),
-                          Text(
-                            'Totali campioni: ${state.track.sensorsData?.length}',
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TrackViewerScreen(track: state.track),
-                                ),
-                              );
-                            },
-                            child: const Text('Vedi traccia'),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              final deviceInfo =
-                                  await ref.read(getDeviceInfoProvider.future);
-                              downloadCSV(
-                                state.track,
-                                deviceInfo,
-                              );
-                            },
-                            child: const Text('Scarica traccia'),
-                          ),
-                        ],
+                          },
+                          child: const Text('Vedi traccia'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            final deviceInfo =
+                                await ref.read(getDeviceInfoProvider.future);
+                            downloadCSV(
+                              state.track,
+                              deviceInfo,
+                            );
+                          },
+                          child: const Text('Scarica traccia'),
+                        ),
                       ],
-                    ),
+                    ],
                   ),
                 ),
-              const SensorTracks(),
-              const SizedBox(height: 64),
-            ],
-          ),
+              ),
+            const SensorTracks(),
+            const SizedBox(height: 64),
+          ],
         ),
       ),
     );

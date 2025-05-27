@@ -49,9 +49,9 @@ class StartDialog extends ConsumerWidget {
     return switch (position) {
       SmartphonePosition.byHandPortrait =>
         'Tieni lo smartphone in mano in posizione portrait guardando lo schermo!',
-      SmartphonePosition.pouch =>
-        'Tieni lo smartphone nel marsupio con lo schermo rivolto '
-            'verso l\'esterno e il connettore di ricarica verso destra!',
+      // SmartphonePosition.pouch =>
+      //   'Tieni lo smartphone nel marsupio con lo schermo rivolto '
+      //       'verso l\'esterno e il connettore di ricarica verso destra!',
       SmartphonePosition.pocket =>
         'Tieni lo smartphone in tasca con lo schermo rivolto '
             'verso l\'esterno e il connettore di ricarica verso il basso!',

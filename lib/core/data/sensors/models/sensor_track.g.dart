@@ -249,7 +249,8 @@ P _sensorTrackDeserializeProp<P>(
 }
 
 const _SensorTrackactivityTypeEnumValueMap = {
-  r'armRotation': r'armRotation',
+  r'forwardArmRotation': r'forwardArmRotation',
+  r'backwardsArmRotation': r'backwardsArmRotation',
   r'clapHands': r'clapHands',
   r'onBicycle': r'onBicycle',
   r'inVehicle': r'inVehicle',
@@ -268,9 +269,16 @@ const _SensorTrackactivityTypeEnumValueMap = {
   r'verticalCyclette': r'verticalCyclette',
   r'run': r'run',
   r'runOnSpot': r'runOnSpot',
+  r'sideOpening': r'sideOpening',
+  r'upperArmAndTorsoStretch': r'upperArmAndTorsoStretch',
+  r'middleSquat': r'middleSquat',
+  r'standingLunges': r'standingLunges',
+  r'heelLift': r'heelLift',
+  r'torsoTorsion': r'torsoTorsion',
 };
 const _SensorTrackactivityTypeValueEnumMap = {
-  r'armRotation': SensorActivityType.armRotation,
+  r'forwardArmRotation': SensorActivityType.forwardArmRotation,
+  r'backwardsArmRotation': SensorActivityType.backwardsArmRotation,
   r'clapHands': SensorActivityType.clapHands,
   r'onBicycle': SensorActivityType.onBicycle,
   r'inVehicle': SensorActivityType.inVehicle,
@@ -289,20 +297,22 @@ const _SensorTrackactivityTypeValueEnumMap = {
   r'verticalCyclette': SensorActivityType.verticalCyclette,
   r'run': SensorActivityType.run,
   r'runOnSpot': SensorActivityType.runOnSpot,
+  r'sideOpening': SensorActivityType.sideOpening,
+  r'upperArmAndTorsoStretch': SensorActivityType.upperArmAndTorsoStretch,
+  r'middleSquat': SensorActivityType.middleSquat,
+  r'standingLunges': SensorActivityType.standingLunges,
+  r'heelLift': SensorActivityType.heelLift,
+  r'torsoTorsion': SensorActivityType.torsoTorsion,
 };
 const _SensorTracksmartphonePositionEnumValueMap = {
   r'byHand': r'byHand',
   r'byHandPortrait': r'byHandPortrait',
   r'pocket': r'pocket',
-  r'pouch': r'pouch',
-  r'handleBar': r'handleBar',
 };
 const _SensorTracksmartphonePositionValueEnumMap = {
   r'byHand': SmartphonePosition.byHand,
   r'byHandPortrait': SmartphonePosition.byHandPortrait,
   r'pocket': SmartphonePosition.pocket,
-  r'pouch': SmartphonePosition.pouch,
-  r'handleBar': SmartphonePosition.handleBar,
 };
 
 Id _sensorTrackGetId(SensorTrack object) {

@@ -1,6 +1,7 @@
 import 'package:aifit/core/navigation/route_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -10,6 +11,14 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.go('/home/settings');
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
       ),
       body: ListView(
         children: const [
@@ -18,14 +27,25 @@ class HomeScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: NavItem(
-                  text: 'AR Tracking',
-                  path: '/ar-tracking',
+                  text: 'Test generico',
+                  path: '/home/set-test',
                 ),
               ),
               Expanded(
                 child: NavItem(
-                  text: 'Sensors Tracking',
-                  path: '/sensors-tracking',
+                  text: 'Scansiona QR-Code',
+                  path: '/home/scan',
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: NavItem(
+                  text: 'Da codice esperimento',
+                  path: '/home/load-experiment',
                 ),
               ),
             ],
