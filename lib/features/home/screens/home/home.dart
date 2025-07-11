@@ -50,6 +50,14 @@ class HomeScreen extends ConsumerWidget {
               ),
             ],
           ),
+          NavItem(
+            text: 'I tuoi WOM',
+            path: '/home/wom',
+          ),
+          NavItem(
+            text: 'Le mie sessioni',
+            path: '/home/sessions',
+          ),
         ],
       ),
     );
@@ -70,14 +78,17 @@ class NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        context.pushRoute(path);
-      },
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: Card(
-          child: Center(child: Text(text)),
+    return SizedBox(
+      height: 100,
+      child: InkWell(
+        onTap: () {
+          context.pushRoute(path);
+        },
+        child: AspectRatio(
+          aspectRatio: 3/2,
+          child: Card(
+            child: Center(child: Text(text)),
+          ),
         ),
       ),
     );

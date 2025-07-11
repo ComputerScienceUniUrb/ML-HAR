@@ -60,15 +60,3 @@ enum SensorActivityType {
     };
   }
 }
-
-/*Camminata sul posto,
- fermo (in piedi),
-
-      rotazione delle braccia,).*/
-
-// cyclette: resistenza, standard o recumbent
-// tapiroulant: pendenza, velocità
-
-// campionamento
-// tagliare i primi 5 secondi di attività
-// bip finale con un secondo di ritardo per tagliare la fine della traccia

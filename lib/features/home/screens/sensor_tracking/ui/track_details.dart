@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:aifit/core/clients/device_info.dart';
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
 import 'package:aifit/core/data/sensors/repository/sensors_repository_impl.dart';
-import 'package:aifit/core/data/sensors/sources/sensors_track_remote_data_source.dart';
 import 'package:aifit/core/utils/csv_utils.dart';
 import 'package:aifit/features/home/screens/track_viewer/track_viewer.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';

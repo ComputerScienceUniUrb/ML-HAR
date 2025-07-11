@@ -1,14 +1,11 @@
-import 'package:isar/isar.dart';
 
-part 'ar_data.g.dart';
-
-@collection
 class ARData {
-  Id id = Isar.autoIncrement;
+  final String id;
+  final String? activity;
 
-  String? activity;
+  final String? confidence;
 
-  String? confidence;
+  final DateTime? timestamp;
 
-  DateTime? timestamp;
+  ARData(this.id, this.activity, this.confidence, this.timestamp);
 }

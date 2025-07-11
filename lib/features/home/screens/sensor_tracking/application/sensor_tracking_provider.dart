@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aifit/app/database/database.dart';
 import 'package:aifit/constants.dart';
 import 'package:aifit/core/data/activity_recognition/repository/ar_repository_impl.dart';
 import 'package:aifit/core/data/audio/repository/audio_repository_impl.dart';
@@ -9,11 +10,12 @@ import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
 import 'package:aifit/core/data/sensors/repository/sensors_repository_impl.dart';
 import 'package:aifit/core/utils/logger.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
-import 'package:aifit/features/home/screens/sensor_tracking/application/user_info_notifier.dart';
 import 'package:aifit/features/settings/screens/user_details/application/user_details_notifier.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:battery_plus/battery_plus.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 part 'sensor_tracking_provider.g.dart';
@@ -37,7 +39,8 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   SensorActivityType? _sensorActivityType;
   int _testDuration = -1;
   int _startBatteryLevel = -1;
-  String? _experimentCode;
+  String? _experimentId;
+  String? _sessionId;
 
   @override
   SensorTrackingState build() {
@@ -85,7 +88,8 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     required SensorActivityType sensorActivityType,
     required SmartphonePosition smartphonePosition,
     required bool retainNullValue,
-    String? experimentCode,
+    String? experimentId,
+    String? sessionId,
   }) async {
     if (state is SensorTrackingStateData) return;
     state = const SensorTrackingStateInitial();
@@ -99,8 +103,12 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     _testDuration = duration;
     _sensorActivityType = sensorActivityType;
     _smartphonePosition = smartphonePosition;
-    if (experimentCode?.isNotEmpty ?? false) {
-      _experimentCode = experimentCode;
+    if (experimentId?.isNotEmpty ?? false) {
+      _experimentId = experimentId;
+    }
+
+    if (sessionId?.isNotEmpty ?? false) {
+      _sessionId = sessionId;
     }
     ref.read(getAudioRepositoryProvider).playPreStart();
     final t = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -155,13 +163,14 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
           );
         }
 
-        final s = SensorsData();
-        s.timestamp = DateTime.now();
-        s.accelerometer = _lastAccelerometer;
-        s.accelerometerWithGravity = _lastAccelerometerWithGravity;
-        s.gyroscope = _lastGyroscope;
-        s.magnetometer = _lastMagnetometer;
-        s.activityRecognized = _lastActivityRecognized;
+        final s = SensorsData(
+          timestamp: DateTime.now(),
+          accelerometer: _lastAccelerometer,
+          accelerometerWithGravity: _lastAccelerometerWithGravity,
+          gyroscope: _lastGyroscope,
+          magnetometer: _lastMagnetometer,
+          activityRecognized: _lastActivityRecognized,
+        );
         _sensorsData.add(s);
 
         // timers may have a 4ms resolution
@@ -187,6 +196,18 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
     reset();
   }
 
+  addWomReward() {
+    ref.read(getAppDatabaseProvider).womRewardsDao.addReward(
+          WomRewardsCompanion(
+            womCount: Value(5),
+            experimentId: Value(_experimentId),
+            sessionId: Value(_sessionId),
+            addedOn: Value(DateTime.now()),
+            // TODO add userId?
+          ),
+        );
+  }
+
   Future _completeSampling() async {
     logger.i('complete sampling');
     final userInfo = await ref.read(userDetailsNotifierProvider.future);
@@ -198,6 +219,7 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
       logger.w('_completeSampling', error: ex, stackTrace: st);
     }
     final track = SensorTrack(
+      id: const Uuid().v4(),
       timestamp: DateTime.now(),
       sensorsData: [..._sensorsData],
       smartphonePosition: _smartphonePosition,
@@ -207,14 +229,17 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
       startBatteryLevel: _startBatteryLevel,
       isInBatterySaveMode: isInBatterySaveMode,
       cloudId: null,
-      experimentCode: _experimentCode,
+      experimentId: _experimentId,
+      sessionId: _sessionId,
     );
     state = SensorTrackingStateCompleted(track: track);
     HapticFeedback.heavyImpact();
     ref.read(getAudioRepositoryProvider).playStop();
+    addWomReward();
     saveTrack(track);
     reset();
     _isCompleting = false;
+    uploadTrack();
   }
 
   Future<void> reset() async {

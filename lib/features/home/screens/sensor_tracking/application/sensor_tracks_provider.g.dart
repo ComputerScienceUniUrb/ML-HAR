@@ -6,7 +6,7 @@ part of 'sensor_tracks_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getSensorTracksHash() => r'75430bb123a41a63e5a6efd7d5ab145ca001b01b';
+String _$getSensorTracksHash() => r'e5352a0c5fe488c789842ba8ef4da3e1080701f3';
 
 /// See also [getSensorTracks].
 @ProviderFor(getSensorTracks)
@@ -21,6 +21,8 @@ final getSensorTracksProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetSensorTracksRef = AutoDisposeStreamProviderRef<List<SensorTrack>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

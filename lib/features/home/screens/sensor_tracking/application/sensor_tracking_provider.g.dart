@@ -7,7 +7,7 @@ part of 'sensor_tracking_provider.dart';
 // **************************************************************************
 
 String _$sensorTrackingNotifierHash() =>
-    r'f44dd0cef5668ba2e793cb2f451037c2943e3387';
+    r'74505f2d9b1974b6a4c5f596974a67816c010a72';
 
 /// See also [SensorTrackingNotifier].
 @ProviderFor(SensorTrackingNotifier)
@@ -24,4 +24,4 @@ final sensorTrackingNotifierProvider =
 
 typedef _$SensorTrackingNotifier = Notifier<SensorTrackingState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

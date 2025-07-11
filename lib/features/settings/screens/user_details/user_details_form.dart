@@ -5,6 +5,7 @@ import 'package:aifit/features/settings/screens/user_details/widgets/custom_numb
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:go_router/go_router.dart';
 
 class UserDetailsFormScreen extends ConsumerStatefulWidget {
   final UserInfo initialUserInfo;
@@ -69,7 +70,6 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                   ),
                   const SizedBox(height: 8),
                   CustomNumberFormField(
-
                     labelText: 'Altezza',
                     value: height?.toString() ?? '',
                     suffix: 'cm',
@@ -143,6 +143,16 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                     ),
                   ),
                   const SizedBox(height: 75),
+                  ElevatedButton(
+                    onPressed: () {
+                      final result =
+                          ref.read(userDetailsNotifierProvider.notifier).save();
+                      if (result) {
+                        context.go('/home');
+                      }
+                    },
+                    child: const Text('Salva i dati e procedi'),
+                  )
                 ],
               ),
             ),

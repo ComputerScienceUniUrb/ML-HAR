@@ -1,14 +1,12 @@
+import 'package:aifit/app/database/database.dart';
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
 import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
 import 'package:aifit/core/data/user/models/user_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
-import 'package:isar/isar.dart';
 
-part 'sensor_track.g.dart';
-
-@collection
 class SensorTrack {
   SensorTrack({
+    required this.id,
     required this.sensorsData,
     required this.activityType,
     required this.smartphonePosition,
@@ -18,15 +16,14 @@ class SensorTrack {
     required this.isInBatterySaveMode,
     required this.cloudId,
     required this.testDuration,
-    required this.experimentCode,
+    required this.experimentId,
+    required this.sessionId,
   });
 
-  Id? id;
+  final String id;
 
   final List<SensorsData>? sensorsData;
-  @Enumerated(EnumType.name)
   final SensorActivityType? activityType;
-  @Enumerated(EnumType.name)
   final SmartphonePosition? smartphonePosition;
 
   final DateTime? timestamp;
@@ -37,27 +34,53 @@ class SensorTrack {
   final bool? isInBatterySaveMode;
   final String? cloudId;
   final int? testDuration;
-  final String? experimentCode;
+  final String? experimentId;
+  final String? sessionId;
 
-  // factory SensorTrack.fromJson(Map<String, dynamic> json) {
-  //   return SensorTrack(
-  //     sensorsData: null,
-  //     activityType: (json['activityType'] as String?) != null
-  //         ? SensorActivityType.values.byName(json['activityType'] as String)
-  //         : null,
-  //     smartphonePosition: (json['smartphonePosition'] as String?) != null
-  //         ? SmartphonePosition.values
-  //         .byName(json['smartphonePosition'] as String)
-  //         : null,
-  //     timestamp: (json['timestamp'] as Timestamp?)?.toDate(),
-  //     userInfo:
-  //     json['userInfo'] != null ? UserInfo.fromJson(json['userInfo']) : null,
-  //     startBatteryLevel: json['startBatteryLevel'] as int?,
-  //     isInBatterySaveMode: json['isInBatterySaveMode'] as bool?,
-  //     cloudId: json['cloudId'] as String?,
-  //     testDuration: json['testDuration'] as int?,
-  //   );
-  // }
+  factory SensorTrack.fromMap(Map<String, dynamic> json) {
+    return SensorTrack(
+      sensorsData: null,
+      activityType: (json['activityType'] as String?) != null
+          ? SensorActivityType.values.byName(json['activityType'] as String)
+          : null,
+      smartphonePosition: (json['smartphonePosition'] as String?) != null
+          ? SmartphonePosition.values
+              .byName(json['smartphonePosition'] as String)
+          : null,
+      timestamp: (json['timestamp'] as Timestamp?)?.toDate(),
+      userInfo:
+          json['userInfo'] != null ? UserInfo.fromMap(json['userInfo']) : null,
+      startBatteryLevel: json['startBatteryLevel'] as int?,
+      isInBatterySaveMode: json['isInBatterySaveMode'] as bool?,
+      cloudId: json['cloudId'] as String?,
+      testDuration: json['testDuration'] as int?,
+      id: json['id'] as String,
+      experimentId: json['experimentId'] as String?,
+      sessionId: json['sessionId'] as String?,
+    );
+  }
+
+  // Nuovo costruttore factory per Drift
+  factory SensorTrack.fromDrift(
+      SensorTrackData trackData, List<SensorsDataEntry> dataEntries) {
+    return SensorTrack(
+      id: trackData.id.toString(),
+      // L'ID di Drift è int, lo convertiamo in String
+      sensorsData: dataEntries
+          .map((entry) => SensorsData.fromDriftEntry(entry))
+          .toList(),
+      activityType: trackData.activityType,
+      smartphonePosition: trackData.smartphonePosition,
+      timestamp: trackData.timestamp,
+      userInfo: trackData.userInfo,
+      startBatteryLevel: trackData.startBatteryLevel,
+      isInBatterySaveMode: trackData.isInBatterySaveMode,
+      cloudId: trackData.cloudId,
+      testDuration: trackData.testDuration,
+      experimentId: trackData.experimentId,
+      sessionId: trackData.sessionId,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -69,12 +92,13 @@ class SensorTrack {
       'isInBatterySaveMode': isInBatterySaveMode,
       'cloudId': cloudId,
       'testDuration': testDuration,
-      'experimentCode': experimentCode,
+      'experimentId': experimentId,
+      'sessionId': sessionId,
     };
   }
 
   SensorTrack copyWith({required String? cloudId}) {
-    final o = SensorTrack(
+    return SensorTrack(
       sensorsData: sensorsData,
       activityType: activityType,
       smartphonePosition: smartphonePosition,
@@ -84,10 +108,10 @@ class SensorTrack {
       isInBatterySaveMode: isInBatterySaveMode,
       cloudId: cloudId ?? cloudId,
       testDuration: testDuration,
-      experimentCode: experimentCode,
+      experimentId: experimentId,
+      sessionId: sessionId,
+      id: id,
     );
-    o.id = id;
-    return o;
   }
 }
 
@@ -95,14 +119,34 @@ extension SensorTrackX on SensorTrack {
   bool get isUploaded => cloudId != null;
 }
 
-@embedded
+// @embedded
 class SensorsData {
-  SensorData? accelerometer;
-  SensorData? accelerometerWithGravity;
-  SensorData? gyroscope;
-  SensorData? magnetometer;
-  String? activityRecognized;
-  DateTime? timestamp;
+  final SensorData? accelerometer;
+  final SensorData? accelerometerWithGravity;
+  final SensorData? gyroscope;
+  final SensorData? magnetometer;
+  final String? activityRecognized;
+  final DateTime? timestamp;
+
+  SensorsData({
+    required this.accelerometer,
+    required this.accelerometerWithGravity,
+    required this.gyroscope,
+    required this.magnetometer,
+    required this.activityRecognized,
+    required this.timestamp,
+  });
+
+  factory SensorsData.fromDriftEntry(SensorsDataEntry entry) {
+    return SensorsData(
+      accelerometer: entry.accelerometer,
+      accelerometerWithGravity: entry.accelerometerWithGravity,
+      gyroscope: entry.gyroscope,
+      magnetometer: entry.magnetometer,
+      activityRecognized: entry.activityRecognized,
+      timestamp: entry.timestamp,
+    );
+  }
 }
 
 extension SensorsDataCsv on SensorsData {
@@ -134,12 +178,18 @@ extension SensorsDataCsv on SensorsData {
   }
 }
 
-@embedded
 class SensorData {
-  double? x;
-  double? y;
-  double? z;
-  DateTime? timestamp;
+  final double? x;
+  final double? y;
+  final double? z;
+  final DateTime? timestamp;
+
+  SensorData({
+    required this.x,
+    required this.y,
+    required this.z,
+    required this.timestamp,
+  });
 
   @override
   String toString() {

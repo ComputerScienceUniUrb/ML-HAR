@@ -6,8 +6,7 @@ part of 'experiment.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExperimentImpl _$$ExperimentImplFromJson(Map<String, dynamic> json) =>
-    _$ExperimentImpl(
+_Experiment _$ExperimentFromJson(Map<String, dynamic> json) => _Experiment(
       id: json['id'] as String,
       name: json['name'] as String,
       shortCode: json['shortCode'] as String,
@@ -21,7 +20,7 @@ _$ExperimentImpl _$$ExperimentImplFromJson(Map<String, dynamic> json) =>
       enabled: json['enabled'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$ExperimentImplToJson(_$ExperimentImpl instance) =>
+Map<String, dynamic> _$ExperimentToJson(_Experiment instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

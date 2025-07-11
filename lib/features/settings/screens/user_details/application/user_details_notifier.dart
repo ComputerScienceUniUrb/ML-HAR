@@ -18,12 +18,12 @@ class UserDetailsNotifier extends _$UserDetailsNotifier {
     final weight = await ref.read(getUserRepositoryProvider).getUserWeight();
     final gender = await ref.read(getUserRepositoryProvider).getUserGender();
 
-    final userInfo = UserInfo();
-    userInfo.age = age;
-    userInfo.weight = weight;
-    userInfo.gender = gender;
-    userInfo.height = height;
-    return userInfo;
+    return UserInfo(
+      age: age,
+      weight: weight,
+      gender: gender,
+      height: height,
+    );
   }
 
   setHeight(double? height) async {
@@ -62,7 +62,20 @@ class UserDetailsNotifier extends _$UserDetailsNotifier {
     }
   }
 
-  clearAll(){
+  bool save() {
+    final currentState = state;
+    if (currentState is AsyncData) {
+      if (currentState.requireValue.age != null &&
+          currentState.requireValue.gender != null &&
+          currentState.requireValue.height != null &&
+          currentState.requireValue.weight != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  clearAll() {
     state = AsyncData(UserInfo());
     ref.read(getUserRepositoryProvider).clearAll();
   }

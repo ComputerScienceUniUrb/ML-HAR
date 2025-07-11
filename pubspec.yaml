@@ -2,7 +2,7 @@ name: aifit
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 0.0.12+13
+version: 0.1.0+15
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -15,15 +15,20 @@ dependencies:
   awesome_dialog: ^3.2.1
   battery_plus: ^6.2.1
   cloud_firestore: ^5.5.0
+  cloud_functions: ^5.5.2
   csv:
   dartz: ^0.10.1
   device_info_plus: ^10.1.2
-  equatable: ^2.0.5
+  dio:
+  drift:
+  drift_flutter: ^0.2.4
+  equatable: ^2.0.7
   flutter_hooks:
   firebase_core: ^3.8.0
   firebase_storage: ^12.3.6
   flutter_activity_recognition: ^4.0.0
-  flutter_riverpod: ^2.5.1
+  flutter_riverpod: ^2.6.1
+  flutter_secure_storage: ^9.2.4
   flutter_smart_dialog: ^4.9.8+7
   freezed_annotation:
   go_router:
@@ -31,40 +36,37 @@ dependencies:
   just_audio: ^0.10.3
   json_annotation: ^4.9.0
   intl:
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
-  logger: ^2.5.0
+  logger: ^2.6.0
   mobile_scanner: ^7.0.0
   package_info_plus: ^8.1.1
   path_provider:
   permission_handler:
-  riverpod_annotation: ^2.3.5
+  qr_flutter: ^4.1.0
+  riverpod_annotation: ^2.6.1
   rxdart: ^0.28.0
   # move this into external library
   sensors_plus: ^6.0.1
   sentry_flutter: ^8.14.1
   share_plus:
   shared_preferences: ^2.3.2
+#  tflite_flutter: ^0.11.0
   uuid:
+  url_launcher:
   material_table_view: ^5.0.0
   wakelock_plus:
-
-dependency_overrides:
-  analyzer: ^6.5.0
-  meta: ^1.14.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  build_runner: ^2.4.11
+  build_runner: any
   custom_lint:
+  drift_dev: ^2.27.0
   flutter_lints: ^3.0.0
   freezed:
-  isar_generator: ^3.1.0+1
-  json_serializable: ^6.9.0
-  riverpod_generator: ^2.4.2
-  riverpod_lint: ^2.3.12
+  json_serializable: ^6.9.5
+  riverpod_generator: ^2.6.5
+  riverpod_lint: ^2.6.5
 
 flutter:
   uses-material-design: true
@@ -72,3 +74,4 @@ flutter:
   assets:
     - assets/sounds/
     - assets/images/
+    - assets/aiFit_09_07_2025.tflite

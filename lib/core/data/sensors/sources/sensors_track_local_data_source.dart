@@ -1,29 +1,29 @@
+import 'package:aifit/app/database/database.dart';
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
-import 'package:aifit/core/providers/isar/isar_provider.dart';
+
 import 'package:aifit/core/utils/logger.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:isar/isar.dart';
 
 part 'sensors_track_local_data_source.g.dart';
 
 @riverpod
 SensorsTrackLocalDataSource getSensorsTrackLocalDataSource(
-  GetSensorsTrackLocalDataSourceRef ref,
+  Ref ref,
 ) {
-  return SensorsTrackLocalDataSource(ref: ref);
+  return SensorsTrackLocalDataSource(
+    database: ref.read(getAppDatabaseProvider),
+  );
 }
 
 class SensorsTrackLocalDataSource {
-  final GetSensorsTrackLocalDataSourceRef ref;
+  final AppDatabase database;
 
-  SensorsTrackLocalDataSource({required this.ref});
+  SensorsTrackLocalDataSource({required this.database});
 
   Future<void> saveTrack(SensorTrack track) async {
     try {
-      final isar = await ref.read(getIsarProvider.future);
-      await isar.writeTxn(() async {
-        await isar.sensorTracks.put(track);
-      });
+      await database.insertFullSensorTrack(track);
     } catch (ex, st) {
       logger.e(
         'SensorsTrackLocalDataSource: saveTrack',
@@ -35,13 +35,16 @@ class SensorsTrackLocalDataSource {
   }
 
   Stream<List<SensorTrack>> getSensorTracks() async* {
-    final stream = (await ref.read(getIsarProvider.future))
-        .sensorTracks
-        .filter()
-        .sensorsDataIsNotEmpty()
-        .sortByTimestampDesc()
-        .build();
+    final streamOfFullTracks = database.watchAllFullTracks();
 
-    yield* stream.watch(fireImmediately: true);
+    await for (final fullTracksList in streamOfFullTracks) {
+      final List<SensorTrack> sensorTracks = fullTracksList
+          .where((fullTrack) => fullTrack.dataEntries.isNotEmpty)
+          .map((fullTrack) {
+      return SensorTrack.fromDrift(fullTrack.track, fullTrack.dataEntries);
+      }).toList();
+
+      yield sensorTracks;
+    }
   }
 }

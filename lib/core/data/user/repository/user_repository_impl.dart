@@ -64,17 +64,17 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<UserInfo> getUserInfo()async {
+  Future<UserInfo> getUserInfo() async {
     final height = await getUserHeight();
     final age = await getUserAge();
     final gender = await getUserGender();
     final weight = await getUserWeight();
 
-    final userInfo = UserInfo();
-    userInfo.age = age;
-    userInfo.weight = weight;
-    userInfo.gender = gender;
-    userInfo.height = height;
-    return userInfo;
+    return UserInfo(
+      age: age,
+      weight: weight,
+      gender: gender,
+      height: height,
+    );
   }
 }

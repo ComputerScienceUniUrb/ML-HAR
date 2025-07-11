@@ -21,6 +21,8 @@ final getDailyRecordsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetDailyRecordsRef = AutoDisposeStreamProviderRef<List<ARData>>;
 String _$getAggregatedDayHash() => r'5746d6756dc6c26a5a47f80b4abf409a403f43fe';
 
@@ -37,7 +39,9 @@ final getAggregatedDayProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetAggregatedDayRef
     = AutoDisposeStreamProviderRef<Map<DateTime, List<ARData>>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

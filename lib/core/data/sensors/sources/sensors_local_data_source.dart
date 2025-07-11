@@ -3,20 +3,19 @@ import 'dart:async';
 import 'package:aifit/constants.dart';
 import 'package:aifit/core/data/sensors/models/sensor_track.dart';
 import 'package:aifit/core/utils/logger.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 part 'sensors_local_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
-SensorsLocalDataSource getSensorsLocalDataSource(
-  GetSensorsLocalDataSourceRef ref,
-) {
+SensorsLocalDataSource getSensorsLocalDataSource(Ref ref) {
   return SensorsLocalDataSource(ref: ref);
 }
 
 class SensorsLocalDataSource {
-  final GetSensorsLocalDataSourceRef ref;
+  final Ref ref;
 
   SensorsLocalDataSource({required this.ref});
 
@@ -24,11 +23,12 @@ class SensorsLocalDataSource {
     return userAccelerometerEventStream(
       samplingPeriod: defaultSamplingPeriod,
     ).map(
-      (e) => SensorData()
-        ..x = e.x
-        ..y = e.y
-        ..z = e.z
-        ..timestamp = e.timestamp,
+      (e) => SensorData(
+        x: e.x,
+        y: e.y,
+        z: e.z,
+        timestamp: e.timestamp,
+      ),
     );
   }
 
@@ -36,11 +36,12 @@ class SensorsLocalDataSource {
     return accelerometerEventStream(
       samplingPeriod: defaultSamplingPeriod,
     ).map(
-      (e) => SensorData()
-        ..x = e.x
-        ..y = e.y
-        ..z = e.z
-        ..timestamp = e.timestamp,
+      (e) => SensorData(
+        x: e.x,
+        y: e.y,
+        z: e.z,
+        timestamp: e.timestamp,
+      ),
     );
   }
 
@@ -48,16 +49,14 @@ class SensorsLocalDataSource {
     return magnetometerEventStream(
       samplingPeriod: defaultSamplingPeriod,
     ).map(
-      (e) => SensorData()
-        ..x = e.x
-        ..y = e.y
-        ..z = e.z
-        ..timestamp = e.timestamp,
+      (e) => SensorData(
+        x: e.x,
+        y: e.y,
+        z: e.z,
+        timestamp: e.timestamp,
+      ),
     );
   }
-
-  // late final listenGyroscopeSensors = _gyroscopeData.stream;
-  // final _gyroscopeData = BehaviorSubject<SensorData>();
 
   Stream<SensorData> gyroscopeStream() => gyroController.stream;
   final StreamController<SensorData> gyroController =
@@ -72,11 +71,12 @@ class SensorsLocalDataSource {
       _gyroscopeStreamSubscription =
           gyroscopeEventStream(samplingPeriod: defaultSamplingPeriod).listen(
         (e) {
-          final data = SensorData()
-            ..x = e.x
-            ..y = e.y
-            ..z = e.z
-            ..timestamp = e.timestamp;
+          final data = SensorData(
+            x: e.x,
+            y: e.y,
+            z: e.z,
+            timestamp: e.timestamp,
+          );
           gyroController.add(data);
         },
         onError: (error) {
@@ -106,11 +106,12 @@ class SensorsLocalDataSource {
           userAccelerometerEventStream(samplingPeriod: defaultSamplingPeriod)
               .listen(
         (e) {
-          final data = SensorData()
-            ..x = e.x
-            ..y = e.y
-            ..z = e.z
-            ..timestamp = e.timestamp;
+          final data = SensorData(
+            x: e.x,
+            y: e.y,
+            z: e.z,
+            timestamp: e.timestamp,
+          );
           userAccelerometerController.add(data);
         },
         onError: (error) {
@@ -119,7 +120,8 @@ class SensorsLocalDataSource {
         cancelOnError: true,
       );
     } catch (ex, st) {
-      logger.e('startListeningUserAccelerometerData', error: ex, stackTrace: st);
+      logger.e('startListeningUserAccelerometerData',
+          error: ex, stackTrace: st);
     }
   }
 }

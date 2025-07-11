@@ -3,8 +3,11 @@ import 'package:aifit/core/navigation/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import 'firebase_options.dart';
 
@@ -41,7 +44,7 @@ void main() async {
   await SentryFlutter.init(
     (options) {
       options.dsn =
-          'https://1e3569f1022100ccf54af4f45f9ccbad@sentry.digit.srl/8';
+          'https://cc3a237e6d29a14d17b37e433cf70785@o4509545347874816.ingest.de.sentry.io/4509545398468688';
       // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
       // We recommend adjusting this value in production.
       options.tracesSampleRate = 1.0;
@@ -53,6 +56,12 @@ void main() async {
   );
 }
 
-void startApp() {
+Future startApp() async {
+  // const storage = FlutterSecureStorage();
+  // var uid = await storage.read(key: 'userId');
+  // if (uid == null) {
+  //   uid = const Uuid().v4();
+  //   await storage.write(key: 'userId', value: uid);
+  // }
   runApp(const AIFitApp());
 }

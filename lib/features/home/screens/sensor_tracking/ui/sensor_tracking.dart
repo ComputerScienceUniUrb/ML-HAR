@@ -158,12 +158,15 @@ class SensorTrackingWidget extends HookConsumerWidget {
           children: [
             const UserInfoWidget(),
             const SizedBox(height: 16),
-            if (experiment != null) ...[
-              ExperimentInfo(
-                experiment: experiment!,
-              ),
-              const SizedBox(height: 16),
-            ],
+            ExperimentInfo(
+              name: experiment?.name,
+              duration: experiment?.duration ?? duration,
+              description: experiment?.description,
+              activityType:
+                  experiment?.activityTypeOverride ?? sensorActivityType,
+              smartphonePosition:
+                  experiment?.smartphonePositionOverride ?? smartphonePosition,
+            ),
             ElevatedButton(
               onPressed: () async {
                 if (!isTracking) {
@@ -183,7 +186,7 @@ class SensorTrackingWidget extends HookConsumerWidget {
                             sensorActivityType: sensorActivityType,
                             smartphonePosition: smartphonePosition,
                             retainNullValue: retainNullValue,
-                            experimentCode: experiment?.id,
+                            experimentId: experiment?.id,
                           );
                     }
                   }

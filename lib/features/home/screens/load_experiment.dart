@@ -1,3 +1,5 @@
+import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
+import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/ui/sensor_tracking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,20 +11,24 @@ import 'package:aifit/features/home/screens/sensor_tracking/application/experime
 
 class LoadExperimentScreen extends HookConsumerWidget {
   final String? initialShortCode;
+  final String? experimentId;
 
   const LoadExperimentScreen({
     super.key,
     this.initialShortCode,
+    this.experimentId,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final experimentController = useTextEditingController();
-    final shortCode = useState<String?>(initialShortCode);
+    final experimentController = useTextEditingController(
+      text: initialShortCode?.toUpperCase(),
+    );
+    final shortCode = useState<String?>(initialShortCode?.toUpperCase());
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cerca esperimento'),
+        title: const Text('Cerca esperimento'),
       ),
       body: GestureDetector(
         onTap: () {
@@ -31,52 +37,62 @@ class LoadExperimentScreen extends HookConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: experimentController,
-                    textCapitalization: TextCapitalization.characters,
-                    decoration: const InputDecoration(
-                      hintText: 'CODE',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(),
+            if (experimentId == null) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: experimentController,
+                      textCapitalization: TextCapitalization.characters,
+                      decoration: const InputDecoration(
+                        hintText: 'CODE',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                IconButton(
-                  icon: const Icon(
-                    Icons.clear,
+                  const SizedBox(width: 16),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.clear,
+                    ),
+                    color: Colors.red,
+                    onPressed: () {
+                      experimentController.clear();
+                    },
                   ),
-                  color: Colors.red,
-                  onPressed: () {
-                    experimentController.clear();
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                final sc = experimentController.text.trim();
-
-                if (shortCode.value == sc) {
-                  ref.invalidate(getExperimentByCodeProvider(sc));
-                } else {
-                  shortCode.value = sc;
-                }
-              },
-              child: Text(
-                'Applica esperimento',
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
-            if (shortCode.value != null)
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  final sc = experimentController.text.trim().toLowerCase();
+
+                  if (shortCode.value == sc) {
+                    ref.invalidate(getExperimentByCodeProvider(sc));
+                  } else {
+                    shortCode.value = sc;
+                  }
+                },
+                child: const Text(
+                  'Applica esperimento',
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            if (shortCode.value != null || experimentId != null)
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  final state =
-                      ref.watch(getExperimentByCodeProvider(shortCode.value!));
+                  late AsyncValue<Experiment?> state;
+                  if (shortCode.value != null) {
+                    state = ref
+                        .watch(getExperimentByCodeProvider(shortCode.value!));
+                  } else if (experimentId != null) {
+                    state = ref.watch(getExperimentByIdProvider(experimentId!));
+                  } else {
+                    return SizedBox.shrink();
+                  }
 
                   if (state.isLoading) {
                     return const CircularProgressIndicator();
@@ -99,19 +115,26 @@ class LoadExperimentScreen extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ExperimentInfo(
-                          experiment: experiment,
+                          name: experiment.name,
+                          description: experiment.description,
+                          smartphonePosition:
+                              experiment.smartphonePositionOverride,
+                          activityType: experiment.activityTypeOverride,
+                          duration: experiment.duration,
                         ),
-                        if(!canDoTest)
-                        ElevatedButton(
-                          onPressed: () {
-                            context.go('/home/load-experiment/set-test',
-                                extra: experiment);
-                          },
-                          child: const Center(
-                            child: Text('Finisci di configurare'),
-                          ),
-                        ),
-                        if (canDoTest) ...[
+                        if (!canDoTest)
+                          ElevatedButton(
+                            onPressed: () {
+                              context.go(
+                                '/home/load-experiment/set-test',
+                                extra: experiment,
+                              );
+                            },
+                            child: const Center(
+                              child: Text('Finisci di configurare'),
+                            ),
+                          )
+                        else ...[
                           const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () {
@@ -174,10 +197,18 @@ class TextInfo extends StatelessWidget {
 }
 
 class ExperimentInfo extends StatelessWidget {
-  final Experiment experiment;
+  final String? name;
+  final String? description;
+  final SensorActivityType? activityType;
+  final SmartphonePosition? smartphonePosition;
+  final int? duration;
 
   const ExperimentInfo({
-    required this.experiment,
+    required this.name,
+    required this.duration,
+    required this.description,
+    required this.activityType,
+    required this.smartphonePosition,
     super.key,
   });
 
@@ -186,25 +217,27 @@ class ExperimentInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextInfo(
-          text: 'Nome',
-          value: experiment.name,
-        ),
-        TextInfo(
-          text: 'Descrizione',
-          value: experiment.description,
-        ),
+        if (name != null)
+          TextInfo(
+            text: 'Nome Experimento',
+            value: name,
+          ),
+        if (description != null)
+          TextInfo(
+            text: 'Descrizione',
+            value: description,
+          ),
         TextInfo(
           text: 'Attività',
-          value: experiment.activityTypeOverride?.translate,
+          value: activityType?.translate,
         ),
         TextInfo(
           text: 'Posizione smartphone',
-          value: experiment.smartphonePositionOverride?.translate,
+          value: smartphonePosition?.translate,
         ),
         TextInfo(
           text: 'Durata del test',
-          value: experiment.duration?.toString(),
+          value: '${duration ?? '-'} secondi',
         ),
       ],
     );

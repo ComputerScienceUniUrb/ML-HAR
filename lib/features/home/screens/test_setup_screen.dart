@@ -38,10 +38,14 @@ class TestSetupScreen extends HookConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          if (initialExperiment != null) Padding(
-            padding: const EdgeInsets.only(bottom:16.0),
-            child: Text(initialExperiment!.name,style: TextStyle(fontSize: 20),),
-          ),
+          if (initialExperiment != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Text(
+                initialExperiment!.name,
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
           Row(
             children: [
               Expanded(
@@ -180,11 +184,12 @@ class TestSetupScreen extends HookConsumerWidget {
           ElevatedButton(
             onPressed: canGoNext
                 ? () {
+                    final td = testDuration.value.toInt();
                     final extra = TestConfiguration(
-                      experiment: initialExperiment,
+                      experiment: initialExperiment?.copyWith(duration: td),
                       smartphonePosition: smartphonePosition.value!,
                       sensorActivityType: sensorActivityType.value!,
-                      duration: testDuration.value.toInt(),
+                      duration: td,
                       retainNullValue: false,
                     );
                     context.go('/home/sensors-tracking', extra: extra);

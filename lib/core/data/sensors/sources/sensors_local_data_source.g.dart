@@ -7,7 +7,7 @@ part of 'sensors_local_data_source.dart';
 // **************************************************************************
 
 String _$getSensorsLocalDataSourceHash() =>
-    r'efad1619a91f3fd5af4db0709debd878f080a986';
+    r'e7b3db4991e2a9dd0b485abb43c2486adcec9b59';
 
 /// See also [getSensorsLocalDataSource].
 @ProviderFor(getSensorsLocalDataSource)
@@ -22,6 +22,8 @@ final getSensorsLocalDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetSensorsLocalDataSourceRef = ProviderRef<SensorsLocalDataSource>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

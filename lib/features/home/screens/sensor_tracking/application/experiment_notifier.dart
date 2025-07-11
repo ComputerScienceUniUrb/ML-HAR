@@ -11,7 +11,7 @@ Future<Experiment?> getExperimentByCode(Ref ref, String shortCode) async {
   try {
     final f = await FirebaseFirestore.instance
         .collection('experiments')
-        .where('shortCode', isEqualTo: shortCode)
+        .where('shortCode', isEqualTo: shortCode.toLowerCase())
         .limit(1)
         .get();
     if (f.docs.isEmpty) {
@@ -20,6 +20,24 @@ Future<Experiment?> getExperimentByCode(Ref ref, String shortCode) async {
     return Experiment.fromJson(f.docs.first.data());
   } catch (ex, st) {
     logger.e('getExperimentByCode', error: ex, stackTrace: st);
+    rethrow;
+  }
+}
+
+@riverpod
+Future<Experiment?> getExperimentById(Ref ref, String experimentId) async {
+  try {
+    final f = await FirebaseFirestore.instance
+        .collection('experiments')
+        .doc(experimentId)
+        .get();
+    final data = f.data();
+    if (!f.exists || data == null) {
+      return null;
+    }
+    return Experiment.fromJson(data);
+  } catch (ex, st) {
+    logger.e('getExperimentById', error: ex, stackTrace: st);
     rethrow;
   }
 }
