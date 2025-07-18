@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aifit/app/database/database.dart';
 import 'package:aifit/core/data/firestore_reference.dart';
 import 'package:aifit/core/data/user/models/gender.dart';
+import 'package:aifit/core/data/user/repository/user_repository_impl.dart';
 import 'package:aifit/core/providers/secure_storage.dart';
 import 'package:aifit/features/session/models/player.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -78,13 +79,14 @@ class SessionPlayerNotifier extends _$SessionPlayerNotifier {
 
   Future<String> subscribePlayer() async {
     try {
+      final userInfo  = await ref.read(getUserRepositoryProvider).getUserInfo();
       final result = await FirebaseFunctions.instanceFor(region: 'europe-west3')
           .httpsCallable('subscribeToSession')
           .call({
-        'gender': 'male',
-        'age': 44,
-        'height': 171,
-        'weight': 70.5,
+        'gender': userInfo.gender?.name,
+        'age': userInfo.age,
+        'height': userInfo.height,
+        'weight': userInfo.weight,
         'sessionId': sessionId,
       });
 

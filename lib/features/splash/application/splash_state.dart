@@ -7,6 +7,6 @@ class SplashState with _$SplashState {
 
   const factory SplashState.missingUserInfo() = SplashStateMissingUserInfo;
   const factory SplashState.loading() = SplashStateLoading;
-  const factory SplashState.loaded() = SplashStateLoaded;
+  const factory SplashState.loaded({required bool introSeen}) = SplashStateLoaded;
 
 }

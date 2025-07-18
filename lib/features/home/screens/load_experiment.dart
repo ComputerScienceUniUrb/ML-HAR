@@ -95,7 +95,7 @@ class LoadExperimentScreen extends HookConsumerWidget {
                   }
 
                   if (state.isLoading) {
-                    return const CircularProgressIndicator();
+                    return Center(child: const CircularProgressIndicator());
                   }
 
                   if (state.hasError) {
@@ -126,7 +126,7 @@ class LoadExperimentScreen extends HookConsumerWidget {
                           ElevatedButton(
                             onPressed: () {
                               context.go(
-                                '/home/load-experiment/set-test',
+                                '/load-experiment/set-test',
                                 extra: experiment,
                               );
                             },

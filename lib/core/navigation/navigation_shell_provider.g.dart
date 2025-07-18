@@ -7,7 +7,7 @@ part of 'navigation_shell_provider.dart';
 // **************************************************************************
 
 String _$getNavigationShellHash() =>
-    r'6df6c61ce2b141cbb302f6da52cb0b37444ff5dc';
+    r'832f7ccc891c8ef6776adc693b8b0f8b549bf6a4';
 
 /// See also [getNavigationShell].
 @ProviderFor(getNavigationShell)

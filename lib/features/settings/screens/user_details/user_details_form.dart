@@ -134,6 +134,12 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+                      listItemBuilder: (context, item, enabled, _) {
+                        return Text(item.translate);
+                      },
+                      headerBuilder: (context, item, enabled) {
+                        return Text(item.translate);
+                      },
                       onChanged: (value) {
                         ref
                             .read(userDetailsNotifierProvider.notifier)
@@ -148,7 +154,7 @@ class UserDetailsFormScreenState extends ConsumerState<UserDetailsFormScreen> {
                       final result =
                           ref.read(userDetailsNotifierProvider.notifier).save();
                       if (result) {
-                        context.go('/home');
+                        context.go('/');
                       }
                     },
                     child: const Text('Salva i dati e procedi'),

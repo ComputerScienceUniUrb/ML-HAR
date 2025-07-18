@@ -7,7 +7,7 @@ part of 'sensor_tracking_provider.dart';
 // **************************************************************************
 
 String _$sensorTrackingNotifierHash() =>
-    r'74505f2d9b1974b6a4c5f596974a67816c010a72';
+    r'a3e985e013e018425d0c3c4a20b7fd4c5e286e2a';
 
 /// See also [SensorTrackingNotifier].
 @ProviderFor(SensorTrackingNotifier)

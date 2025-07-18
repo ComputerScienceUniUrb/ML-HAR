@@ -11,7 +11,11 @@ class SplashScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(splashNotifierProvider, (p, n) {
       if (n is SplashStateLoaded) {
-        context.go('/home');
+        if (!n.introSeen) {
+          context.go('/intro');
+        } else {
+          context.go('/');
+        }
       } else if (n is SplashStateMissingUserInfo) {
         context.go('/user-details');
       }

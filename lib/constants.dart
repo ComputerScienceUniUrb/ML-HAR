@@ -5,6 +5,10 @@ const sourceId = '68677b24fc1ae1860800965d';
 const defaultSamplingPeriod = Duration(milliseconds: 10);
 const defaultTestDurationInSeconds = 30.0;
 
+const privacyPolicyUrl = 'https://digit.srl/privacy/aifit/';
+const acceptanceUrl = 'https://digit.srl/files/aifit/aifit-assenso.pdf';
+const introSeenKey = 'introSeen';
+
 const csvUserInfoHeader = [
   'OS',
   'Device',

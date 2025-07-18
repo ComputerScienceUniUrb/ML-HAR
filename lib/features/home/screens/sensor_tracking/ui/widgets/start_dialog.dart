@@ -1,5 +1,6 @@
 import 'package:aifit/core/data/sensors/models/sensor_activity_type.dart';
 import 'package:aifit/core/data/sensors/models/smartphone_position.dart';
+import 'package:aifit/core/navigation/utils/route_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,7 +36,7 @@ class StartDialog extends ConsumerWidget {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
-                context.pop(true);
+                context.maybePop(true);
               },
               child: const Text('Start'),
             ),

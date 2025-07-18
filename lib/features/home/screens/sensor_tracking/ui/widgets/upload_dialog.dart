@@ -1,3 +1,4 @@
+import 'package:aifit/core/navigation/utils/route_extensions.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_provider.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +96,7 @@ class _ErrorWidget extends ConsumerWidget {
           children: [
             TextButton(
               onPressed: () {
-                context.pop(false);
+                context.maybePop(false);
               },
               child: const Text('Esci'),
             ),
@@ -136,7 +137,7 @@ class _TrackSavedWidget extends ConsumerWidget {
           children: [
             TextButton(
               onPressed: () {
-                context.pop(false);
+                context.maybePop(false);
               },
               child: const Text('No'),
             ),

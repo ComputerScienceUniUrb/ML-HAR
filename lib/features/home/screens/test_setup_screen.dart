@@ -192,7 +192,7 @@ class TestSetupScreen extends HookConsumerWidget {
                       duration: td,
                       retainNullValue: false,
                     );
-                    context.go('/home/sensors-tracking', extra: extra);
+                    context.go('/sensors-tracking', extra: extra);
                   }
                 : null,
             child: const Text('Avanti'),

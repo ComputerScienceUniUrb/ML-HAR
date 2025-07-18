@@ -18,16 +18,17 @@ class OpenedSessionWidget extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Center(
+          Center(
             child: Text(
-              'Benvenuto in questa sessione!',
+              'Sessione ${session.name} aperta!',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 24),
           const Text('Resta in attesa dell\'avvio di un nuovo esperimento'),
           const SizedBox(height: 16),
-          const Text('Dettaglio esperimento:'),
+          const Text(
+              'Di seguito trove le info relative al primo esperimento a cui verrai sottoposto!'),
           const SizedBox(height: 16),
           if (session.selectedExperimentId != null)
             Consumer(

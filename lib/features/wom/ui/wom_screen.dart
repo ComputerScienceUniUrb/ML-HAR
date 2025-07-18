@@ -1,10 +1,13 @@
 import 'package:aifit/features/wom/application/wom_notifier.dart';
 import 'package:aifit/features/wom/application/wom_transactions_notifier.dart';
 import 'package:aifit/features/wom/domain/wom_repository.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class WomScreen extends ConsumerStatefulWidget {
@@ -65,7 +68,7 @@ class _WomScreenState extends ConsumerState<WomScreen>
 final dateFormatter = DateFormat('dd-MM-yyyy HH:mm:ss');
 
 // --- Tab 1: WOM Guadagnati (Rewards) ---
-class WomRewardsTab extends ConsumerWidget {
+class WomRewardsTab extends HookConsumerWidget {
   const WomRewardsTab({super.key});
 
   @override
@@ -77,7 +80,7 @@ class WomRewardsTab extends ConsumerWidget {
 
     final womToRedeem = totalRewards - totalWomRedeemed;
     final rewardsAsyncValue = ref.watch(getWomRewardsProvider);
-
+    final loading = useState(false);
     return rewardsAsyncValue.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(child: Text('Errore: $err')),
@@ -107,11 +110,37 @@ class WomRewardsTab extends ConsumerWidget {
                             color: Theme.of(context).colorScheme.primary,
                           ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        ref.read(getWomRepositoryProvider).redeemWom(5);
-                      },
-                      child: Text('Riscatta'),
+                    ElevatedButton.icon(
+                      onPressed: womToRedeem > 0
+                          ? () async {
+                              if (loading.value) {
+                                return;
+                              }
+
+                              try {
+                                loading.value = true;
+                                await ref
+                                    .read(getWomRepositoryProvider)
+                                    .redeemWom(womToRedeem);
+                              } catch (ex) {
+                                final dialog = AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.error,
+                                  animType: AnimType.scale,
+                                  title:
+                                      'Errore durante la conversione dei WOM',
+                                  btnOkOnPress: () {},
+                                );
+                                dialog.show();
+                              } finally {
+                                loading.value = false;
+                              }
+                            }
+                          : null,
+                      icon: loading.value
+                          ? const Center(child: CircularProgressIndicator())
+                          : const Icon(Icons.download),
+                      label: const Text('Riscatta'),
                     ),
                   ],
                 ),
@@ -224,8 +253,8 @@ class WomTransactionsTab extends ConsumerWidget {
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 4),
                     child: ListTile(
-                      onTap: (){
-                        context.go('/home/wom/details',extra: transaction);
+                      onTap: () {
+                        context.go('/wom/details', extra: transaction);
                       },
                       leading:
                           const Icon(Icons.check_circle, color: Colors.green),

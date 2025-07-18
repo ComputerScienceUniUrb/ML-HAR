@@ -38,6 +38,30 @@ class TestConfiguration extends Equatable {
     required this.retainNullValue,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'experiment': experiment?.toJson(),
+      'smartphonePosition': smartphonePosition.name,
+      'sensorActivityType': sensorActivityType.name,
+      'duration': duration,
+      'retainNullValue': retainNullValue,
+    };
+  }
+
+  factory TestConfiguration.fromJson(Map<String, dynamic> json) {
+    return TestConfiguration(
+      experiment: json['experiment'] != null
+          ? Experiment.fromJson(json['experiment'] as Map<String, dynamic>)
+          : null,
+      smartphonePosition: SmartphonePosition.values
+          .byName(json['smartphonePosition'] as String),
+      sensorActivityType: SensorActivityType.values
+          .byName(json['sensorActivityType'] as String),
+      duration: json['duration'] as int,
+      retainNullValue: json['retainNullValue'] as bool,
+    );
+  }
+
   @override
   List<Object?> get props => [
         experiment,

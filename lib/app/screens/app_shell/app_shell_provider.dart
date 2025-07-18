@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_shell_provider.g.dart';
 
-@riverpod
+@Riverpod(dependencies: [getNavigationShell])
 class AppShellNotifier extends _$AppShellNotifier {
   /// Flag used to know if we are currently showing the DownTime snackbar.
   ///

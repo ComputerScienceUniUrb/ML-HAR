@@ -1,3 +1,4 @@
+import 'package:aifit/features/home/screens/load_experiment.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/experiment_notifier.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_provider.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
@@ -39,6 +40,7 @@ class LiveSessionWidget extends ConsumerWidget {
                       ? const SizedBox.shrink()
                       : Column(
                           mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             const Text(
                                 'Esperimento caricato con successo, siamo pronti,'),
@@ -48,6 +50,7 @@ class LiveSessionWidget extends ConsumerWidget {
                                 'Segui le indicazioni dell\'operatore e preparati al test'),
                             const SizedBox(height: 8),
                             const Text('Siamo pronti per iniziare'),
+                            const SizedBox(height: 16),
                             Consumer(
                               builder: (
                                 BuildContext context,
@@ -110,7 +113,7 @@ class LiveSessionWidget extends ConsumerWidget {
                                     ref.watch(sensorTrackingNotifierProvider);
 
                                 return CircleAvatar(
-                                  radius: 100,
+                                  radius: 150,
                                   child: Center(
                                     child: switch (state) {
                                       SensorTrackingStateData(
@@ -118,7 +121,10 @@ class LiveSessionWidget extends ConsumerWidget {
                                         :final remainingInSecond,
                                         :final activityRecognized,
                                       ) =>
-                                        Text('$remainingInSecond sec'),
+                                        Text(
+                                          '$remainingInSecond sec',
+                                          style: TextStyle(fontSize: 22),
+                                        ),
                                       SensorTrackingStateLoading() =>
                                         const SizedBox.shrink(),
                                       SensorTrackingStateUploaded() =>
@@ -168,8 +174,14 @@ class LiveSessionWidget extends ConsumerWidget {
                                 // );
                               },
                             ),
-                            Text('${value.activityTypeOverride}'),
-                            Text('${value.smartphonePositionOverride}')
+                            ExperimentInfo(
+                              name: value.name,
+                              duration: value.duration,
+                              description: value.description,
+                              activityType: value.activityTypeOverride,
+                              smartphonePosition:
+                                  value.smartphonePositionOverride,
+                            )
                           ],
                         ),
                   _ => const SizedBox.shrink(),

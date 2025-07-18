@@ -6,7 +6,7 @@ part of 'app_shell_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appShellNotifierHash() => r'7f27a03cabb4fab18a82a3554b3f65d2d4b8f620';
+String _$appShellNotifierHash() => r'5065370d30bd5480d70bfb5fda24bd6f66687b08';
 
 /// See also [AppShellNotifier].
 @ProviderFor(AppShellNotifier)
@@ -17,8 +17,11 @@ final appShellNotifierProvider =
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$appShellNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[getNavigationShellProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    getNavigationShellProvider,
+    ...?getNavigationShellProvider.allTransitiveDependencies
+  },
 );
 
 typedef _$AppShellNotifier = AutoDisposeNotifier<AppShellState>;

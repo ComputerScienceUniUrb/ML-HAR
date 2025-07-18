@@ -187,7 +187,8 @@ class SensorTrackingNotifier extends _$SensorTrackingNotifier {
   Future stop() async {
     logger.i('stop listening');
     if (state is SensorTrackingStateInitial ||
-        state is SensorTrackingStateCompleted) {
+        state is SensorTrackingStateCompleted ||
+        state is SensorTrackingStateUploaded) {
       return;
     }
     state = const SensorTrackingStateInitial();

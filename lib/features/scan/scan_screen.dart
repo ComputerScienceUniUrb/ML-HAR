@@ -1,3 +1,4 @@
+import 'package:aifit/core/navigation/utils/route_extensions.dart';
 import 'package:aifit/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -39,15 +40,15 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
               ),
               Positioned(
                 top: MediaQuery.of(context).padding.top + 8,
-                right: 16,
+                left: 16,
                 child: IconButton(
                   icon: const CircleAvatar(
                     backgroundColor: Colors.white,
-                    child: Icon(Icons.clear),
+                    child: Icon(Icons.arrow_back),
                   ),
                   color: Colors.black,
                   onPressed: () {
-                    context.pop();
+                    context.maybePop();
                   },
                 ),
               ),
@@ -80,9 +81,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
             validateExperiment(barcode.barcodes.first.rawValue);
         final sessionId = validateSession(barcode.barcodes.first.rawValue);
         if (experimentId != null) {
-          context.go('/home/load-experiment?experimentId=$experimentId');
+          context.pushReplacement('/load-experiment?experimentId=$experimentId');
         } else if (sessionId != null) {
-          context.go('/home/session/$sessionId');
+          context.pushReplacement('/session/$sessionId');
         } else {
           setState(() {
             cameraOnPause = false;

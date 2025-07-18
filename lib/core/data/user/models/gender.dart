@@ -8,7 +8,7 @@ enum Gender{
     return switch (this) {
       Gender.male => 'Maschio',
       Gender.female => 'Femmina',
-      Gender.notBinary => 'Non binarion',
+      Gender.notBinary => 'Non binario',
       Gender.notAvailable => 'Non disponibile',
     };
   }

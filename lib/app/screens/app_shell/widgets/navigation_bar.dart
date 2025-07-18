@@ -1,4 +1,6 @@
 import 'package:aifit/app/screens/app_shell/app_shell_provider.dart';
+import 'package:aifit/core/navigation/route_extensions.dart';
+import 'package:aifit/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,15 +16,7 @@ class CustomNavigationBar extends ConsumerStatefulWidget {
 class _CustomNavigationBarState extends ConsumerState<CustomNavigationBar> {
   @override
   Widget build(BuildContext context) {
-    // final state = ref.watch(appShellNotifierProvider);
     return BottomNavigationBar(
-      // backgroundColor: VegaBottomNavBarColors.backgroundColor,
-      // selectedFontSize: VegaBottomNavBarTypography.textStyle(
-      //   isSelected: true,
-      // ).fontSize!,
-      // unselectedFontSize: VegaBottomNavBarTypography.textStyle(
-      //   isSelected: false,
-      // ).fontSize!,
       elevation: 0.0,
       type: BottomNavigationBarType.fixed,
       items: const [
@@ -43,6 +37,34 @@ class _CustomNavigationBarState extends ConsumerState<CustomNavigationBar> {
         BottomNavigationBarItem(
           icon: Padding(
             padding: EdgeInsets.all(2),
+            child: Icon(Icons.list),
+          ),
+          activeIcon: Padding(
+            padding: EdgeInsets.all(2),
+            child: Icon(
+              Icons.list,
+              color: Colors.orange,
+            ),
+          ),
+          label: 'Sessioni',
+        ),
+        BottomNavigationBarItem(
+          icon: Padding(
+            padding: EdgeInsets.all(2),
+            child: Icon(Icons.currency_bitcoin_sharp),
+          ),
+          activeIcon: Padding(
+            padding: EdgeInsets.all(2),
+            child: Icon(
+              Icons.currency_bitcoin_sharp,
+              color: Colors.orange,
+            ),
+          ),
+          label: 'WOM',
+        ),
+        BottomNavigationBarItem(
+          icon: Padding(
+            padding: EdgeInsets.all(2),
             child: Icon(Icons.settings),
           ),
           activeIcon: Padding(
@@ -56,18 +78,6 @@ class _CustomNavigationBarState extends ConsumerState<CustomNavigationBar> {
         ),
       ],
       onTap: (index) => _onItemTap(index),
-      // selectedLabelStyle: VegaBottomNavBarTypography.textStyle(
-      //   isSelected: true,
-      // ),
-      // unselectedLabelStyle: VegaBottomNavBarTypography.textStyle(
-      //   isSelected: false,
-      // ),
-      // selectedItemColor: VegaBottomNavBarColors.textColor(
-      //   isSelected: true,
-      // ),
-      // unselectedItemColor: VegaBottomNavBarColors.textColor(
-      //   isSelected: false,
-      // ),
       currentIndex: _getBottomNavigationIndex(context),
     );
   }
@@ -79,14 +89,15 @@ class _CustomNavigationBarState extends ConsumerState<CustomNavigationBar> {
     }
     final goRouter = GoRouter.of(context);
     final fullPath = GoRouterState.of(context).fullPath!;
-    final path = fullPath.split('/')[1];
-    final selectedTabIndex = activeTabsPaths.indexOf('/$path');
-    // final routes = goRouter.routerDelegate.currentConfiguration.routes;
-    // if (selectedTabIndex < 0) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     context.goToRoute('/');
-    //   });
-    // }
+    // final path = fullPath.split('/')[0];
+    final selectedTabIndex = activeTabsPaths.indexOf(fullPath);
+    final routes = goRouter.routerDelegate.currentConfiguration.routes;
+    if (selectedTabIndex < 0) {
+      logger.w('CustomNavigationBar: selectedTabIndex < 0 | return to the home');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.goToRoute('/');
+      });
+    }
     return selectedTabIndex < 0 ? 0 : selectedTabIndex;
   }
 

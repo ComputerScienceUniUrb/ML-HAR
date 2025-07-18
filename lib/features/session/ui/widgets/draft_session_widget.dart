@@ -21,11 +21,27 @@ class DraftSessionWidget extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          const Column(
+            children: [
+              Text('Benvenuto in questa sessione!'),
+            ],
+          ),
+          Center(
+            child: Text(
+              session.name,
+              style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+            ),
+          ),
           const Center(child: Text('Sei registrato con il numero:')),
           Center(
             child: Text(
               player.id,
               style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const Center(
+            child: Text(
+              'Resta in questa pagina e attendi che la sessione inizi.',
             ),
           ),
         ],

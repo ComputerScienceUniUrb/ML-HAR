@@ -1,3 +1,4 @@
+import 'package:aifit/core/utils/logger.dart';
 import 'package:aifit/features/wom/data/wom_local_data_source.dart';
 import 'package:aifit/features/wom/data/wom_remote_data_source.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,9 +24,12 @@ class WomRepository {
   })  : _remoteDataSource = remoteDataSource,
         _localDataSource = localDataSource;
 
-
   Future<void> redeemWom(int womCount) async {
-    final response = await _remoteDataSource.getWom(womCount);
-    await _localDataSource.saveWomTransaction(response);
+    try {
+      final response = await _remoteDataSource.getWom(womCount);
+      await _localDataSource.saveWomTransaction(response);
+    } catch (ex, st) {
+      logger.e('redeemWom', error: ex, stackTrace: st);
+    }
   }
 }

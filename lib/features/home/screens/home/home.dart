@@ -10,19 +10,49 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.go('/home/settings');
-            },
-            icon: const Icon(Icons.settings),
-          ),
-        ],
+        title: const Text('AIFit'),
       ),
-      body: ListView(
-        children: const [
-          Row(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              context.pushRoute('/scan');
+            },
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(
+                MediaQuery.sizeOf(context).width / 1.7,
+                MediaQuery.sizeOf(context).width / 1.7,
+              ),
+              // La forma circolare
+              shape: const CircleBorder(),
+              // Il padding interno per definire la dimensione del cerchio
+              padding: const EdgeInsets.all(20),
+              // (Opzionale) Colori personalizzati
+              backgroundColor: Colors.blue,
+              // Colore di sfondo
+              foregroundColor: Colors.white, // Colore dell'icona
+            ),
+            child: const Icon(
+              Icons.qr_code_2,
+              size: 100,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Scansiona il QR-Code',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 30),
+          ),
+          Center(child: Text('oppure')),
+          TextButton(
+              onPressed: () {
+                context.pushRoute('/load-experiment');
+              },
+              child: Text('Avvia un esperimento da un codice identificativo')),
+          const SizedBox(height: kBottomNavigationBarHeight),
+          /*Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
@@ -57,7 +87,7 @@ class HomeScreen extends ConsumerWidget {
           NavItem(
             text: 'Le mie sessioni',
             path: '/home/sessions',
-          ),
+          ),*/
         ],
       ),
     );
@@ -85,7 +115,7 @@ class NavItem extends StatelessWidget {
           context.pushRoute(path);
         },
         child: AspectRatio(
-          aspectRatio: 3/2,
+          aspectRatio: 3 / 2,
           child: Card(
             child: Center(child: Text(text)),
           ),
