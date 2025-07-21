@@ -1,5 +1,6 @@
 import 'package:aifit/app/converters.dart';
 import 'package:aifit/core/data/user/models/gender.dart';
+import 'package:aifit/features/session/models/experiment_log.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'player.g.dart';
@@ -15,6 +16,7 @@ abstract class Player with _$Player {
     double? height,
     double? weight,
     Gender? gender,
+    @Default([]) List<ExperimentLog> experimentLogs,
   }) = _Player;
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);

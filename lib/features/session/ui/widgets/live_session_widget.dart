@@ -1,12 +1,16 @@
+import 'package:aifit/core/data/firestore_reference.dart';
 import 'package:aifit/features/home/screens/load_experiment.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/experiment_notifier.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_provider.dart';
 import 'package:aifit/features/home/screens/sensor_tracking/application/sensor_tracking_state.dart';
 import 'package:aifit/features/session/application/session_notifier.dart';
 import 'package:aifit/features/session/models/activity_session.dart';
+import 'package:aifit/features/session/models/experiment_log.dart';
 import 'package:aifit/features/session/models/player.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 class LiveSessionWidget extends ConsumerWidget {
   final ActivitySession session;
@@ -109,13 +113,24 @@ class LiveSessionWidget extends ConsumerWidget {
                                   },
                                 );
 
-                                final state =
+                                ref.listen(sensorTrackingNotifierProvider,
+                                    (p, n) {
+                                  if (n is SensorTrackingStateUploaded) {
+                                    setExperimentAsCompleted(
+                                      session.id,
+                                      player.id,
+                                      experiment.id,
+                                      session.runningId ?? 'error',
+                                    );
+                                  }
+                                });
+                                final sensorTrackingState =
                                     ref.watch(sensorTrackingNotifierProvider);
 
                                 return CircleAvatar(
                                   radius: 150,
                                   child: Center(
-                                    child: switch (state) {
+                                    child: switch (sensorTrackingState) {
                                       SensorTrackingStateData(
                                         :final samples,
                                         :final remainingInSecond,
@@ -123,7 +138,7 @@ class LiveSessionWidget extends ConsumerWidget {
                                       ) =>
                                         Text(
                                           '$remainingInSecond sec',
-                                          style: TextStyle(fontSize: 22),
+                                          style: const TextStyle(fontSize: 22),
                                         ),
                                       SensorTrackingStateLoading() =>
                                         const SizedBox.shrink(),
@@ -192,5 +207,24 @@ class LiveSessionWidget extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> setExperimentAsCompleted(
+    String sessionId,
+    String playerId,
+    String experimentId,
+    String runningId,
+  ) async {
+    final log = ExperimentLog(
+      id: const Uuid().v4(),
+      experimentId: experimentId,
+      createdAt: DateTime.now(),
+      runningId: runningId,
+    );
+    await FirestoreReference.playerDoc(sessionId, playerId).update({
+      'experimentLogs': FieldValue.arrayUnion(
+        [log.toJson()],
+      ),
+    });
   }
 }

@@ -22,6 +22,7 @@ mixin _$Player {
   double? get height;
   double? get weight;
   Gender? get gender;
+  List<ExperimentLog> get experimentLogs;
 
   /// Create a copy of Player
   /// with the given fields replaced by the non-null parameter values.
@@ -44,17 +45,19 @@ mixin _$Player {
             (identical(other.age, age) || other.age == age) &&
             (identical(other.height, height) || other.height == height) &&
             (identical(other.weight, weight) || other.weight == weight) &&
-            (identical(other.gender, gender) || other.gender == gender));
+            (identical(other.gender, gender) || other.gender == gender) &&
+            const DeepCollectionEquality()
+                .equals(other.experimentLogs, experimentLogs));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, subscribedOn, age, height, weight, gender);
+  int get hashCode => Object.hash(runtimeType, id, subscribedOn, age, height,
+      weight, gender, const DeepCollectionEquality().hash(experimentLogs));
 
   @override
   String toString() {
-    return 'Player(id: $id, subscribedOn: $subscribedOn, age: $age, height: $height, weight: $weight, gender: $gender)';
+    return 'Player(id: $id, subscribedOn: $subscribedOn, age: $age, height: $height, weight: $weight, gender: $gender, experimentLogs: $experimentLogs)';
   }
 }
 
@@ -69,7 +72,8 @@ abstract mixin class $PlayerCopyWith<$Res> {
       int? age,
       double? height,
       double? weight,
-      Gender? gender});
+      Gender? gender,
+      List<ExperimentLog> experimentLogs});
 }
 
 /// @nodoc
@@ -90,6 +94,7 @@ class _$PlayerCopyWithImpl<$Res> implements $PlayerCopyWith<$Res> {
     Object? height = freezed,
     Object? weight = freezed,
     Object? gender = freezed,
+    Object? experimentLogs = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -116,6 +121,10 @@ class _$PlayerCopyWithImpl<$Res> implements $PlayerCopyWith<$Res> {
           ? _self.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender?,
+      experimentLogs: null == experimentLogs
+          ? _self.experimentLogs
+          : experimentLogs // ignore: cast_nullable_to_non_nullable
+              as List<ExperimentLog>,
     ));
   }
 }
@@ -129,7 +138,9 @@ class _Player implements Player {
       this.age,
       this.height,
       this.weight,
-      this.gender});
+      this.gender,
+      final List<ExperimentLog> experimentLogs = const []})
+      : _experimentLogs = experimentLogs;
   factory _Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
 
   @override
@@ -145,6 +156,14 @@ class _Player implements Player {
   final double? weight;
   @override
   final Gender? gender;
+  final List<ExperimentLog> _experimentLogs;
+  @override
+  @JsonKey()
+  List<ExperimentLog> get experimentLogs {
+    if (_experimentLogs is EqualUnmodifiableListView) return _experimentLogs;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_experimentLogs);
+  }
 
   /// Create a copy of Player
   /// with the given fields replaced by the non-null parameter values.
@@ -172,17 +191,19 @@ class _Player implements Player {
             (identical(other.age, age) || other.age == age) &&
             (identical(other.height, height) || other.height == height) &&
             (identical(other.weight, weight) || other.weight == weight) &&
-            (identical(other.gender, gender) || other.gender == gender));
+            (identical(other.gender, gender) || other.gender == gender) &&
+            const DeepCollectionEquality()
+                .equals(other._experimentLogs, _experimentLogs));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, subscribedOn, age, height, weight, gender);
+  int get hashCode => Object.hash(runtimeType, id, subscribedOn, age, height,
+      weight, gender, const DeepCollectionEquality().hash(_experimentLogs));
 
   @override
   String toString() {
-    return 'Player(id: $id, subscribedOn: $subscribedOn, age: $age, height: $height, weight: $weight, gender: $gender)';
+    return 'Player(id: $id, subscribedOn: $subscribedOn, age: $age, height: $height, weight: $weight, gender: $gender, experimentLogs: $experimentLogs)';
   }
 }
 
@@ -198,7 +219,8 @@ abstract mixin class _$PlayerCopyWith<$Res> implements $PlayerCopyWith<$Res> {
       int? age,
       double? height,
       double? weight,
-      Gender? gender});
+      Gender? gender,
+      List<ExperimentLog> experimentLogs});
 }
 
 /// @nodoc
@@ -219,6 +241,7 @@ class __$PlayerCopyWithImpl<$Res> implements _$PlayerCopyWith<$Res> {
     Object? height = freezed,
     Object? weight = freezed,
     Object? gender = freezed,
+    Object? experimentLogs = null,
   }) {
     return _then(_Player(
       id: null == id
@@ -245,6 +268,10 @@ class __$PlayerCopyWithImpl<$Res> implements _$PlayerCopyWith<$Res> {
           ? _self.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender?,
+      experimentLogs: null == experimentLogs
+          ? _self._experimentLogs
+          : experimentLogs // ignore: cast_nullable_to_non_nullable
+              as List<ExperimentLog>,
     ));
   }
 }

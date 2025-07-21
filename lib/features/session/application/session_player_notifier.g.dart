@@ -7,7 +7,7 @@ part of 'session_player_notifier.dart';
 // **************************************************************************
 
 String _$sessionPlayerNotifierHash() =>
-    r'c18adf04d5ea2633aa05cff172d1f6528b8cd1f9';
+    r'c6dcfff059a5ff68cbc96bff950535e62897a849';
 
 /// Copied from Dart SDK
 class _SystemHash {

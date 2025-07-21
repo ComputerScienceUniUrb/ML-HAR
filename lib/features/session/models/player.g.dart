@@ -13,6 +13,10 @@ _Player _$PlayerFromJson(Map<String, dynamic> json) => _Player(
       height: (json['height'] as num?)?.toDouble(),
       weight: (json['weight'] as num?)?.toDouble(),
       gender: $enumDecodeNullable(_$GenderEnumMap, json['gender']),
+      experimentLogs: (json['experimentLogs'] as List<dynamic>?)
+              ?.map((e) => ExperimentLog.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
@@ -22,6 +26,7 @@ Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
       'height': instance.height,
       'weight': instance.weight,
       'gender': _$GenderEnumMap[instance.gender],
+      'experimentLogs': instance.experimentLogs,
     };
 
 const _$GenderEnumMap = {
